@@ -19,6 +19,25 @@ scene.add( cube );
 
 camera.position.z = 5;
 
+//Creates the cube
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('doTheGoo.png')});
+
+const cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
+cube.position.x = -3;
+cube.position.y = 2;
+
+const cube2 = new THREE.Mesh(geometry, material);
+scene.add(cube2);
+cube2.position.x = 0;
+cube2.position.y = 2;
+
+const cube3 = new THREE.Mesh(geometry, material);
+scene.add(cube3);
+cube3.position.x = 3;
+cube3.position.y = 2;
+
 //hide horizontal scrollbar
 document.body.style.overflowX = "hidden";
 
@@ -30,39 +49,34 @@ window.addEventListener('resize', () => {
 	camera.updateProjectionMatrix();
 });
 
-//Create a function that when called creates various rectangles that slide onto screen
+let cubeR = 0.02;
+let cubeR2 = 0.02;
+let cubeR3 = 0.02;
 
+//On buttons hover
+const button = document.getElementsByClassName("button")[0];
 
-
-document.getElementById("calc").onclick = function createRectangles() {
-	//Create a random number of rectangles
-	let numRects = Math.floor(Math.random() * 10) + 1;
-	//Create a random color for the rectangles
-	let color = Math.random() * 0xffffff;
-	//Create a random size for the rectangles
-	let size = Math.random() * 5;
-	//Create a random position for the rectangles
-	let position = Math.random() * 10;
-
-	for (let i = 0; i < numRects; i++) {
-		//Create a rectangle
-		const geometry = new THREE.BoxGeometry(size, size, size);
-		const material = new THREE.MeshBasicMaterial({ color: color });
-		const rectangle = new THREE.Mesh(geometry, material);
-		//Add the rectangle to the scene
-		scene.add(rectangle);
-		//Set the position of the rectangle
-		rectangle.position.x = position;
-		rectangle.position.y = position;
-		rectangle.position.z = position;
-	}
-};
-
-
-
+button.addEventListener("mouseover", () => {
+	console.log("Hey")
+	cubeR = 0.01;
+})
+button.addEventListener("mouseout", () => {
+	console.log("Hey")
+	cubeR = 0.02;
+})
 
 function animate() {
 	requestAnimationFrame(animate);
+
 	renderer.render(scene, camera);
+	renderer.render(scene, camera);
+	cube.rotation.x += cubeR;
+	cube.rotation.y += cubeR;
+
+	cube2.rotation.x -= cubeR2;
+	cube2.rotation.y -= cubeR2;
+
+	cube3.rotation.x += cubeR3;
+	cube3.rotation.y -= cubeR3;
 }
 animate();

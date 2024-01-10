@@ -33,6 +33,10 @@ button {
     font-family: 'Roboto', sans-serif;
 }
 
+button:hover {
+    background-color: #4dcf32;
+}
+
 button:active {
     background-color: #1d7e09;
     border-style: inset;
