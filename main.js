@@ -19,10 +19,11 @@ scene.add( cube );
 
 camera.position.z = 5;
 
-//Creates the cube
+//Creates the cube materials and geometry
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 const material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('doTheGoo.png')});
 
+//Adds the cubes to the scene and positions them
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 cube.position.x = -3;
@@ -49,34 +50,76 @@ window.addEventListener('resize', () => {
 	camera.updateProjectionMatrix();
 });
 
-let cubeR = 0.02;
-let cubeR2 = 0.02;
-let cubeR3 = 0.02;
+let buttons = [];
 
 //On buttons hover
-const button = document.getElementsByClassName("button")[0];
+const button = document.getElementById("button");
 
-button.addEventListener("mouseover", () => {
-	console.log("Hey")
-	cubeR = 0.01;
-})
-button.addEventListener("mouseout", () => {
-	console.log("Hey")
-	cubeR = 0.02;
-})
+//Establishes cube rotation speed
+let cubeR1 = .0025;
+let cubeR2 = .0025;
+let cubeR3 = .0025;
 
+//Array of cube rotation speeds and cubes from the scene
+let cubeR = [cubeR1, cubeR2, cubeR3];
+let cubes = [cube, cube2, cube3];
+
+//Establishes cube scale when the page loads
+let cX = 1;
+let cY = 1;
+let cZ = 1;
+
+//Creates the boolean that determines if the cube can become big or not
+let big = false;
+
+let iter;
+
+//On button hover makes the cube bigger, rotate faster, and returns the number associated in the array to variable iter
+for (let i = 0; i < document.getElementById("hotbar").length; i++) {
+
+	document.getElementById("hotbar")[i].addEventListener("mouseover", () => {
+		iter = i;
+		cubeR[i] = 0.008;
+		big = true;
+		return iter;
+	});
+	
+	document.getElementById("hotbar")[i].addEventListener("mouseout", () => {
+		big = false;
+		cubeR[i] = 0.0025;
+	});
+	
+}
+
+//Executes every frame
 function animate() {
 	requestAnimationFrame(animate);
 
+	//If big = true and x scale is less than 1.25, increases the scale of the cube gradually and quickly
+	if (cX < 1.25 && big == true) {
+		console.log(cX);
+		cubes[iter].scale.set(cX += 0.005, cY += 0.005, cZ += 0.005);
+	}
+
+	//if big = false and x scale is greater than 1, set the scale of the cube back to 1
+	if (cX > 1 && big == false) {
+		console.log(cX);
+		cX = 1;
+		cY = 1;
+		cZ = 1;
+		cubes[iter].scale.set(cX, cY, cZ);
+	}
 	renderer.render(scene, camera);
 	renderer.render(scene, camera);
-	cube.rotation.x += cubeR;
-	cube.rotation.y += cubeR;
 
-	cube2.rotation.x -= cubeR2;
-	cube2.rotation.y -= cubeR2;
+	//Rotates the cubes depending if the mouse is hovering over the buttons established in above for loop
+	cube.rotation.x += cubeR[0];
+	cube.rotation.y += cubeR[0];
 
-	cube3.rotation.x += cubeR3;
-	cube3.rotation.y -= cubeR3;
+	cube2.rotation.x -= cubeR[1];
+	cube2.rotation.y -= cubeR[1];
+
+	cube3.rotation.x += cubeR[2];
+	cube3.rotation.y -= cubeR[2];
 }
 animate();
