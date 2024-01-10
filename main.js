@@ -21,7 +21,7 @@ camera.position.z = 5;
 
 //Creates the cube materials and geometry
 const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('doTheGoo.png')});
+const material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('doTheGoo.png') });
 
 //Adds the cubes to the scene and positions them
 const cube = new THREE.Mesh(geometry, material);
@@ -71,44 +71,41 @@ let cZ = 1;
 
 //Creates the boolean that determines if the cube can become big or not
 let big = false;
+let iter = 0
 
-let iter;
 
 //On button hover makes the cube bigger, rotate faster, and returns the number associated in the array to variable iter
 for (let i = 0; i < document.getElementById("hotbar").length; i++) {
-
 	document.getElementById("hotbar")[i].addEventListener("mouseover", () => {
 		iter = i;
 		cubeR[i] = 0.008;
 		big = true;
 		return iter;
 	});
-	
+
 	document.getElementById("hotbar")[i].addEventListener("mouseout", () => {
 		big = false;
 		cubeR[i] = 0.0025;
 	});
-	
+
 }
+
+/*
+cubes[iter].scale.set(cX += 0.05, cY += 0.05, cZ += 0.05);
+*/
+
 
 //Executes every frame
 function animate() {
 	requestAnimationFrame(animate);
+	
+	if (big == true && cX < 1.25) {
+		cubes[iter].scale.set(cX += 0.05, cY += 0.05, cZ += 0.05);
 
-	//If big = true and x scale is less than 1.25, increases the scale of the cube gradually and quickly
-	if (cX < 1.25 && big == true) {
-		console.log(cX);
-		cubes[iter].scale.set(cX += 0.005, cY += 0.005, cZ += 0.005);
+	} else if (big == false && cX > 1) {
+		cubes[iter].scale.set(cX -= 0.05, cY -= 0.05, cZ -= 0.05);
 	}
 
-	//if big = false and x scale is greater than 1, set the scale of the cube back to 1
-	if (cX > 1 && big == false) {
-		console.log(cX);
-		cX = 1;
-		cY = 1;
-		cZ = 1;
-		cubes[iter].scale.set(cX, cY, cZ);
-	}
 	renderer.render(scene, camera);
 	renderer.render(scene, camera);
 
