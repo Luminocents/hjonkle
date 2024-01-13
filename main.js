@@ -59,6 +59,8 @@ if (window.location.pathname == '/index.html') {
 	scene.add(cube3);
 	cube3.position.x = cubeXR;
 	cube3.position.y = cubeY;
+} else {
+	window.location.href = 'index.html';
 }
 
 
