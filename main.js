@@ -120,6 +120,7 @@ let cubePos;
 let iter;
 let href = 'index.html';
 
+//Creates click listeners for the buttons and sets the variable href to the page associated with the button
 for (let i = 0; i < document.getElementById("hotbar").length; i++) {
 	document.getElementById("hotbar")[i].addEventListener("click", () => {
 		href = document.getElementById("hotbar")[i].value + '.html'
@@ -135,7 +136,7 @@ for (let i = 0; i < document.getElementById("hotbar").length; i++) {
 //Executes every frame
 function animate() {
 	requestAnimationFrame(animate);
-
+	//Rotates the cubes
 	if (big == true && cX < 1.25) {
 		cubes[iterS].scale.set(cX += 0.05, cY += 0.05, cZ += 0.05);
 
@@ -143,16 +144,17 @@ function animate() {
 		cubes[iterS].scale.set(cX -= 0.05, cY -= 0.05, cZ -= 0.05);
 	}
 
+	//Zooms in on the cube and fades it out and changes page when process is finished
 	if (zoom == true && camera.position.z > cubePos.z) {
-		cube.material.opacity -= .03;
+		cube.material.opacity -= .025;
 		camera.position.z -= 0.08;
 		if (camera.position.y < cubePos.y) {
 			camera.position.y += 0.038;
 		}
 		if (Math.sign(cubePos.x) == -1 && camera.position.x > cubePos.x) {
-			camera.position.x -= 0.06;
+			camera.position.x -= 0.055;
 		} else if (Math.sign(cubePos.x) == 1 && camera.position.x < cubePos.x) {
-			camera.position.x += 0.06;
+			camera.position.x += 0.055;
 		}
 	} else if (zoom == true) {
 		window.location.href = href ? href : 'index.html';
