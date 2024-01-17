@@ -33,32 +33,61 @@ const cubeY = 1.5;
 const cubeXL = -2;
 const cubeXR = 2;
 
+//Sets the scale of the cubes for when the page is loaded on a mobile device, and sets the position of the cubes
+let smol = false;
+const scale = .5;
+let smolL = 0;
+let smolR = 0;
+let smolY = 0;
+
+let cubeOp = -0.055;
+let zoomY = 0.08;
+let zoomX = 0.1;
+let zoomZ = -0.15;
+
 //Add cubes to scene according to page loaded
+
+if (window.innerWidth < 600) {
+	smol = true;
+	cube.scale.set(scale, scale, scale);
+	cube2.scale.set(scale, scale, scale);
+	cube3.scale.set(scale, scale, scale);
+
+	smolL = 1.25;
+	smolR = -1.25;
+	smolY = 0.75;
+
+	cubeOp = -.025;
+	zoomY = .05;
+	zoomX = .02;
+	zoomZ = -.1;
+}
+
 if (window.location.pathname == '/index.html') {
 	scene.add(cube);
-	cube.position.x = cubeXL;
-	cube.position.y = cubeY;
+	cube.position.x = cubeXL + smolL;
+	cube.position.y = cubeY + smolY;
 
 	scene.add(cube2);
-	cube2.position.x = cubeXR;
-	cube2.position.y = cubeY;
+	cube2.position.x = cubeXR + smolR;
+	cube2.position.y = cubeY + smolY;
 
 } else if (window.location.pathname == '/calc.html') {
 	scene.add(cube2);
-	cube2.position.x = cubeXL;
-	cube2.position.y = cubeY;
+	cube2.position.x = cubeXL + smolL;
+	cube2.position.y = cubeY + smolY;
 	
 	scene.add(cube3);
-	cube3.position.x = cubeXR;
-	cube3.position.y = cubeY;
+	cube3.position.x = cubeXR + smolR;
+	cube3.position.y = cubeY + smolY;
 } else if (window.location.pathname == '/sett.html') {
 	scene.add(cube);
-	cube.position.x = cubeXL;
-	cube.position.y = cubeY;
+	cube.position.x = cubeXL + smolL;
+	cube.position.y = cubeY + smolY;
 
 	scene.add(cube3);
-	cube3.position.x = cubeXR;
-	cube3.position.y = cubeY;
+	cube3.position.x = cubeXR + smolR;
+	cube3.position.y = cubeY + smolY;
 } else {
 	window.location.href = 'index.html';
 }
@@ -139,24 +168,24 @@ for (let i = 0; i < document.getElementById("hotbar").length; i++) {
 function animate() {
 	requestAnimationFrame(animate);
 	//Rotates the cubes
-	if (big == true && cX < 1.25) {
+	if (big == true && cX < 1.25 && smol == false) {
 		cubes[iterS].scale.set(cX += 0.05, cY += 0.05, cZ += 0.05);
 
-	} else if (big == false && cX > 1) {
+	} else if (big == false && cX > 1 && smol == false) {
 		cubes[iterS].scale.set(cX -= 0.05, cY -= 0.05, cZ -= 0.05);
 	}
 
 	//Zooms in on the cube and fades it out and changes page when process is finished
 	if (zoom == true && camera.position.z > cubePos.z) {
-		cube.material.opacity -= .025;
-		camera.position.z -= 0.08;
+		cube.material.opacity += cubeOp;
+		camera.position.z += zoomZ;
 		if (camera.position.y < cubePos.y) {
-			camera.position.y += 0.038;
+			camera.position.y += zoomY;
 		}
 		if (Math.sign(cubePos.x) == -1 && camera.position.x > cubePos.x) {
-			camera.position.x -= 0.055;
+			camera.position.x += (zoomX * -1);
 		} else if (Math.sign(cubePos.x) == 1 && camera.position.x < cubePos.x) {
-			camera.position.x += 0.055;
+			camera.position.x += zoomX;
 		}
 	} else if (zoom == true) {
 		window.location.href = href ? href : 'index.html';
