@@ -20,7 +20,7 @@ scene.add( cube );
 camera.position.z = 5;
 
 //Creates the cube materials and geometry
-const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+const geometry = new THREE.BoxGeometry(1, 1, 1);
 const material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('doTheGoo.png'), transparent: true });
 const material3 = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('Nerd Dog Emoji.png'), transparent: true });
 //Meshes the materials and geometry together
@@ -41,11 +41,16 @@ let smolR = 0;
 let smolY = 0;
 
 let cubeOp = -0.055;
-let zoomY = 0.08;
-let zoomX = 0.1;
-let zoomZ = -0.15;
+let zoomY = 0.04;
+let zoomX = 0.05;
+let zoomZ = -0.08;
 
 //Add cubes to scene according to page loaded
+
+if (window.location.pathname == '/index.html') {
+	let zoomX = 0.025;
+
+}
 
 if (window.innerWidth < 600) {
 	smol = true;
@@ -74,18 +79,22 @@ if (window.location.pathname == '/index.html') {
 
 } else if (window.location.pathname == '/calc.html') {
 	scene.add(cube2);
+	cube2.scale.set(1.5, 1.5, 1.5);
 	cube2.position.x = cubeXL + smolL;
 	cube2.position.y = cubeY + smolY;
 	
 	scene.add(cube3);
+	cube3.scale.set(1.5, 1.5, 1.5);
 	cube3.position.x = cubeXR + smolR;
 	cube3.position.y = cubeY + smolY;
 } else if (window.location.pathname == '/sett.html') {
 	scene.add(cube);
+	cube.scale.set(1.5, 1.5, 1.5);
 	cube.position.x = cubeXL + smolL;
 	cube.position.y = cubeY + smolY;
 
 	scene.add(cube3);
+	cube3.scale.set(1.5, 1.5, 1.5);
 	cube3.position.x = cubeXR + smolR;
 	cube3.position.y = cubeY + smolY;
 } else {
@@ -163,6 +172,14 @@ for (let i = 0; i < document.getElementById("hotbar").length; i++) {
 
 }
 
+let moveX = 0.03;
+let moveY = -0.02;
+
+let moveX2 = -0.03;
+let moveY2 = 0.02;
+
+let moveX3 = -0.03;
+let moveY3 = 0.02;
 
 //Executes every frame
 function animate() {
@@ -205,5 +222,49 @@ function animate() {
 
 	cube3.rotation.x += cubeR[2];
 	cube3.rotation.y -= cubeR[2];
+
+	//Add a small amount to the cube.position to make them move around the screen and bounce off the walls like a screensaver
+	if (window.location.pathname == '/index.html') {
+		if (cube.position.x < -4.5) { 
+			moveX *= -1;
+		}
+		if (cube.position.x > 4.5) {
+			moveX *= -1;
+		}
+		cube.position.x += moveX;
+	
+		if (cube.position.y < -2.5) {
+			moveY *= -1;
+		}
+		if (cube.position.y > 2.5) {
+			moveY *= -1;
+		}
+		cube.position.y += moveY;
+		
+		if (cube2.position.x < -4.5) { 
+			moveX2 *= -1;
+		}
+		if (cube2.position.x > 4.5) {
+			moveX2 *= -1;
+		}
+		cube2.position.x += moveX2;
+	
+		if (cube2.position.y < -2.5) {
+			moveY2 *= -1;
+		}
+		if (cube2.position.y > 2.5) {
+			moveY2 *= -1;
+		}
+		cube2.position.y += moveY2;
+	
+		if (cube3.position.x < -4.5) { 
+			moveX3 *= -1;
+		}
+		if (cube3.position.x > 4.5) {
+			moveX3 *= -1;
+		}
+		cube3.position.x += moveX3;
+	}
+
 }
 animate();
