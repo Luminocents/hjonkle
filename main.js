@@ -22,9 +22,9 @@ camera.position.z = 5;
 //Creates the cube materials and geometry
 const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
 const material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('doTheGoo.png'), transparent: true });
-
+const material3 = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('Nerd Dog Emoji.png'), transparent: true });
 //Meshes the materials and geometry together
-const cube = new THREE.Mesh(geometry, material);
+const cube = new THREE.Mesh(geometry, material3);
 const cube2 = new THREE.Mesh(geometry, material);
 const cube3 = new THREE.Mesh(geometry, material);
 
