@@ -3,12 +3,18 @@ import * as THREE from 'three';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
 const canvas = document.getElementById("canvas");
+
+//set the canvas background to "Nerd Dog Emoji.png"
+
 
 const renderer = new THREE.WebGLRenderer({ canvas: canvas });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+
+//set the scene background to "Nerd Dog Emoji.png"
+const texture = new THREE.TextureLoader().load('Nerd Dog Emoji.png');
+scene.background = texture;
 
 /* THIS IS HOW YOU ADD A CUBE AND STUFF, REMEBER THIS
 const geometry = new THREE.BoxGeometry( 1, 1, 1 );
@@ -19,23 +25,36 @@ scene.add( cube );
 
 camera.position.z = 5;
 
+const createCube = (geometry, material) => {
+    const cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+    return cube;
+}
+
+const setCubeProperties = (cube, cubeSize, cubeX, cubeY) => {
+    cube.scale.set(cubeSize, cubeSize, cubeSize);
+    cube.position.x = cubeX;
+    cube.position.y = cubeY;
+}
+
 //Creates the cube materials and geometry
-const geometry = new THREE.BoxGeometry(1, 1, 1);
+const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
 const material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('doTheGoo.png'), transparent: true });
 const material3 = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('Nerd Dog Emoji.png'), transparent: true });
+
 //Meshes the materials and geometry together
 const cube = new THREE.Mesh(geometry, material3);
 const cube2 = new THREE.Mesh(geometry, material);
 const cube3 = new THREE.Mesh(geometry, material);
 
+let cubeX = -2;
+
 //Sets the position of the cubes
-const cubeY = 1.5;
-const cubeXL = -2;
-const cubeXR = 2;
+let cubeY = 1.5;
 
 //Sets the scale of the cubes for when the page is loaded on a mobile device, and sets the position of the cubes
 let smol = false;
-const scale = .5;
+const scaley = .5;
 let smolL = 0;
 let smolR = 0;
 let smolY = 0;
@@ -52,53 +71,44 @@ if (window.location.pathname == '/index.html') {
 
 }
 
+let cubeSize = 1;
+
 if (window.innerWidth < 600) {
 	smol = true;
-	cube.scale.set(scale, scale, scale);
-	cube2.scale.set(scale, scale, scale);
-	cube3.scale.set(scale, scale, scale);
+	cube.scale.set(scaley, scaley, scaley);
+	cube2.scale.set(scaley, scaley, scaley);
+	cube3.scale.set(scaley, scaley, scaley);
 
-	smolL = 1.25;
-	smolR = -1.25;
-	smolY = 0.75;
+	cubeSize = .4;
+	cubeX = -.5;
+	cubeY = 2.5;
 
-	cubeOp = -.025;
-	zoomY = .05;
-	zoomX = .02;
-	zoomZ = -.1;
+	zoomX = 0.02;
+	zoomY = 0.07;
+	zoomZ = -0.1;
 }
 
-if (window.location.pathname == '/index.html') {
-	scene.add(cube);
-	cube.position.x = cubeXL + smolL;
-	cube.position.y = cubeY + smolY;
-
-	scene.add(cube2);
-	cube2.position.x = cubeXR + smolR;
-	cube2.position.y = cubeY + smolY;
-
-} else if (window.location.pathname == '/calc.html') {
-	scene.add(cube2);
-	cube2.scale.set(1.5, 1.5, 1.5);
-	cube2.position.x = cubeXL + smolL;
-	cube2.position.y = cubeY + smolY;
-	
-	scene.add(cube3);
-	cube3.scale.set(1.5, 1.5, 1.5);
-	cube3.position.x = cubeXR + smolR;
-	cube3.position.y = cubeY + smolY;
-} else if (window.location.pathname == '/sett.html') {
-	scene.add(cube);
-	cube.scale.set(1.5, 1.5, 1.5);
-	cube.position.x = cubeXL + smolL;
-	cube.position.y = cubeY + smolY;
-
-	scene.add(cube3);
-	cube3.scale.set(1.5, 1.5, 1.5);
-	cube3.position.x = cubeXR + smolR;
-	cube3.position.y = cubeY + smolY;
-} else {
-	window.location.href = 'index.html';
+switch (window.location.pathname) {
+    case '/index.html':
+		scene.add(cube);
+        setCubeProperties(cube, cubeSize, cubeX, cubeY);
+		scene.add(cube2);
+        setCubeProperties(cube2, cubeSize, cubeX * -1, cubeY);
+        break;
+    case '/calc.html':
+		scene.add(cube2);
+        setCubeProperties(cube2, cubeSize, cubeX, cubeY);
+		scene.add(cube3);
+        setCubeProperties(cube3, cubeSize, cubeX * -1, cubeY);
+        break;
+    case '/sett.html':
+		scene.add(cube);
+        setCubeProperties(cube, cubeSize, cubeX, cubeY);
+		scene.add(cube3);
+        setCubeProperties(cube3, cubeSize, cubeX * -1, cubeY);
+        break;
+    default:
+        window.location.href = 'index.html';
 }
 
 
@@ -124,11 +134,6 @@ let cubeR3 = .0025;
 //Array of cube rotation speeds and cubes from the scene
 let cubeR = [cubeR1, cubeR2, cubeR3];
 let cubes = [cube, cube2, cube3];
-
-//Establishes cube scale when the page loads
-let cX = 1;
-let cY = 1;
-let cZ = 1;
 
 //Creates the boolean that determines if the cube can become big or not
 let big = false;
@@ -172,29 +177,28 @@ for (let i = 0; i < document.getElementById("hotbar").length; i++) {
 
 }
 
-let moveX = 0.03;
-let moveY = -0.02;
-
-let moveX2 = -0.03;
-let moveY2 = 0.02;
-
-let moveX3 = -0.03;
-let moveY3 = 0.02;
 
 //Executes every frame
 function animate() {
 	requestAnimationFrame(animate);
 	//Rotates the cubes
-	if (big == true && cX < 1.25 && smol == false) {
-		cubes[iterS].scale.set(cX += 0.05, cY += 0.05, cZ += 0.05);
-
-	} else if (big == false && cX > 1 && smol == false) {
-		cubes[iterS].scale.set(cX -= 0.05, cY -= 0.05, cZ -= 0.05);
-	}
+	if (big == true && cubeSize < 1.25 && smol == false) {
+        cubeSize += 0.05;
+        if (cubes[iterS]) {
+            cubes[iterS].scale.set(cubeSize, cubeSize, cubeSize);
+        }
+    } else if (big == false && cubeSize > 1 && smol == false) {
+        cubeSize -= 0.05;
+        if (cubes[iterS]) {
+            cubes[iterS].scale.set(cubeSize, cubeSize, cubeSize);
+        }
+    }
 
 	//Zooms in on the cube and fades it out and changes page when process is finished
 	if (zoom == true && camera.position.z > cubePos.z) {
-		cube.material.opacity += cubeOp;
+		cubes.forEach(cube => {
+			cube.material.opacity += cubeOp;
+		});
 		camera.position.z += zoomZ;
 		if (camera.position.y < cubePos.y) {
 			camera.position.y += zoomY;
@@ -222,49 +226,6 @@ function animate() {
 
 	cube3.rotation.x += cubeR[2];
 	cube3.rotation.y -= cubeR[2];
-
-	//Add a small amount to the cube.position to make them move around the screen and bounce off the walls like a screensaver
-	if (window.location.pathname == '/index.html') {
-		if (cube.position.x < -4.5) { 
-			moveX *= -1;
-		}
-		if (cube.position.x > 4.5) {
-			moveX *= -1;
-		}
-		cube.position.x += moveX;
-	
-		if (cube.position.y < -2.5) {
-			moveY *= -1;
-		}
-		if (cube.position.y > 2.5) {
-			moveY *= -1;
-		}
-		cube.position.y += moveY;
-		
-		if (cube2.position.x < -4.5) { 
-			moveX2 *= -1;
-		}
-		if (cube2.position.x > 4.5) {
-			moveX2 *= -1;
-		}
-		cube2.position.x += moveX2;
-	
-		if (cube2.position.y < -2.5) {
-			moveY2 *= -1;
-		}
-		if (cube2.position.y > 2.5) {
-			moveY2 *= -1;
-		}
-		cube2.position.y += moveY2;
-	
-		if (cube3.position.x < -4.5) { 
-			moveX3 *= -1;
-		}
-		if (cube3.position.x > 4.5) {
-			moveX3 *= -1;
-		}
-		cube3.position.x += moveX3;
-	}
 
 }
 animate();
