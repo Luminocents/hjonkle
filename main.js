@@ -12,9 +12,10 @@ const renderer = new THREE.WebGLRenderer({ canvas: canvas });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-//set the scene background to "Nerd Dog Emoji.png"
+/*set the scene background to "Nerd Dog Emoji.png"
 const texture = new THREE.TextureLoader().load('Nerd Dog Emoji.png');
 scene.background = texture;
+*/
 
 /* THIS IS HOW YOU ADD A CUBE AND STUFF, REMEBER THIS
 const geometry = new THREE.BoxGeometry( 1, 1, 1 );

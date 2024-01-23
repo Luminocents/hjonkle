@@ -7,6 +7,7 @@
     <title>Hjonkle</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='calc.css'>
     <script type="importmap">
         {
           "imports": {
@@ -16,6 +17,7 @@
         }
     </script>
     <script type="module" src='main.js'></script>
+    <script type="module" src='calc.js'></script>
 </head>
 
 <body>
@@ -31,10 +33,36 @@
 
     </form>
 
-    <div id="unf">
-        <p>IMPORTANT! PAGE UNFINISHED :)</p>
+
+    <div class="container">
+        <button id="button">Click Me</button>
+        <div class="hide menuPanel">
+            <ul>
+                <li>Menu Item</li>
+                <li>Menu Item</li>
+                <li>Menu Item</li>
+                <li>Menu Item</li>
+                <li>Menu Item</li>
+                <li>Menu Item</li>
+            </ul>
+        </div>
     </div>
+    <form id="navbar" onsubmit="return false"></form>
 
 </body>
+
+<script>
+    let clicked = false;
+    document.getElementById("button").addEventListener("click", function () {
+        clicked = !clicked;
+        if (clicked) {
+        document.getElementById("button").id = "buttonOn"
+    } else {
+        document.getElementById("buttonOn").id = "button"
+    } 
+    });
+    
+
+</script>
 
 </html>
