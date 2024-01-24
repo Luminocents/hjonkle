@@ -1,4 +1,4 @@
-#buttonOn {
+[id*="On"] {
     background-color: #176807;
 }
 
@@ -70,24 +70,24 @@ input {
     color: white;
     animation: slideIn 800ms;
     animation-fill-mode: forwards;
-    z-index: -10;
+    z-index: +10;
 
 }
 
 #scathaOn+.hide {
     color: white;
-    z-index: -10;
+    z-index: +10;
 }
 
 #dmgOff+.hide {
     color: white;
     animation: slideIn 800ms;
     animation-fill-mode: forwards;
-    z-index: -10;
+    z-index: +10;
 
 }
 
 #dmgOn+.hide {
     color: white;
-    z-index: -10;
+    z-index: +10;
 }

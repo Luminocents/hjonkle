@@ -152,14 +152,14 @@ let iterS;
 for (let i = 0; i < document.getElementById("hotbar").length; i++) {
 	document.getElementById("hotbar")[i].addEventListener("mouseover", () => {
 		iterS = i;
-		cubeR[i] = 0.008;
+		cubeR[i] = cubeR[i] * 2;
 		big = true;
 		return iterS;
 	});
 
 	document.getElementById("hotbar")[i].addEventListener("mouseout", () => {
 		big = false;
-		cubeR[i] = 0.0025;
+		cubeR[i] = cubeR[i] / 2;
 	});
 
 }
@@ -227,13 +227,13 @@ function animate() {
 
 	//Rotates the cubes depending if the mouse is hovering over the buttons established in above for loop
 	cube.rotation.x += cubeR[0];
-	cube.rotation.y += cubeR[1];
+	cube.rotation.y += cubeR[0];
 
 	cube2.rotation.x -= cubeR[1];
-	cube2.rotation.y -= cubeR[2];
+	cube2.rotation.y -= cubeR[1];
 
 	cube3.rotation.x += cubeR[2];
-	cube3.rotation.y -= cubeR[0];
+	cube3.rotation.y -= cubeR[2];
 
 }
 animate();
