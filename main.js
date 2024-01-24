@@ -27,15 +27,15 @@ scene.add( cube );
 camera.position.z = 5;
 
 const createCube = (geometry, material) => {
-    const cube = new THREE.Mesh(geometry, material);
-    scene.add(cube);
-    return cube;
+	const cube = new THREE.Mesh(geometry, material);
+	scene.add(cube);
+	return cube;
 }
 
 const setCubeProperties = (cube, cubeSize, cubeX, cubeY) => {
-    cube.scale.set(cubeSize, cubeSize, cubeSize);
-    cube.position.x = cubeX;
-    cube.position.y = cubeY;
+	cube.scale.set(cubeSize, cubeSize, cubeSize);
+	cube.position.x = cubeX;
+	cube.position.y = cubeY;
 }
 
 //Creates the cube materials and geometry
@@ -90,26 +90,26 @@ if (window.innerWidth < 600) {
 }
 
 switch (window.location.pathname) {
-    case '/index.html':
+	case '/index.html':
 		scene.add(cube);
-        setCubeProperties(cube, cubeSize, cubeX, cubeY);
+		setCubeProperties(cube, cubeSize, cubeX, cubeY);
 		scene.add(cube2);
-        setCubeProperties(cube2, cubeSize, cubeX * -1, cubeY);
-        break;
-    case '/calc.html':
+		setCubeProperties(cube2, cubeSize, cubeX * -1, cubeY);
+		break;
+	case '/calc.html':
 		scene.add(cube2);
-        setCubeProperties(cube2, cubeSize, cubeX, cubeY);
+		setCubeProperties(cube2, cubeSize, cubeX, cubeY);
 		scene.add(cube3);
-        setCubeProperties(cube3, cubeSize, cubeX * -1, cubeY);
-        break;
-    case '/sett.html':
+		setCubeProperties(cube3, cubeSize, cubeX * -1, cubeY);
+		break;
+	case '/sett.html':
 		scene.add(cube);
-        setCubeProperties(cube, cubeSize, cubeX, cubeY);
+		setCubeProperties(cube, cubeSize, cubeX, cubeY);
 		scene.add(cube3);
-        setCubeProperties(cube3, cubeSize, cubeX * -1, cubeY);
-        break;
-    default:
-        window.location.href = 'index.html';
+		setCubeProperties(cube3, cubeSize, cubeX * -1, cubeY);
+		break;
+	default:
+		window.location.href = 'index.html';
 }
 
 
@@ -124,13 +124,20 @@ window.addEventListener('resize', () => {
 	camera.updateProjectionMatrix();
 });
 
-
-
-
 //Establishes cube rotation speed
 let cubeR1 = .0025;
 let cubeR2 = .0025;
 let cubeR3 = .0025;
+
+if (Math.floor(Math.random() * 2)) {
+	cubeR1 *= -1;
+}
+if (Math.floor(Math.random() * 2)) {
+	cubeR2 *= -1;
+}
+if (Math.floor(Math.random() * 2)) {
+	cubeR3 *= -1;
+}
 
 //Array of cube rotation speeds and cubes from the scene
 let cubeR = [cubeR1, cubeR2, cubeR3];
@@ -182,18 +189,18 @@ for (let i = 0; i < document.getElementById("hotbar").length; i++) {
 //Executes every frame
 function animate() {
 	requestAnimationFrame(animate);
-	//Rotates the cubes
+	//Make cubes bigger when hovered over respective buttons
 	if (big == true && cubeSize < 1.25 && smol == false) {
-        cubeSize += 0.05;
-        if (cubes[iterS]) {
-            cubes[iterS].scale.set(cubeSize, cubeSize, cubeSize);
-        }
-    } else if (big == false && cubeSize > 1 && smol == false) {
-        cubeSize -= 0.05;
-        if (cubes[iterS]) {
-            cubes[iterS].scale.set(cubeSize, cubeSize, cubeSize);
-        }
-    }
+		cubeSize += 0.05;
+		if (cubes[iterS]) {
+			cubes[iterS].scale.set(cubeSize, cubeSize, cubeSize);
+		}
+	} else if (big == false && cubeSize > 1 && smol == false) {
+		cubeSize -= 0.05;
+		if (cubes[iterS]) {
+			cubes[iterS].scale.set(cubeSize, cubeSize, cubeSize);
+		}
+	}
 
 	//Zooms in on the cube and fades it out and changes page when process is finished
 	if (zoom == true && camera.position.z > cubePos.z) {
@@ -220,13 +227,13 @@ function animate() {
 
 	//Rotates the cubes depending if the mouse is hovering over the buttons established in above for loop
 	cube.rotation.x += cubeR[0];
-	cube.rotation.y += cubeR[0];
+	cube.rotation.y += cubeR[1];
 
 	cube2.rotation.x -= cubeR[1];
-	cube2.rotation.y -= cubeR[1];
+	cube2.rotation.y -= cubeR[2];
 
 	cube3.rotation.x += cubeR[2];
-	cube3.rotation.y -= cubeR[2];
+	cube3.rotation.y -= cubeR[0];
 
 }
 animate();
