@@ -35,34 +35,36 @@
 
 
     <div class="container">
-        <button id="button">Click Me</button>
+        <button id="buttonOff">Damage</button>
         <div class="hide menuPanel">
-            <ul>
-                <li>Menu Item</li>
-                <li>Menu Item</li>
-                <li>Menu Item</li>
-                <li>Menu Item</li>
-                <li>Menu Item</li>
-                <li>Menu Item</li>
-            </ul>
+            <h1>Damage Calculator</h1>
+            <form class="dmgForm" onsubmit="return false">
+                <div class="dmgDiv">
+                    <div id="dmgDiv">
+                        <h2>Combat Level</h2>
+                        <input type="number" id=cmb">
+                    </div>
+                    <div id="dmgDiv">
+                        <h2>Strength</h2>
+                        <input type="number" id="str">
+                    </div>
+                    <div id="dmgDiv">
+                        <h2>Crit Damage</h2>
+                        <input type="number" id="crt">
+                    </div>
+                </div>
+                <div id="dmgDiv">
+                    <h2>Weapon Damage</h2>
+                    <input type="number" id="dmg">
+                </div>
+                
+
+
+            </form>
         </div>
     </div>
     <form id="navbar" onsubmit="return false"></form>
 
 </body>
-
-<script>
-    let clicked = false;
-    document.getElementById("button").addEventListener("click", function () {
-        clicked = !clicked;
-        if (clicked) {
-        document.getElementById("button").id = "buttonOn"
-    } else {
-        document.getElementById("buttonOn").id = "button"
-    } 
-    });
-    
-
-</script>
 
 </html>
