@@ -96,6 +96,15 @@ input {
     z-index: +10;
 }
 
-#rares {
+select, input {
+    text-align: center;
+    width: 15vw;
+    appearance: none;
+    background: url(scathaHead.png) 96% / 15% no-repeat #EEE;
     font-size: 2vi;
+    background-color: #1900ff;
+    color: white;
+    border-style: inherit;
+    border-radius: 5px;
+
 }
