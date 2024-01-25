@@ -23,7 +23,6 @@
 <body>
     <canvas id="canvas"></canvas>
 
-
     <form id="hotbar" onsubmit="return false">
 
         <button id="calc" value="calc" hidden>Calculations</button>
@@ -35,6 +34,7 @@
 
 
     <div class="container">
+        <button id="load" style="display: none; visibility: hidden;"></button>
         <button id="dmgOff">Damage</button>
         <div class="hide menuPanel">
             <h1>Damage Calculator</h1>
@@ -68,7 +68,13 @@
             <h1>Scatha Chance Calculator</h1>
             <form class="dmgForm" onsubmit="return false">
 
-                <p>Nothing Yet</p>
+                <select id="rares">
+
+                    <option value="0">Epic</option>
+                    <option value="1">Rare</option>
+                    <option value="1">Legendary</option>
+
+                </select>
 
             </form>
         </div>

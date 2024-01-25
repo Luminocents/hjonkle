@@ -66,6 +66,10 @@ input {
     justify-content: space-evenly;
 }
 
+#load+.hide {
+    display: none;
+}
+
 #scathaOff+.hide {
     color: white;
     animation: slideIn 800ms;
@@ -90,4 +94,8 @@ input {
 #dmgOn+.hide {
     color: white;
     z-index: +10;
+}
+
+#rares {
+    font-size: 2vi;
 }
