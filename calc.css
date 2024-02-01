@@ -96,6 +96,56 @@ input {
     z-index: +10;
 }
 
-#rares {
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    display: none;
+}
+
+select, input {
+    text-align: center;
+    width: 15vw;
+    appearance: none;
+    background: url(static/scathaHead.png) 96% / 15% no-repeat #EEE;
     font-size: 2vi;
+    background-color: #1900ff;
+    color: white;
+    border-style: inherit;
+    border-radius: 5px;
+
+}
+
+#cmb {
+    text-align: center;
+    background: url(static/Minecraft_items_stone_sword.png) 96% / 15% no-repeat #EEE;
+    font-size: 2vi;
+    background-color: #1900ff;
+    color: white;
+    border-radius: 5px;
+}
+
+#str {
+    text-align: center;
+    background: url(static/SkyBlock_icons_strength.png) 96% / 15% no-repeat #EEE;
+    font-size: 2vi;
+    background-color: #1900ff;
+    color: white;
+    border-radius: 5px;
+}
+
+#ctd {
+    text-align: center;
+    background: url(static/SkyBlock_icons_crit_damage.png) 96% / 15% no-repeat #EEE;
+    font-size: 2vi;
+    background-color: #1900ff;
+    color: white;
+    border-radius: 5px;
+}
+
+#dmg {
+    text-align: center;
+    background: url(static/SkyBlock-damage.png) 96% / 15% no-repeat #EEE;
+    font-size: 2vi;
+    background-color: #1900ff;
+    color: white;
+    border-radius: 5px;
 }
