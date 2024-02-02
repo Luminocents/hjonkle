@@ -57,13 +57,14 @@
 
 }
 
-input {
-    font-size: 2vi;
-}
 
 .dmgDiv{
     display: flex;
     justify-content: space-evenly;
+}
+
+#sumDiv {
+    margin-top: -7vh;
 }
 
 #load+.hide {
@@ -106,7 +107,7 @@ select, input {
     width: 15vw;
     appearance: none;
     background: url(static/scathaHead.png) 96% / 15% no-repeat #EEE;
-    font-size: 2vi;
+    font-size: 3vi;
     background-color: #1900ff;
     color: white;
     border-style: inherit;
@@ -114,38 +115,60 @@ select, input {
 
 }
 
-#cmb {
+#cmb, #str, #ctd, #dmg, #shp {
     text-align: center;
-    background: url(static/Minecraft_items_stone_sword.png) 96% / 15% no-repeat #EEE;
+    background: url(static/SkyBlock_icons_combat.png) 96% / 15% no-repeat #EEE;
     font-size: 2vi;
     background-color: #1900ff;
     color: white;
     border-radius: 5px;
+}
+
+#cmb {
+    background: url(static/Minecraft_items_stone_sword.png) 96% / 15% no-repeat #EEE;
+    background-color: #1900ff;
 }
 
 #str {
-    text-align: center;
     background: url(static/SkyBlock_icons_strength.png) 96% / 15% no-repeat #EEE;
-    font-size: 2vi;
     background-color: #1900ff;
-    color: white;
-    border-radius: 5px;
 }
 
 #ctd {
-    text-align: center;
     background: url(static/SkyBlock_icons_crit_damage.png) 96% / 15% no-repeat #EEE;
-    font-size: 2vi;
+    background-color: #1900ff;
+}
+
+#dmg {
+    background: url(static/SkyBlock-damage.png) 96% / 15% no-repeat #EEE;
+    background-color: #1900ff;
+}
+
+#shp {
+    background: url(static/SkyBlock-damage.png) 96% / 15% no-repeat #EEE;
+    background-color: #1900ff;
+}
+
+#rares {
+    padding-left: .5vw;
+    width: 18vw;
+    text-align:start;
+}
+
+#dmgCalc {
+    top: 6vh;
+}
+
+#enchant, #enc {
+    background-image: none;
+    text-align: center;
+    font-size: 2.3vi;
     background-color: #1900ff;
     color: white;
     border-radius: 5px;
 }
 
-#dmg {
-    text-align: center;
-    background: url(static/SkyBlock-damage.png) 96% / 15% no-repeat #EEE;
-    font-size: 2vi;
-    background-color: #1900ff;
-    color: white;
-    border-radius: 5px;
+h1 {
+    margin-bottom: 0;
+    margin-top: 0;
 }

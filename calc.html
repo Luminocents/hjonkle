@@ -29,7 +29,6 @@
         <button id="sett" value="sett">Settings</button>
         <button id="index" value="index">Back</button>
 
-
     </form>
 
 
@@ -38,7 +37,7 @@
         <button id="dmgOff">Damage</button>
         <div class="hide menuPanel">
             <h1>Damage Calculator</h1>
-            <form class="dmgForm" onsubmit="return false">
+            <form id="dmgForm" onsubmit="return false">
                 <div class="dmgDiv">
                     <div id="dmgDiv">
                         <h2>Combat Level</h2>
@@ -53,30 +52,54 @@
                         <input type="number" id="ctd">
                     </div>
                 </div>
-                <div id="dmgDiv">
-                    <h2>Weapon Damage</h2>
-                    <input type="number" id="dmg">
+
+                <div id="enchDiv" class="dmgDiv">
+                    <div id="dmgDiv">
+                        <h2>Weapon Damage</h2>
+                        <input type="number" id="dmg">
+                    </div>
+                    <div id="dmgDiv">
+                        <h2>Enchant</h2>
+                        <select id="enchant">
+                            <option value="none">None</option>
+                            <option value="sharpness">Sharpness</option>
+                            <option value="giant killer">Giant Killer</option>
+                            <option value="prosecute">Prosecute</option>
+                        </select>
+                    </div>
+                    <div id="dmgDiv">
+                        <h2 id="encText">No Enchant</h2>
+                        <input type="number" id="enc" placeholder="None">
+                    </div>
                 </div>
-
-
-
-
+                
+                <input id="dmgSub" type="submit" style="visibility: hidden; display: none;">
             </form>
+            <button id="dmgCalc">Calculate</button>
         </div>
+
+
+
         <button id="scathaOff">Scatha</button>
         <div class="hide scathaPanel">
             <h1>Scatha Chance Calculator</h1>
-            <form class="dmgForm" onsubmit="return false">
+            <form id="scathaForm" onsubmit="return false">
 
-                <select id="rares">
+                <div>
+                    <select id="rares">
 
-                    <option value="0">Epic</option>
-                    <option value="1">Rare</option>
-                    <option value="1">Legendary</option>
+                        <option value="0">Epic</option>
+                        <option value="1">Rare</option>
+                        <option value="2">Legendary</option>
 
-                </select>
+                    </select>
+                </div>
+                <input id="scathaSub" type="submit" style="visibility: hidden; display: none;">
 
             </form>
+
+            <button id="scathaCalc">Calculate</button>
+
         </div>
 
     </div>
