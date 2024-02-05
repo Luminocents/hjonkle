@@ -6,6 +6,8 @@ const io = require('socket.io')(http);
 
 var players = {};
 
+
+
 io.on('connection', (socket) => {
     // Get the socket id and assign it to the player
     players[socket.handshake.address] = {
@@ -54,6 +56,8 @@ io.on('connection', (socket) => {
             players[socket.handshake.address].keyS = true;
         } else if (data.key == 'd') {
             players[socket.handshake.address].keyD = true;
+        } else if (data.key == ' ') {
+            players[socket.handshake.address].keySpace = true;
         }
 
     });
@@ -67,6 +71,8 @@ io.on('connection', (socket) => {
             players[socket.handshake.address].keyS = false;
         } else if (data.key == 'd') {
             players[socket.handshake.address].keyD = false;
+        } else if (data.key == ' ') {
+            players[socket.handshake.address].keySpace = false;
         }
 
     });
@@ -74,12 +80,12 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('A user disconnected');
         io.emit('playerDisconnected', { playerId: players[socket.handshake.address].playerId });
-        
+
         // Update the longest connected player
         longestConnectedPlayer = getLongestConnectedPlayer();
-        
+
         io.emit('longestConnectedPlayer', { playerId: longestConnectedPlayer.playerId });
-        
+
         console.log(longestConnectedPlayer.connectionTime);
         // Do something with longestConnectedPlayer...
         delete players[socket.handshake.address];
@@ -88,35 +94,69 @@ io.on('connection', (socket) => {
 
 
 
+
+
 // game loop
 setInterval(step, 1000 / 1000);
+
+let gravity = 5;
+let floor = 890;
 
 function step() {
     let tempPlayerList = {};
 
     // for every player, read their keys presses and move them accordingly
     for (var i in players) {
+        longestConnectedPlayer = getLongestConnectedPlayer();
+        let onFloor = true;
         let player = players[i];
-        let speed = 1; // Set the default speed to 1
+        let speed = 3; // Set the default speed to 1
+
+        if (player.y < floor) {
+            onFloor = false;
+        } else {
+            onFloor = true;
+        }
 
         // Check for diagonal movement
         if ((player.keyW || player.keyS) && (player.keyA || player.keyD)) {
-            speed = 0.7071; // Set the speed to 0.7071 (approx. 1/sqrt(2))
+            speed = 2.7071; // Set the speed to 0.7071 (approx. 1/sqrt(2))
         }
 
-        if (player.keyW && player.y > -50) {
-            player.y -= speed;
+        if (player.playerId != longestConnectedPlayer.playerId) {
+            speed *= 2; // Faster rat speed
+            if (onFloor && player.keySpace) {
+                player.y -= 1;
+                gravity = -5;
+            }
+
+            if (gravity < 5) {
+                gravity += 0.1
+            }
+
+
+            if (player.y < floor) {
+                console.log(player.y)
+                player.y += gravity;
+            }
+            if (player.keyA && player.x > -5) {
+                player.x -= speed;
+            }
+            if (player.keyD && player.x < 1660) {
+                player.x += speed;
+            }
         }
-        if (player.keyA && player.x > -130) {
-            player.x -= speed;
+
+        if (player.playerId == longestConnectedPlayer.playerId) {
+            if (player.keyA && player.x > -85) {
+                player.x -= speed;
+            }
+            if (player.keyD && player.x < 1740) {
+                player.x += speed;
+            }
         }
-        if (player.keyS && player.y < 780) {
-            player.y += speed;
-            console.log(player.y)
-        }
-        if (player.keyD && player.x < 1740) {
-            player.x += speed;
-        }
+
+
 
         // add the player to the temp player list
         tempPlayerList[player.playerId] = {

@@ -7,15 +7,22 @@
     </script>
 </head>
 
-<body style="overflow: hidden;"> <canvas id="canvas" width="" height="600"></canvas>
+<body style="overflow: hidden; margin: 0;"> <canvas id="canvas" width="" height=""></canvas>
     <script>
         // start scoket.io connection
         const socket = io();
         const jerm = new Image();
-        jerm.src = 'jerma.png';
+        jerm.src = 'jermaStare.png';
 
         const rat = new Image();
         rat.src = 'rat.png';
+
+        const wood = new Image();
+        wood.src = 'wood.png';
+
+        const square = new Image();
+        square.src = 'squareFade.png';
+
 
         var players = {};
         var longest;
@@ -29,6 +36,11 @@
         ctx.canvas.width = window.innerWidth;
         ctx.canvas.height = window.innerHeight;
 
+        sc1 = window.innerWidth / 1920;
+        sc2 = window.innerHeight / 1080;
+
+
+        ctx.scale(sc1, sc2);
         // read wasd keys being pressed and released
         document.addEventListener('keydown', handleKeydown);
         document.addEventListener('keyup', handleKeyup);
@@ -59,7 +71,7 @@
         // get socket message for update
         socket.on('update', function (data) {
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, 1920, 1080);
 
             for (var player in data.players) {
                 players[player] = data.players[player];
@@ -72,14 +84,17 @@
             longest = data.playerId;
         });
 
-        
+
+
         let rats = false;
 
         // on reqestanimationfroame, erease canvs
         requestAnimationFrame(draw);
         
         function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, 1920, 1080);
+            ctx.drawImage(wood, -50, window.innerHeight * 1.5, window.innerWidth * 2, window.innerHeight / 2)
+            ctx.drawImage(square, 0, -200, window.innerWidth * 2, window.innerHeight)
             for (var player in players) {
                 const { x, y } = players[player];
 
@@ -100,73 +115,3 @@
 </body>
 
 </html>
-
-<!--
-
-    <!DOCTYPE html>
-<html>
- 
-<head>
-    <title>Canvas with Socket.IO</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.js">
-    </script>
-</head>
- 
-<body> <canvas id="canvas" width="800" height="600"></canvas>
-    <script>
-        // start scoket.io connection
-        const socket = io();
- 
-        // get canvas element
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
- 
-        // read wasd keys being pressed and released
-        document.addEventListener('keydown', handleKeydown);
-        document.addEventListener('keyup', handleKeyup);
- 
-        // handle key down events
-        function handleKeydown(event) {
-            const key = event.key;
- 
- 
-            // emit the key event to teh server
-            socket.emit('keydown', { key });
-        }
- 
-        // handle key up events
-        function handleKeyup(event) {
-            const key = event.key;
- 
-            // emit the key event to teh server
-            socket.emit('keyup', { key });
-        }
- 
-        // get socket message for update
-        socket.on('update', function (data) {
-            for (var player in data.players) {
-                const { x, y } = data.players[player];
- 
-                // draw a circle at the recieved positon
-                ctx.beginPath();
-                ctx.arc(x, y, 10, 0, 2 * Math.PI);
-                console.log(data.players[player].playerId == socket.id);
-                if (player.playerId == socket.id) {
-                    ctx.fillStyle = 'red';
-                } else {
-                    ctx.fillStyle = 'blue';
-                }
-                ctx.fill();
-            }
- 
- 
-        });
- 
-        // on reqestanimationfroame, erease canvs
-       
- 
-    </script>
-</body>
- 
-</html>
--->
