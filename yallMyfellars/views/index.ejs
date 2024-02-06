@@ -23,6 +23,8 @@
         const square = new Image();
         square.src = 'squareFade.png';
 
+        const beam = new Image();
+        beam.src = 'beam.png';
 
         var players = {};
         var longest;
@@ -93,17 +95,28 @@
         
         function draw() {
             ctx.clearRect(0, 0, 1920, 1080);
-            ctx.drawImage(wood, -50, window.innerHeight * 1.5, window.innerWidth * 2, window.innerHeight / 2)
             ctx.drawImage(square, 0, -200, window.innerWidth * 2, window.innerHeight)
+            ctx.drawImage(wood, 0, window.innerHeight + 50, window.innerWidth * 2, window.innerHeight / 3);
             for (var player in players) {
                 const { x, y } = players[player];
-
                 // draw a circle at the recieved positon
                 ctx.beginPath();
                 if (players[player].playerId == longest) {
-                    ctx.drawImage(jerm, x, y, jerm.width, jerm.height);
+                    ctx.drawImage(jerm, x, 0, jerm.width, jerm.height);
+                    ctx.rect(x, 0, players[player].health * 3, 25);
+                    ctx.fillStyle = 'red';
+                    ctx.fill();
+
+                    if(players[player].beam) {
+                        console.log("BEEAAAAAAM")
+                        ctx.drawImage(beam, x + 100, 500, beam.width/1.25, beam.height/1.5);
+                    }
+
                 } else {
-                    ctx.drawImage(rat, x, y, rat.width/1.25, rat.height/1.25);
+                    ctx.rect(x, y - 30, players[player].health * 3, 25);
+                    ctx.fillStyle = 'red';
+                    ctx.fill();
+                    ctx.drawImage(rat, x, y, rat.width/1.25, rat.height/1.5);
                 }
 
             }

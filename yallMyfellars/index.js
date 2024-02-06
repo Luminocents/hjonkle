@@ -7,7 +7,6 @@ const io = require('socket.io')(http);
 var players = {};
 
 
-
 io.on('connection', (socket) => {
     // Get the socket id and assign it to the player
     players[socket.handshake.address] = {
@@ -15,6 +14,9 @@ io.on('connection', (socket) => {
         playerSocket: socket,
         x: 10,
         y: 10,
+        gravity: 1,
+        health: 100,
+        beam: false,
         connectionTime: Date.now() // Store the connection time
     };
     // Update the longest connected player
@@ -99,7 +101,6 @@ io.on('connection', (socket) => {
 // game loop
 setInterval(step, 1000 / 1000);
 
-let gravity = 5;
 let floor = 890;
 
 function step() {
@@ -127,17 +128,16 @@ function step() {
             speed *= 2; // Faster rat speed
             if (onFloor && player.keySpace) {
                 player.y -= 1;
-                gravity = -5;
+                player.gravity = -18;
             }
 
-            if (gravity < 5) {
-                gravity += 0.1
+            if (player.gravity < 10) {
+                player.gravity += .2;
             }
 
 
             if (player.y < floor) {
-                console.log(player.y)
-                player.y += gravity;
+                player.y += player.gravity;
             }
             if (player.keyA && player.x > -5) {
                 player.x -= speed;
@@ -145,7 +145,42 @@ function step() {
             if (player.keyD && player.x < 1660) {
                 player.x += speed;
             }
+
+            console.log(longestConnectedPlayer.x)
+            if (player.x > longestConnectedPlayer.x - 150 &&
+                player.x < longestConnectedPlayer.x + 100) {
+                // Collision detected
+                // Handle collision logic here
+                // For example, decrease health of longestConnectedPlayer
+                if (player.health > 0) {
+                    player.health -= .2;
+
+                }
+                if (player.health <= 0) {
+                    player.x = 10;
+                    player.y = 10;
+                    player.health = 100;
+
+                }
+            }
+
+            if (player.x < longestConnectedPlayer.x + 50 &&
+                player.x + 50 > longestConnectedPlayer.x &&
+                player.y < 200) {
+                // Collision detected
+                // Handle collision logic here
+                if (longestConnectedPlayer.health > 0) {
+                    longestConnectedPlayer.health -= .2;
+                    player.health += 1;
+                } else {
+                    longestConnectedPlayer.x = 10;
+                    longestConnectedPlayer.y = 10;
+                    longestConnectedPlayer.health = 100;
+                }
+            }
         }
+
+
 
         if (player.playerId == longestConnectedPlayer.playerId) {
             if (player.keyA && player.x > -85) {
@@ -154,6 +189,11 @@ function step() {
             if (player.keyD && player.x < 1740) {
                 player.x += speed;
             }
+            if (player.keySpace) {
+                player.beam = true;
+            } else {
+                player.beam = false}
+
         }
 
 
@@ -162,6 +202,8 @@ function step() {
         tempPlayerList[player.playerId] = {
             x: player.x,
             y: player.y,
+            health: player.health,
+            beam: player.beam,
             playerId: player.playerId
         };
     }
