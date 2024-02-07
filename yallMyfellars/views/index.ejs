@@ -8,7 +8,7 @@
     <style>
         #points {
             position: absolute;
-            top: 40vh;
+            top: 60vh;
             right: 0;
             width: 20%;
             padding: 10px;
@@ -23,9 +23,14 @@
 <body style="overflow: hidden; margin: 0;"> <canvas id="canvas" width="" height=""></canvas>
     <div id="points"></div>
     <script>
-        let name = prompt("Enter a name");
         // start scoket.io connection
         const socket = io();
+        // get variable name and send it to the server to be assigned to the player who set it
+
+
+        let username = prompt('Enter your username');
+        socket.emit('setUsername', username);
+
         const jerm = new Image();
         jerm.src = 'jermaStare.png';
 
@@ -51,7 +56,7 @@
         beam2Flip.src = 'beam2Flip.png';
 
 
-        
+
         var players = {};
         var longest;
 
@@ -95,8 +100,8 @@
             // emit the key event to teh server
             socket.emit('keyup', { key });
         }
-        
-        
+
+
         socket.on('playerDisconnected', (data) => {
             // Remove the disconnected player from the local player list
             delete players[data.playerId];
@@ -110,22 +115,18 @@
             for (var player in data.players) {
                 players[player] = data.players[player];
             }
-            socket.emit('name', { name: name, playerId: player.playerId });
-            
-            
+
+
             function points() {
-                for (var player in players) {
-                    const points = players[player].points
-                    // draw a circle at the received position
 
-                    // ...
-                    // Your existing code here
-
-                    // Update the points div with player's points
-                    const pointsDiv = document.getElementById('points');
-                    pointsDiv.innerText = `Player ${player.name}: ${points}`;
-
-                }
+                    pointsDiv.innerHTML = '';
+                    for (var player in players) {
+                        const points = players[player].points;
+                        const playerPoints = document.createElement('p');
+                        playerPoints.innerText = `Player ${player}: ${points} points`;
+                        pointsDiv.appendChild(playerPoints);
+                    }
+                    
             }
 
         });

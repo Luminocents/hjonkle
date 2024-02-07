@@ -18,21 +18,13 @@ io.on('connection', (socket) => {
         health: 100,
         beam: false,
         points: 0,
-        name: undefined,
         connectionTime: Date.now() // Store the connection time
     };
     // Update the longest connected player
     let longestConnectedPlayer = getLongestConnectedPlayer();
     io.emit('longestConnectedPlayer', { playerId: longestConnectedPlayer.playerId });
-    io.on('name', (data) => {
-        for (var i in players) {
-            if (players[i].playerId == data.playerId) {
-                players[i].name = data.name;
-                console.log(players[i].name)
-            }
-        }
-    });
 });
+
 
 
 function getLongestConnectedPlayer() {
@@ -61,14 +53,10 @@ app.get('/', (req, res) => { res.render('index'); });
 io.on('connection', (socket) => {
     console.log('A user connected' + socket.handshake.address);
 
-
+    
     socket.on('keydown', (data) => {
-        if (data.key == 'w') {
-            players[socket.handshake.address].keyW = true;
-        } else if (data.key == 'a') {
+        if (data.key == 'a') {
             players[socket.handshake.address].keyA = true;
-        } else if (data.key == 's') {
-            players[socket.handshake.address].keyS = true;
         } else if (data.key == 'd') {
             players[socket.handshake.address].keyD = true;
         } else if (data.key == ' ') {
@@ -78,12 +66,8 @@ io.on('connection', (socket) => {
     });
 
     socket.on('keyup', (data) => {
-        if (data.key == 'w') {
-            players[socket.handshake.address].keyW = false;
-        } else if (data.key == 'a') {
+        if (data.key == 'a') {
             players[socket.handshake.address].keyA = false;
-        } else if (data.key == 's') {
-            players[socket.handshake.address].keyS = false;
         } else if (data.key == 'd') {
             players[socket.handshake.address].keyD = false;
         } else if (data.key == ' ') {
@@ -131,11 +115,6 @@ function step() {
             onFloor = true;
         }
 
-        // Check for diagonal movement
-        if ((player.keyW || player.keyS) && (player.keyA || player.keyD)) {
-            speed = 2.7071; // Set the speed to 0.7071 (approx. 1/sqrt(2))
-        }
-
         if (player.playerId != longestConnectedPlayer.playerId) {
             speed *= 2; // Faster rat speed
             if (onFloor && player.keySpace) {
@@ -146,7 +125,6 @@ function step() {
             if (player.gravity < 10) {
                 player.gravity += .2;
             }
-
 
             if (player.y < floor) {
                 player.y += player.gravity;
@@ -187,13 +165,14 @@ function step() {
                 if (longestConnectedPlayer.health > 0) {
                     longestConnectedPlayer.health -= .2;
                 } else {
-                    longestConnectedPlayer.connectionTime = Date.now();
-                    longestConnectedPlayer = getLongestConnectedPlayer();
-                    io.emit('longestConnectedPlayer', { playerId: longestConnectedPlayer.playerId });
-
                     longestConnectedPlayer.x = 10;
                     longestConnectedPlayer.y = 10;
                     longestConnectedPlayer.health = 100;
+
+                    longestConnectedPlayer.connectionTime = Date.now();
+                    longestConnectedPlayer = getLongestConnectedPlayer();
+                    io.emit('longestConnectedPlayer', { playerId: longestConnectedPlayer.playerId });
+                    
                 }
             }
         }
@@ -208,7 +187,8 @@ function step() {
             if (player.keySpace) {
                 longestConnectedPlayer.beam = true;
             } else {
-                longestConnectedPlayer.beam = false}
+                longestConnectedPlayer.beam = false
+            }
 
         }
 
@@ -223,7 +203,6 @@ function step() {
             left: player.keyA,
             right: player.keyD,
             points: player.points,
-            name: player.name,
             playerId: player.playerId
         };
     }
