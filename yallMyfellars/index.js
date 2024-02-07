@@ -17,12 +17,23 @@ io.on('connection', (socket) => {
         gravity: 1,
         health: 100,
         beam: false,
+        points: 0,
+        name: undefined,
         connectionTime: Date.now() // Store the connection time
     };
     // Update the longest connected player
     let longestConnectedPlayer = getLongestConnectedPlayer();
     io.emit('longestConnectedPlayer', { playerId: longestConnectedPlayer.playerId });
+    io.on('name', (data) => {
+        for (var i in players) {
+            if (players[i].playerId == data.playerId) {
+                players[i].name = data.name;
+                console.log(players[i].name)
+            }
+        }
+    });
 });
+
 
 function getLongestConnectedPlayer() {
     let longestConnectedPlayer = null;
@@ -37,6 +48,8 @@ function getLongestConnectedPlayer() {
 
     return longestConnectedPlayer;
 }
+
+
 
 // Set the view engine to
 app.set('view engine', 'ejs');
@@ -88,7 +101,6 @@ io.on('connection', (socket) => {
 
         io.emit('longestConnectedPlayer', { playerId: longestConnectedPlayer.playerId });
 
-        console.log(longestConnectedPlayer.connectionTime);
         // Do something with longestConnectedPlayer...
         delete players[socket.handshake.address];
     });
@@ -154,32 +166,37 @@ function step() {
                 if (player.health > 0) {
                     player.health -= .2;
 
-                }
-                if (player.health <= 0) {
+                } else {
                     player.x = 10;
                     player.y = 10;
                     player.health = 100;
+                    longestConnectedPlayer.points += 1;
+                    console.log(longestConnectedPlayer.points)
 
                 }
             }
 
             if (player.x < longestConnectedPlayer.x + 50 &&
-                player.x + 50 > longestConnectedPlayer.x &&
+                player.x + 150 > longestConnectedPlayer.x &&
                 player.y < 200) {
                 // Collision detected
                 // Handle collision logic here
-                if (longestConnectedPlayer.health > 0 && player.health < 100) {
+                if (player.health < 100) {
+                    player.health += .5;
+                }
+                if (longestConnectedPlayer.health > 0) {
                     longestConnectedPlayer.health -= .2;
-                    player.health += 1;
                 } else {
+                    longestConnectedPlayer.connectionTime = Date.now();
+                    longestConnectedPlayer = getLongestConnectedPlayer();
+                    io.emit('longestConnectedPlayer', { playerId: longestConnectedPlayer.playerId });
+
                     longestConnectedPlayer.x = 10;
                     longestConnectedPlayer.y = 10;
                     longestConnectedPlayer.health = 100;
                 }
             }
         }
-
-
 
         if (player.playerId == longestConnectedPlayer.playerId) {
             if (player.keyA && player.x > -85) {
@@ -205,6 +222,8 @@ function step() {
             beam: player.beam,
             left: player.keyA,
             right: player.keyD,
+            points: player.points,
+            name: player.name,
             playerId: player.playerId
         };
     }
