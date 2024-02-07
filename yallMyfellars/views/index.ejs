@@ -26,10 +26,21 @@
         const beam = new Image();
         beam.src = 'beam.png';
 
+        const beam2 = new Image();
+        beam2.src = 'beam2.png';
+
+        const beamFlip = new Image();
+        beamFlip.src = 'beamFlip.png';
+
+        const beam2Flip = new Image();
+        beam2Flip.src = 'beam2Flip.png';
+
         var players = {};
         var longest;
 
         let img = "rat.png";
+        let switcher;
+        let counter = 0;
 
         // get canvas element
         const canvas = document.getElementById('canvas');
@@ -50,7 +61,6 @@
         // handle key down events
         function handleKeydown(event) {
             const key = event.key;
-
 
             // emit the key event to teh server
             socket.emit('keydown', { key });
@@ -103,13 +113,23 @@
                 ctx.beginPath();
                 if (players[player].playerId == longest) {
                     ctx.drawImage(jerm, x, 0, jerm.width, jerm.height);
-                    ctx.rect(x, 0, players[player].health * 3, 25);
+                    ctx.rect(x - 40, 0, players[player].health * 3, 25);
                     ctx.fillStyle = 'red';
                     ctx.fill();
 
+
                     if(players[player].beam) {
                         console.log("BEEAAAAAAM")
-                        ctx.drawImage(beam, x + 100, 500, beam.width/1.25, beam.height/1.5);
+                        counter += 1;
+                        if (counter > 50) {
+                            counter = 0;
+                            switcher = !switcher;
+                        }
+                        if (switcher) {
+                            ctx.drawImage(beam, x + 80, 250, beam.width/1.25, beam.height / 1.405);
+                        } else {
+                            ctx.drawImage(beam2, x + 80, 250, beam.width/1.25, beam.height / 1.405);
+                        }
                     }
 
                 } else {

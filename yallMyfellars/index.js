@@ -146,9 +146,8 @@ function step() {
                 player.x += speed;
             }
 
-            console.log(longestConnectedPlayer.x)
             if (player.x > longestConnectedPlayer.x - 150 &&
-                player.x < longestConnectedPlayer.x + 100) {
+                player.x < longestConnectedPlayer.x + 100 && longestConnectedPlayer.beam == true) {
                 // Collision detected
                 // Handle collision logic here
                 // For example, decrease health of longestConnectedPlayer
@@ -169,7 +168,7 @@ function step() {
                 player.y < 200) {
                 // Collision detected
                 // Handle collision logic here
-                if (longestConnectedPlayer.health > 0) {
+                if (longestConnectedPlayer.health > 0 && player.health < 100) {
                     longestConnectedPlayer.health -= .2;
                     player.health += 1;
                 } else {
@@ -190,9 +189,9 @@ function step() {
                 player.x += speed;
             }
             if (player.keySpace) {
-                player.beam = true;
+                longestConnectedPlayer.beam = true;
             } else {
-                player.beam = false}
+                longestConnectedPlayer.beam = false}
 
         }
 
@@ -204,6 +203,8 @@ function step() {
             y: player.y,
             health: player.health,
             beam: player.beam,
+            left: player.keyA,
+            right: player.keyD,
             playerId: player.playerId
         };
     }
