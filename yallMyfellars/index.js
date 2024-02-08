@@ -18,11 +18,17 @@ io.on('connection', (socket) => {
         health: 100,
         beam: false,
         points: 0,
+        username: null,
+        textColor: 'black',
         connectionTime: Date.now() // Store the connection time
     };
     // Update the longest connected player
     let longestConnectedPlayer = getLongestConnectedPlayer();
     io.emit('longestConnectedPlayer', { playerId: longestConnectedPlayer.playerId });
+    socket.on('setUsername', (data) => {
+        players[socket.handshake.address].username = data.username;
+        players[socket.handshake.address].textColor = data.textColor;
+    });
 });
 
 
@@ -142,7 +148,7 @@ function step() {
                 // Handle collision logic here
                 // For example, decrease health of longestConnectedPlayer
                 if (player.health > 0) {
-                    player.health -= .2;
+                    player.health -= .5;
 
                 } else {
                     player.x = 10;
@@ -165,6 +171,7 @@ function step() {
                 if (longestConnectedPlayer.health > 0) {
                     longestConnectedPlayer.health -= .2;
                 } else {
+                    player.points += 5;
                     longestConnectedPlayer.x = 10;
                     longestConnectedPlayer.y = 10;
                     longestConnectedPlayer.health = 100;
@@ -178,10 +185,10 @@ function step() {
         }
 
         if (player.playerId == longestConnectedPlayer.playerId) {
-            if (player.keyA && player.x > -85) {
+            if (player.keyA && player.x -100 > -85) {
                 player.x -= speed;
             }
-            if (player.keyD && player.x < 1740) {
+            if (player.keyD && player.x + 80 < 1740) {
                 player.x += speed;
             }
             if (player.keySpace) {
@@ -192,8 +199,6 @@ function step() {
 
         }
 
-
-
         // add the player to the temp player list
         tempPlayerList[player.playerId] = {
             x: player.x,
@@ -203,6 +208,8 @@ function step() {
             left: player.keyA,
             right: player.keyD,
             points: player.points,
+            username: player.username,
+            textColor: player.textColor,
             playerId: player.playerId
         };
     }
