@@ -59,7 +59,7 @@ app.get('/', (req, res) => { res.render('index'); });
 io.on('connection', (socket) => {
     console.log('A user connected' + socket.handshake.address);
 
-    
+
     socket.on('keydown', (data) => {
         if (data.key == 'a') {
             players[socket.handshake.address].keyA = true;
@@ -179,13 +179,13 @@ function step() {
                     longestConnectedPlayer.connectionTime = Date.now();
                     longestConnectedPlayer = getLongestConnectedPlayer();
                     io.emit('longestConnectedPlayer', { playerId: longestConnectedPlayer.playerId });
-                    
+
                 }
             }
         }
 
         if (player.playerId == longestConnectedPlayer.playerId) {
-            if (player.keyA && player.x -100 > -85) {
+            if (player.keyA && player.x - 100 > -85) {
                 player.x -= speed;
             }
             if (player.keyD && player.x + 80 < 1740) {
