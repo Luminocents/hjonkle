@@ -103,10 +103,11 @@ switch (window.location.pathname) {
 		setCubeProperties(cube3, cubeSize, cubeX * -1, cubeY);
 		break;
 	case '/sett.html':
-		scene.add(cube);
+		/*scene.add(cube);
 		setCubeProperties(cube, cubeSize, cubeX, cubeY);
 		scene.add(cube3);
 		setCubeProperties(cube3, cubeSize, cubeX * -1, cubeY);
+		*/
 		break;
 	default:
 		window.location.href = 'index.html';

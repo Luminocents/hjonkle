@@ -1,6 +1,10 @@
 let dmg = false;
 const buttons = document.querySelectorAll("button");
 
+let scathaPanel = document.getElementById("scathaPanel");
+let menuPanel = document.getElementById("menuPanel");
+
+
 function butOff() {
     buttons.forEach(button => {
         if (button.id.endsWith("On")) {
@@ -19,6 +23,7 @@ document.getElementById("dmgOff").addEventListener("click", function () {
     }
     dmg = !dmg;
     if (dmg) {
+        menuPanel.style.visibility = "visible";
         document.getElementById("dmgOff").id = "dmgOn"
     } else {
         document.getElementById("dmgOn").id = "dmgOff"
@@ -33,6 +38,7 @@ document.getElementById("scathaOff").addEventListener("click", function () {
     }
     scatha = !scatha;
     if (scatha) {
+        scathaPanel.style.visibility = "visible";
         document.getElementById("scathaOff").id = "scathaOn"
     } else {
         document.getElementById("scathaOn").id = "scathaOff"
@@ -52,17 +58,9 @@ dForm.elements[4].addEventListener("change", function () {
             dForm.elements[5].placeholder = "None";
             document.getElementById("encText").innerHTML = "No Enchant lvl";
             break;
-        case "sharpness":
-            dForm.elements[5].placeholder = "Sharpness";
-            document.getElementById("encText").innerHTML = "Enchants Level";
-            break;
-        case "giant killer":
-            dForm.elements[5].placeholder = "Giant Killer";
-            document.getElementById("encText").innerHTML = "Enchants Level";
-            break;
-        case "prosecute":
-            dForm.elements[5].placeholder = "Prosecute";
-            document.getElementById("encText").innerHTML = "Enchants Level";
+        default:
+            dForm.elements[5].placeholder = "Enchant lvl";
+            document.getElementById("encText").innerHTML = "Enchant lvl";
             break;
     }
 });

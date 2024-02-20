@@ -7,22 +7,14 @@
     <title>Hjonkle</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-    <script type="importmap">
-        {
-          "imports": {
-            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-          }
-        }
-    </script>
-    <script type="module" src='main.js'></script>
+    <link rel='stylesheet' type='text/css' media='screen' href='sett.css'>
 </head>
 
 <body>
     <canvas id="canvas"></canvas>
 
 
-    <form id="hotbar" onsubmit="return false">
+    <form id="hotbar" onsubmit="return false" style="visibility: hidden;">
 
         <button id="calc" value="calc">Calculations</button>
         <button id="sett" value="sett" hidden>Settings</button>
@@ -31,10 +23,54 @@
 
     </form>
 
+    <img src="static/pause.png" alt="pause" id="pause">
+
     <div id="unf">
-        <p>IMPORTANT! PAGE UNFINISHED :)</p>
+        <p>IMPORTANT! PAGE UNDER WORK :)</p>
     </div>
 
 </body>
+
+<script>
+    for (let i = 0; i < document.getElementById("hotbar").length; i++) {
+        document.getElementById("hotbar")[i].addEventListener("click", () => {
+            window.location.href = document.getElementById("hotbar")[i].value + '.html'
+        });
+
+    }
+
+    let key;
+    let menu = false;
+
+    document.addEventListener('keydown', function (event) {
+        if (event.defaultPrevented) {
+            return;
+        }
+        key = event.key;
+
+    });
+
+    document.addEventListener('keyup', function (event) {
+        if (event.key == "p" || event.key == "P") {
+            menu = !menu
+        }
+        console.log(event.key)
+        if (menu) {
+            document.getElementById('hotbar').style.visibility = "visible";
+        } else {
+            document.getElementById('hotbar').style.visibility = "hidden";
+        }
+        key = undefined;
+    });
+
+    requestAnimationFrame(anim)
+    function anim() {
+
+        console.log(key)
+
+        requestAnimationFrame(anim)
+    }
+
+</script>
 
 </html>

@@ -13,6 +13,7 @@
 }
 
 .menuPanel {
+    visibility: hidden;
     text-align: center;
     font-size: 2vi;
     position: fixed;
@@ -24,6 +25,7 @@
 }
 
 .scathaPanel {
+    visibility: hidden;
     text-align: center;
     font-size: 2vi;
     position: fixed;
@@ -166,6 +168,10 @@ select, input {
     background-color: #1900ff;
     color: white;
     border-radius: 5px;
+}
+
+#encText {
+    width: 20vw;
 }
 
 h1 {
