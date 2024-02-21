@@ -8,6 +8,15 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
     <link rel='stylesheet' type='text/css' media='screen' href='sett.css'>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script type="module" src="sett.js"></script>
 </head>
 
 <body>
@@ -30,47 +39,5 @@
     </div>
 
 </body>
-
-<script>
-    for (let i = 0; i < document.getElementById("hotbar").length; i++) {
-        document.getElementById("hotbar")[i].addEventListener("click", () => {
-            window.location.href = document.getElementById("hotbar")[i].value + '.html'
-        });
-
-    }
-
-    let key;
-    let menu = false;
-
-    document.addEventListener('keydown', function (event) {
-        if (event.defaultPrevented) {
-            return;
-        }
-        key = event.key;
-
-    });
-
-    document.addEventListener('keyup', function (event) {
-        if (event.key == "p" || event.key == "P") {
-            menu = !menu
-        }
-        console.log(event.key)
-        if (menu) {
-            document.getElementById('hotbar').style.visibility = "visible";
-        } else {
-            document.getElementById('hotbar').style.visibility = "hidden";
-        }
-        key = undefined;
-    });
-
-    requestAnimationFrame(anim)
-    function anim() {
-
-        console.log(key)
-
-        requestAnimationFrame(anim)
-    }
-
-</script>
 
 </html>

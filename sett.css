@@ -1,3 +1,13 @@
+body {
+    background-color: white;
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
 #pause {
     position: absolute;
     right: 0;

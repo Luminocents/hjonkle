@@ -5,17 +5,14 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const canvas = document.getElementById("canvas");
 
-//set the canvas background to "Nerd Dog Emoji.png"
-
 
 const renderer = new THREE.WebGLRenderer({ canvas: canvas });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-/*set the scene background to "Nerd Dog Emoji.png"
-const texture = new THREE.TextureLoader().load('Nerd Dog Emoji.png');
-scene.background = texture;
-*/
+// // set the scene background to "Nerd Dog Emoji.png"
+// const texture = new THREE.TextureLoader().load('Nerd Dog Emoji.png');
+// scene.background = texture;
 
 /* THIS IS HOW YOU ADD A CUBE AND STUFF, REMEBER THIS
 const geometry = new THREE.BoxGeometry( 1, 1, 1 );
@@ -56,9 +53,6 @@ let cubeY = 1.5;
 //Sets the scale of the cubes for when the page is loaded on a mobile device, and sets the position of the cubes
 let smol = false;
 const scaley = .5;
-let smolL = 0;
-let smolR = 0;
-let smolY = 0;
 
 let cubeOp = -0.055;
 let zoomY = 0.04;
@@ -68,7 +62,7 @@ let zoomZ = -0.08;
 //Add cubes to scene according to page loaded
 
 if (window.location.pathname == '/index.html') {
-	let zoomX = 0.025;
+	zoomX = 0.025;
 
 }
 
@@ -113,9 +107,6 @@ switch (window.location.pathname) {
 		window.location.href = 'index.html';
 }
 
-
-//hide horizontal scrollbar
-document.body.style.overflowX = "hidden";
 
 //Resize the canvas when the window is resized
 window.addEventListener('resize', () => {
@@ -222,7 +213,6 @@ function animate() {
 		zoom = false;
 	}
 
-	renderer.render(scene, camera);
 	renderer.render(scene, camera);
 
 
