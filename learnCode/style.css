@@ -1,0 +1,49 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: blue;
+    text-align: center;
+}
+
+#startMenu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #00eeff59;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-size: 2.5vi;
+}
+
+@font-face {
+    font-family: 'Genos';
+    src: url('Genos-BoldItalic.ttf'),
+    /* Add more font formats if needed */
+}
+
+p {
+    font-family: Genos;
+    background-color: #00000000;
+}
+
+#pStart {
+    background-color: #00000000;
+    box-shadow: none;
+}
+.start {
+    background-color: #00eeff59;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    user-select: none;
+}
+#startButton:hover {
+    background-color: #00eeff;
+}
+#startButton:active {
+    background-color: #00eeff59;
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You Ready Brahv?</title>
+    <script src="index.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <canvas id="canvas" style="visibility: hidden;"></canvas>
+    <div id="startMenu">
+        <p class="start">Welcome To Cyber Dungeon!1!!!1!</p>
+        <div id="pause" style="visibility: hidden;" display>Continue</div>
+
+        <div class="start" id="startButton">
+            <p class="start" id="pStart">Start</p>
+        </div>
+    </div>
+</body>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    ctx.canvas.width = 1000;
+    ctx.canvas.height = 1000;
+
+    let bg = new Image();
+    bg.src = 'public/floorTile.PNG';
+
+    function animate() {
+        // Your animation code goes here
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        for (let i = 5000 / 400, j = 0; i > 0; i--, j += 398) {
+            for (let k = 5000 / 400, l = 0; k > 0; k--, l += 398) {
+                ctx.drawImage(bg, j, l, 400, 400);
+            }
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+</script>
+
+</html>
