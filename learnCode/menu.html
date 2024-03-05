@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>You Ready Brahv?</title>
-    <script src="index.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -13,34 +12,188 @@
     <canvas id="canvas" style="visibility: hidden;"></canvas>
     <div id="startMenu">
         <p class="start">Welcome To Cyber Dungeon!1!!!1!</p>
-        <div id="pause" style="visibility: hidden;" display>Continue</div>
-
         <div class="start" id="startButton">
-            <p class="start" id="pStart">Start</p>
+            <p class="start" id="p">Start</p>
         </div>
     </div>
+    <div id="pauseMenu" style="visibility: hidden;">
+        <p class="start">Paused</p>
+        <div class="start" id="pauseButton" display>
+            <p class="start" id="p">Resume</p>
+        </div>
+    </div>
+
+    <div id="craftMenu"></div>
+
 </body>
 
 <script>
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
 
-    ctx.canvas.width = 1000;
-    ctx.canvas.height = 1000;
+    // Menu when you open the game
+    document.getElementById('startButton').addEventListener('click', function () {
+        document.getElementById('startMenu').style.display = 'none';
+        document.getElementById('startMenu').style.visibility = 'hidden';
+        canvas.style.visibility = 'visible';
+    });
+
+    document.getElementById('pauseButton').addEventListener('click', function () {
+        document.getElementById('pauseMenu').style.visibility = 'hidden';
+        requestAnimationFrame(animate);
+    });
+
+    let enemy = function (x, y, width, height, color, speed, health) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.color = color;
+        this.speed = speed;
+        this.health = health;
+    }
+
+    let world = {};
+
+    world.wave = 1;
+    world.enemySpeed = 3;
+    world.enemies = [];
+
+
+    // Your player
+    let player = {}
+
+    player.x = 0;
+    player.y = 0;
+    player.width = 50;
+    player.height = 50;
+    player.color = 'red';
+    player.speed = 5;
+
+    let w = false;
+    let a = false;
+    let s = false;
+    let d = false;
+
+    // read keys being pressed and released
+    document.addEventListener('keydown', function () {
+        switch (event.key) {
+            case 'w':
+                w = true;
+                break;
+            case 'a':
+                a = true;
+                break;
+            case 's':
+                s = true;
+                break;
+            case 'd':
+                d = true;
+                break;
+        }
+
+    });
+    document.addEventListener('keyup', function () {
+        switch (event.key) {
+            case 'w':
+                w = false;
+                break;
+            case 'a':
+                a = false;
+                break;
+            case 's':
+                s = false;
+                break;
+            case 'd':
+                d = false;
+                break;
+        }
+        if (event.key == 'p' || event.key == 'P' || event.key == 'Escape') {
+            if (document.getElementById('pauseMenu').style.visibility = 'hidden') {
+                document.getElementById('pauseMenu').style.visibility = 'visible';
+            } else {
+                document.getElementById('pauseMenu').style.visibility = 'hidden';
+                requestAnimationFrame(animate);
+            }
+        }
+    });
+
+    ctx.canvas.width = 2000;
+    ctx.canvas.height = 2000;
 
     let bg = new Image();
     bg.src = 'public/floorTile.PNG';
 
     function animate() {
         // Your animation code goes here
-        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-        for (let i = 5000 / 400, j = 0; i > 0; i--, j += 398) {
-            for (let k = 5000 / 400, l = 0; k > 0; k--, l += 398) {
+        for (let i = 2000 / 400, j = 0; i > 0; i--, j += 399) {
+            for (let k = 2000 / 400, l = 0; k > 0; k--, l += 398) {
                 ctx.drawImage(bg, j, l, 400, 400);
             }
         }
+        
+        if (world.enemies.length == 0) {
+            world.wave++;
+            for (let i = 0; i < world.wave; i++) {
+            // Calculate the random position within a radius around the player
+            let radius = 500; // Adjust the radius as needed
+            let randomAngle = Math.random() * 2 * Math.PI;
+            let randomDistance = Math.random() * radius + 500;
+            let enemyX = player.x + Math.cos(randomAngle) * randomDistance;
+            let enemyY = player.y + Math.sin(randomAngle) * randomDistance;
 
-        requestAnimationFrame(animate);
+            world.enemies.push(new enemy(enemyX, enemyY, 50, 50, 'blue', world.enemySpeed, 100));
+            }
+        } else {
+            for (let i = 0; i < world.enemies.length; i++) {
+            // Calculate the distance between the enemy and the player
+            let distanceX = player.x - world.enemies[i].x;
+            let distanceY = player.y - world.enemies[i].y;
+    
+            // Calculate the angle between the enemy and the player
+            let angle = Math.atan2(distanceY, distanceX);
+    
+            // Calculate the velocity of the enemy
+            let velocityX = Math.cos(angle) * world.enemies[i].speed;
+            let velocityY = Math.sin(angle) * world.enemies[i].speed;
+    
+            // Update the position of the enemy
+            world.enemies[i].x += velocityX;
+            world.enemies[i].y += velocityY;
+    
+            // Draw the enemy on the canvas
+            ctx.fillStyle = world.enemies[i].color;
+            ctx.fillRect(world.enemies[i].x, world.enemies[i].y, world.enemies[i].width, world.enemies[i].height);
+    
+            if (world.enemies[i].x < player.x + player.width &&
+                world.enemies[i].x + world.enemies[i].width > player.x &&
+                world.enemies[i].y < player.y + player.height &&
+                world.enemies[i].y + world.enemies[i].height > player.y) {
+                world.enemies.splice(i, 1);
+                }
+                
+            }
+        }
+
+        if (w) {
+            player.y -= player.speed;
+        }
+        if (a) {
+            player.x -= player.speed;
+        }
+        if (s) {
+            player.y += player.speed;
+        }
+        if (d) {
+            player.x += player.speed;
+        }
+        scrollTo(player.x - window.innerWidth / 2, player.y - window.innerHeight / 2);
+        ctx.fillStyle = player.color;
+        ctx.fillRect(player.x, player.y, player.width, player.height);
+
+        if (document.getElementById('pauseMenu').style.visibility == 'hidden'){
+            requestAnimationFrame(animate);
+        }
     }
 
     animate();
