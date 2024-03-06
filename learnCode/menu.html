@@ -28,8 +28,8 @@
 </body>
 
 <script>
-    var canvas = document.getElementById('canvas');
-    var ctx = canvas.getContext('2d');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
 
     // Menu when you open the game
     document.getElementById('startButton').addEventListener('click', function () {
@@ -48,14 +48,13 @@
         this.y = y;
         this.width = width;
         this.height = height;
-        this.color = color;
         this.speed = speed;
         this.health = health;
     }
 
     let world = {};
 
-    world.wave = 1;
+    world.wave = 2000;
     world.enemySpeed = 3;
     world.enemies = [];
 
@@ -63,12 +62,13 @@
     // Your player
     let player = {}
 
-    player.x = 0;
-    player.y = 0;
+    player.x = 500;
+    player.y = 500;
     player.width = 50;
     player.height = 50;
     player.color = 'red';
     player.speed = 5;
+    player.health = 100;
 
     let w = false;
     let a = false;
@@ -123,6 +123,12 @@
 
     let bg = new Image();
     bg.src = 'public/floorTile.PNG';
+    let jermaRat = new Image();
+    jermaRat.src = 'public/jermaRat.png';
+    let jermaRatR = new Image();
+    jermaRatR.src = 'public/jermaRatR.png';
+    let jerma = new Image();
+    jerma.src = 'public/jermaStare.png';
 
     function animate() {
         // Your animation code goes here
@@ -134,6 +140,7 @@
         
         if (world.enemies.length == 0) {
             world.wave++;
+            player.health += 10;
             for (let i = 0; i < world.wave; i++) {
             // Calculate the random position within a radius around the player
             let radius = 500; // Adjust the radius as needed
@@ -142,7 +149,7 @@
             let enemyX = player.x + Math.cos(randomAngle) * randomDistance;
             let enemyY = player.y + Math.sin(randomAngle) * randomDistance;
 
-            world.enemies.push(new enemy(enemyX, enemyY, 50, 50, 'blue', world.enemySpeed, 100));
+            world.enemies.push(new enemy(enemyX, enemyY, 80, 50, 'blue', world.enemySpeed, 100));
             }
         } else {
             for (let i = 0; i < world.enemies.length; i++) {
@@ -156,14 +163,17 @@
             // Calculate the velocity of the enemy
             let velocityX = Math.cos(angle) * world.enemies[i].speed;
             let velocityY = Math.sin(angle) * world.enemies[i].speed;
-    
+            
             // Update the position of the enemy
             world.enemies[i].x += velocityX;
             world.enemies[i].y += velocityY;
     
             // Draw the enemy on the canvas
-            ctx.fillStyle = world.enemies[i].color;
-            ctx.fillRect(world.enemies[i].x, world.enemies[i].y, world.enemies[i].width, world.enemies[i].height);
+            if (world.enemies[i].x < player.x) {
+                ctx.drawImage(jermaRatR, world.enemies[i].x, world.enemies[i].y, world.enemies[i].width, world.enemies[i].height);
+            } else {
+                ctx.drawImage(jermaRat, world.enemies[i].x, world.enemies[i].y, world.enemies[i].width, world.enemies[i].height);
+            }
     
             if (world.enemies[i].x < player.x + player.width &&
                 world.enemies[i].x + world.enemies[i].width > player.x &&
@@ -189,7 +199,7 @@
         }
         scrollTo(player.x - window.innerWidth / 2, player.y - window.innerHeight / 2);
         ctx.fillStyle = player.color;
-        ctx.fillRect(player.x, player.y, player.width, player.height);
+        ctx.drawImage(jerma, player.x - 20, player.y - 20, 80, 80);
 
         if (document.getElementById('pauseMenu').style.visibility == 'hidden'){
             requestAnimationFrame(animate);
