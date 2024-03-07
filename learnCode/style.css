@@ -7,7 +7,7 @@ body {
 }
 
 #startMenu {
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -65,17 +65,14 @@ p {
 
 #craftMenu {
     position: fixed;
-    right: -13%;
+    right: -25%;
     bottom: 0;
     background-color: #0c7ecafd;
     height: 100%;
     width: 25%;
     border-left: 5px solid #00eeff;
-}
-
-#craftMenu:hover {
-    animation-fill-mode: forwards;
-    animation: slideOut 800ms;
+    font-size: 2vi;
+    overflow-y: auto;
 }
 
 @keyframes slideOut {
@@ -84,6 +81,30 @@ p {
     }
 
     0% {
-        right: -13%;
+        right: -25%;
     }
+}
+
+@keyframes slideIn {
+    100% {
+        right: -25%;
+    }
+
+    0% {
+        right: 0;
+    }
+}
+
+textarea {
+    background-color: #0c7ecafd;
+    border-color: black;
+    border-radius: .5vi;
+    resize: none;
+    font-family: genos;
+    font-size: 1.5vi;
+    max-width: 92.5%;
+}
+
+#craft {
+    font-size: 2vi;
 }

@@ -23,38 +23,67 @@
         </div>
     </div>
 
-    <div id="craftMenu"></div>
+    <div id="craftMenu">
+        <p>Unique Enemies</br>rats</p>
+        <p id="craft">Things You Should Know</br></br>
+        To open the console, right click and click inspect, then click console</br>
+        You can also use the up and down arrow keys to go back to the previously typed command</br></br>
+        </p>
+        <h2>Basic code:</h2>
+        <p id="craft">
+        Important variables/ arrays/ objects necessary to play the game can be viewed in console, with their values, by typing their names:</br>
+        player, world, world.enemies</br></br>
+        To change the value of a variable, type the name of the variable, an equal sign, and the new value:</br>
+        splice(#, #) is specifically for arrays(variable containing multiple items) and deleting their values</br></br>
+        world is the name of the object, it has the wave, enemySpeed, and enemies</br></br>
+        enemies is the array that holds all the enemies, to define one use world.enemies[0] or world.enemies[1] or [2] etc</br></br>
+        By using splice you can delete one or multiple enemies at once</br>
+        splice(0, 1) will delete the first enemy in the array, splice(0, 2) will delete the first and second, and so on</br></br>
+        splice(1, 1) will delete the second, splice(1, 2) will delete the second and third and so on</br></br>
+        A for loop can be used to define how many of something is in an array or such</br>
+        console.log() will print the value of the variable in the console</br></br>
+        for (i in world.enemies) {console.log(world.enemies[i])}</br>
+        i will be replaced with a number representing the item it is iterating, starting from 0</br></br>
+        </p>
+    </div>
 
 </body>
 
 <script>
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
+    let paused;
+    let code;
 
     // Menu when you open the game
     document.getElementById('startButton').addEventListener('click', function () {
         document.getElementById('startMenu').style.display = 'none';
         document.getElementById('startMenu').style.visibility = 'hidden';
+        paused = false;
         canvas.style.visibility = 'visible';
+        animate()
     });
 
     document.getElementById('pauseButton').addEventListener('click', function () {
         document.getElementById('pauseMenu').style.visibility = 'hidden';
-        requestAnimationFrame(animate);
+        document.getElementById('craftMenu').style.animation = "slideIn 1s forwards";
+        paused = false;
+        animate()
     });
 
-    let enemy = function (x, y, width, height, color, speed, health) {
+    let enemy = function (x, y, width, height, color, speed, health, name) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.speed = speed;
         this.health = health;
+        this.name = name;
     }
 
     let world = {};
 
-    world.wave = 2000;
+    world.wave = 5;
     world.enemySpeed = 3;
     world.enemies = [];
 
@@ -107,13 +136,21 @@
             case 'd':
                 d = false;
                 break;
+            case 'k':
+                let code = document.getElementById('code').value;
+                console.log(code)
+                break;
         }
         if (event.key == 'p' || event.key == 'P' || event.key == 'Escape') {
             if (document.getElementById('pauseMenu').style.visibility = 'hidden') {
                 document.getElementById('pauseMenu').style.visibility = 'visible';
+                document.getElementById('craftMenu').style.animation = "slideOut 1s forwards";
+                paused = true;
             } else {
                 document.getElementById('pauseMenu').style.visibility = 'hidden';
-                requestAnimationFrame(animate);
+                document.getElementById('craftMenu').style.animation = "slideIn 1s forwards";
+                paused = false;
+                animate
             }
         }
     });
@@ -149,7 +186,7 @@
             let enemyX = player.x + Math.cos(randomAngle) * randomDistance;
             let enemyY = player.y + Math.sin(randomAngle) * randomDistance;
 
-            world.enemies.push(new enemy(enemyX, enemyY, 80, 50, 'blue', world.enemySpeed, 100));
+            world.enemies.push(new enemy(enemyX, enemyY, 80, 50, 'blue', world.enemySpeed, 100, "rat"));
             }
         } else {
             for (let i = 0; i < world.enemies.length; i++) {
@@ -180,6 +217,7 @@
                 world.enemies[i].y < player.y + player.height &&
                 world.enemies[i].y + world.enemies[i].height > player.y) {
                 world.enemies.splice(i, 1);
+                console.log('hit')
                 }
                 
             }
@@ -201,7 +239,7 @@
         ctx.fillStyle = player.color;
         ctx.drawImage(jerma, player.x - 20, player.y - 20, 80, 80);
 
-        if (document.getElementById('pauseMenu').style.visibility == 'hidden'){
+        if (paused == false) {
             requestAnimationFrame(animate);
         }
     }
