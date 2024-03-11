@@ -30,6 +30,18 @@ body {
     font-size: 2.5vi;
 }
 
+#deathMenu {
+    position: fixed;
+    top: 47%;
+    left: 52.5%;
+    transform: translate(-50%, -50%);
+    background-color: #00eeff59;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-size: 2.5vi;
+}
+
 @font-face {
     font-family: 'Genos';
     src: url('Genos-BoldItalic.ttf'),
@@ -52,14 +64,14 @@ p {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     user-select: none;
 }
-#startButton:hover, #pauseButton:hover {
+#startButton:hover, #pauseButton:hover, #deathButton:hover {
     background-color: #00eeff;
 }
-#startButton:active, #pauseButton:active {
+#startButton:active, #pauseButton:active, #deathButton:active {
     background-color: #00eeff59;
 }
 
-#pauseButton, #startButton {
+#pauseButton, #startButton, #deathButton {
     cursor: pointer;
 }
 
@@ -73,6 +85,7 @@ p {
     border-left: 5px solid #00eeff;
     font-size: 2vi;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 @keyframes slideOut {
@@ -102,7 +115,10 @@ textarea {
     resize: none;
     font-family: genos;
     font-size: 1.5vi;
+    width: 92.5%;
     max-width: 92.5%;
+    height: 10vi;
+    overflow-y: auto;
 }
 
 #craft {
