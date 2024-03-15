@@ -2,17 +2,25 @@
 <html>
 
 <head>
-    <title>My Pretty HTML Page</title>
+    <title>GPA Moment</title>
     <style>
         body {
             margin: 0;
             text-align: center;
         }
 
-        button {
+        #gradeButton {
             margin-left: 41%;
             display: flex;
             font-size: 5vi;
+            bottom: 0;
+        }
+
+        #addGrade {
+            margin-top: 1%;
+            margin-left: 45%;
+            margin-right: 45%;
+            font-size: 2vi;
             bottom: 0;
         }
 
@@ -22,6 +30,7 @@
             display: flex;
             justify-content: center;
             justify-content: space-evenly;
+            flex-direction: column;
             padding: 1vi;
             border: 5px solid black;
 
@@ -29,14 +38,45 @@
 
         input {
             width: 10%;
-            justify-content: center;
+            text-align: center;
+            width: 3%;
+            font-size: 2vi;
         }
 
-        #LGrade {
+        input::-webkit-inner-spin-button,
+        input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .LGrade {
             display: flex;
-            flex-direction: column;
             justify-content: center;
-            align-items: center;
+            gap: 2vi;
+            font-size: 3vi;
+            flex-direction: row;
+        }
+
+        #next {
+            width: 10%;
+            font-size: 2vi;
+
+        }
+
+        #results {
+            margin-top: 1%;
+            font-size: 5vi;
+            bottom: 0;
+        }
+        
+        #textarea {
+            font-size: 2vi;
+            width: 10%;
+            resize: none;
+            justify-content: center;
+            border: 1px solid black;
+            border-radius: 1vi;
+            justify-content: center;
         }
     </style>
 </head>
@@ -44,87 +84,108 @@
 <body>
     <h1>Lets Calculate Your Worth</h1>
     <h2>This is Unweighted</h2>
-    <p>Insert How Much of Each Grade Letters You Have</br>
+    <p>Insert How Much of Each Grade Letters You Have or add a new grade selection for each class, either works</br>
         &</br>
         If it is worth half, or quarter, credits then type in .5, or .25 and such.
     </p>
-    <button onclick="getGrades()">Submit</button>
+    <button onclick="getGrades()" id="gradeButton">Submit</button>
     <div id="ye">
-        <div id="LGrade">
-            <p>How Many of Each Letter Grades & their credits</p>
-            A+ (97-100)<input type="number" name="A+" placeholder="A+ (4 Points 97-100)" value="0"></br>
-            A (93-96)<input type="number" name="A" placeholder="A (4 Points 93-96)"value="0"></br>
-            A- (90-92)<input type="number" name="A-" placeholder="A- (3.7 Points 90-92)"value="0"></br>
-            B+ (87-89)<input type="number" name="B+" placeholder="B+ (3.3 Points 87-89)"value="0"></br>
-            B (83-86)<input type="number" name="B" placeholder="B (3 Points 83-86)"value="0"></br>
-            B- (80-82)<input type="number" name="B-" placeholder="B- (2.7 Points 80-82)"value="0"></br>
-            C+ (77-79)<input type="number" name="C+" placeholder="C+ (2.3 Points 77-79)"value="0"></br>
-            C (73-76)<input type="number" name="C" placeholder="C (2 Points 73-76)"value="0"></br>
-            C- (70-72)<input type="number" name="C-" placeholder="C- (1.7 Points 70-72)"value="0"></br>
-            D+ (67-69)<input type="number" name="D+" placeholder="D+ (1.3 Points 67-69)"value="0"></br>
-            D (65-66)<input type="number" name="D" placeholder="D (1 Points 65-66)"value="0"></br>
-            D- (60-64)<input type="number" name="D-" placeholder="D- (0.7 Points 60-64)"value="0"></br>
-            F (0-59)<input type="number" name="F" placeholder="F (0 Points 0-59)"value="0"></br>
+        <p>How Many of Each Letter Grades & their credits</p>
+        <div class="LGrade">
+            <div id="textarea" contenteditable>Does Nothing</div>|<input type="number" name="num" placeholder="0">| Letter Grade:
+            <select name="grade">
+                <option value="A+">A+ (97-100)</option>
+                <option value="A">A (93-96)</option>
+                <option value="A-">A- (90-92)</option>
+                <option value="B+">B+ (87-89)</option>
+                <option value="B">B (83-86)</option>
+                <option value="B-">B- (80-82)</option>
+                <option value="C+">C+ (77-79)</option>
+                <option value="C">C (73-76)</option>
+                <option value="C-">C- (70-72)</option>
+                <option value="D+">D+ (67-69)</option>
+                <option value="D">D (63-66)</option>
+                <option value="D-">D- (60-62)</option>
+                <option value="F">F (0-59)</option>
+            </select>| Credits Each:
+            <input type="number" name="cred" placeholder="0">|
         </div>
     </div>
+    <button onclick="addGrade()" id="addGrade">Add Grade</button>
+    <div id="results"></div>
 </body>
 
 <script>
-    var LGrade = document.getElementById("LGrade");
     function getGrades() {
-        let LGradeChildren = LGrade.getElementsByTagName("input");
-        var grades = 0;
-        var classes = 0;
+        var ye = document.getElementById("ye");
+        var LGrade = document.getElementsByClassName("LGrade");
+        var yeChildren = ye.getElementsByTagName("div");
+        let results = document.getElementById("results");
+        let GPA = 0;
+        let classes = 0;
+        let credits = 0;
 
-        // Gets the input of LGradeChildren and adds to grades
-        for (i = 0; i < 13; i++) {
-            let value = parseFloat(LGradeChildren[i].value)
-            classes += value;
-            
-            switch (LGradeChildren[i].name) {
-                case "A+":
-                    grades += (4 * value);
-                    break;
-                case "A":
-                    grades += (4 * value);
-                    break;
-                case "A-":
-                    grades += (3.7 * value);
-                    break;
-                case "B+":
-                    grades += (3.3 * value);
-                    break;
-                case "B":
-                    grades += (3 * value);
-                    break;
-                case "B-":
-                    grades += (2.7 * value);
-                    break;
-                case "C+":
-                    grades += (2.3 * value);
-                    break;
-                case "C":
-                    grades += (2 * value);
-                    break;
-                case "C-":
-                    grades += (1.7 * value);
-                    break;
-                case "D+":
-                    grades += (1.3 * value);
-                    break;
-                case "D":
-                    grades += (1 * value);
-                    break;
-                case "D-":
-                    grades += (0.7 * value);
-                    break;
-                case "F":
-                    grades += (0 * value);
-                    break;
+
+        for (let i = 0; i < LGrade.length; i++) {
+            let worth = 0;
+            let child = LGrade[i];
+            let classy = parseFloat(child.getElementsByTagName("input")[0].value);
+            let letter = child.getElementsByTagName("select")[0].value;
+            creds = parseFloat(child.getElementsByTagName("input")[1].value);
+
+            // Make sure the values inputed are not empty and will calculate correctly
+            if (creds < 1) {
+                creds += 1;
+            } else if (isNaN(creds)) {
+                creds = 0;
             }
+            if (isNaN(classy)) {
+                classy = 0;
+            }
+
+            //Set a variable equal to what the letter grade is worth in GPA
+            if (letter == "A+") {
+                worth = 4.0;
+            } else if (letter == "A") {
+                worth = 4.0;
+            } else if (letter == "A-") {
+                worth = 3.7;
+            } else if (letter == "B+") {
+                worth = 3.3;
+            } else if (letter == "B") {
+                worth = 3.0;
+            } else if (letter == "B-") {
+                worth = 2.7;
+            } else if (letter == "C+") {
+                worth = 2.3;
+            } else if (letter == "C") {
+                worth = 2.0;
+            } else if (letter == "C-") {
+                worth = 1.7;
+            } else if (letter == "D+") {
+                worth = 1.3;
+            } else if (letter == "D") {
+                worth = 1.0;
+            } else if (letter == "D-") {
+                worth = 0.7;
+            } else if (letter == "F") {
+                worth = 0;
+            }
+            credits += classy * creds;
+            classes += (classy * creds) * worth;
         }
-        console.log(classes)
-        console.log("Your GPA is: " + Math.floor(grades / classes));
+        console.log("credits " + credits);
+        console.log("classes " + classes);
+        GPA = classes / credits;
+        results.innerHTML = "Your GPA is: " + GPA.toFixed(2);
+    }
+
+
+    function addGrade() {
+        var div = document.createElement("div");
+        div.className = "LGrade";
+        div.innerHTML = '<div id="textarea" contenteditable>Does Nothing</div>|<input type="number" name="num" placeholder="0">| Letter Grade: <select name="grade"><option value="A+">A+ (97-100)</option><option value="A">A (93-96)</option><option value="A-">A- (90-92)</option><option value="B+">B+ (87-89)</option><option value="B">B (83-86)</option><option value="B-">B- (80-82)</option><option value="C+">C+ (77-79)</option><option value="C">C (73-76)</option><option value="C-">C- (70-72)</option><option value="D+">D+ (67-69)</option><option value="D">D (63-66)</option><option value="D-">D- (60-62)</option><option value="F">F (0-59)</option></select>| Credits Each: <input type="number" name="cred" placeholder="0">|';
+        ye.appendChild(div);
     }
 </script>
 
