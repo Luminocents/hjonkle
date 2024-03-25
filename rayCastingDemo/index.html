@@ -56,6 +56,7 @@
         1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     ];
+    var showMap = false;
 
     // player
     var playerX = MAP_SCALE + 20;
@@ -69,19 +70,20 @@
     document.addEventListener('keydown', function (event) {
         var key = event.keyCode;
         switch (key) {
-            case 83: playerMoveX = -1; playerMoveY = -1; break;
-            case 87: playerMoveX = 1; playerMoveY = 1; break;
-            case 65: playerMoveAngle = 1; break;
-            case 68: playerMoveAngle = -1; break;
+            case 83: playerMoveX = -1; playerMoveY = -1; break; // s
+            case 87: playerMoveX = 1; playerMoveY = 1; break; // w
+            case 65: playerMoveAngle = 1; break; // a
+            case 68: playerMoveAngle = -1; break; // d
         }
     });
     document.addEventListener('keyup', function (event) {
         var key = event.keyCode;
         switch (key) {
-            case 83: playerMoveX = 0; playerMoveY = 0; break;
-            case 87: playerMoveX = 0; playerMoveY = 0; break;
-            case 65: playerMoveAngle = 0; break;
-            case 68: playerMoveAngle = 0; break;
+            case 83: playerMoveX = 0; playerMoveY = 0; break; // s
+            case 87: playerMoveX = 0; playerMoveY = 0; break; // w
+            case 65: playerMoveAngle = 0; break; // a
+            case 68: playerMoveAngle = 0; break; // d
+            case 77: showMap = !showMap; break; // m
         }
     });
 
@@ -106,8 +108,8 @@
         if (cycleCount % 60 == 0) fps_rate = Math.floor(1000 / cycleTime);
 
         // Resize dynamically
-        canvas.width = window.innerWidth * 0.3;
-        canvas.height = window.innerHeight * 0.3;
+        canvas.width = window.innerWidth * 0.4;
+        canvas.height = window.innerHeight * 0.4;
 
         // Update Screen
         ctx.fillStyle = 'black';
@@ -124,36 +126,10 @@
         if (playerMoveAngle) playerAngle += 0.06 * playerMoveAngle;
 
         // Calculate map & player offsets
-        var mapOffsetX = Math.floor(canvas.width / 2 - MAP_RANGE / 2);
-        var mapOffsetY = Math.floor(canvas.height / 2 - MAP_RANGE / 2);
-        var playerMapX = playerX + mapOffsetX;
-        var playerMapY = playerY + mapOffsetY;
-
-        // Draw 2d map
-        for (var row = 0; row < MAP_SIZE; row++) {
-            for (var col = 0; col < MAP_SIZE; col++) {
-                var square = row * MAP_SIZE + col;
-                if (map[square] != 0) {
-                    ctx.fillStyle = '#555';
-                    ctx.fillRect(mapOffsetX + col * MAP_SCALE, mapOffsetY + row * MAP_SCALE, MAP_SCALE, MAP_SCALE);
-                } else {
-                    ctx.fillStyle = '#aaa';
-                    ctx.fillRect(mapOffsetX + col * MAP_SCALE, mapOffsetY + row * MAP_SCALE, MAP_SCALE, MAP_SCALE);
-                }
-            }
-        }
-
-        // Draw player on 2D map
-        ctx.fillStyle = 'red';
-        ctx.beginPath();
-        ctx.arc(playerMapX, playerMapY, 2, 0, DOUBLE_PI, true);
-        ctx.fill();
-        ctx.strokeStyle = 'red';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(playerMapX, playerMapY);
-        ctx.lineTo(playerMapX + Math.sin(playerAngle) * 5, playerMapY + Math.cos(playerAngle) * 5);
-        ctx.stroke();
+        var mapOffsetX = Math.floor(canvas.width / 2 - 150);
+        var mapOffsetY = 0;
+        var playerMapX = (playerX / MAP_SCALE) * 5 + mapOffsetX;
+        var playerMapY = (playerY / MAP_SCALE) * 5 + mapOffsetY;
 
         // Raycasting
         var currentAngle = playerAngle + HALF_FOV;
@@ -183,17 +159,6 @@
                 rayEndX += rayDirectionX * MAP_SCALE;
             }
 
-            // temp endX and endY targets
-            var tempX = rayEndX, tempY = rayEndY;
-
-            // // draw ray
-            // ctx.strokeStyle = 'Green';
-            // ctx.lineWidth = 1;
-            // ctx.beginPath();
-            // ctx.moveTo(playerMapX, playerMapY);
-            // ctx.lineTo(rayEndX + mapOffsetX, rayEndY + mapOffsetY);
-            // ctx.stroke();
-
             // horizontal line intersection
             var rayEndY, rayEndX, rayDirectionY, horizontalDepth;
             if (currentCos > 0) { rayEndY = rayStartY + MAP_SCALE; rayDirectionY = 1 }
@@ -210,27 +175,44 @@
                 rayEndY += rayDirectionY * MAP_SCALE;
             }
 
-            // // draw ray
-            // ctx.strokeStyle = 'Brown';
-            // ctx.lineWidth = 1;
-            // ctx.beginPath();
-            // ctx.moveTo(playerMapX, playerMapY);
-            // ctx.lineTo(rayEndX + mapOffsetX, rayEndY + mapOffsetY);
-            // ctx.stroke();
-
-            var endX = verticalDepth < horizontalDepth ? tempX : rayEndX;
-            var endY = verticalDepth < horizontalDepth ? tempY : rayEndY;
-
-            // draw ray
-            ctx.strokeStyle = 'Yellow';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(playerMapX, playerMapY);
-            ctx.lineTo(endX + mapOffsetX, endY + mapOffsetY);
-            ctx.stroke();
+            // render 3D projection
+            var depth = verticalDepth < horizontalDepth ? verticalDepth : horizontalDepth;
+            depth *= Math.cos(playerAngle - currentAngle);
+            var wallHeight = Math.min(MAP_SCALE * 300 / (depth + 0.0001), HEIGHT);
+            ctx.fillStyle = 'green';
+            ctx.fillRect(mapOffsetX + ray, mapOffsetY + HEIGHT / 2 - wallHeight / 2, 1, wallHeight);
 
             // update current angle
             currentAngle -= STEP_ANGLE;
+        }
+
+
+        // Draw 2d map
+        if (showMap) {
+            for (var row = 0; row < MAP_SIZE; row++) {
+                for (var col = 0; col < MAP_SIZE; col++) {
+                    var square = row * MAP_SIZE + col;
+                    if (map[square] != 0) {
+                        ctx.fillStyle = 'green';
+                        ctx.fillRect(mapOffsetX + col * 5, mapOffsetY + row * 5, 5, 5);
+                    } else {
+                        ctx.fillStyle = '#aaa';
+                        ctx.fillRect(mapOffsetX + col * 5, mapOffsetY + row * 5, 5, 5);
+                    }
+                }
+            }
+
+            // Draw player on 2D map
+            ctx.fillStyle = 'red';
+            ctx.beginPath();
+            ctx.arc(playerMapX, playerMapY, 2, 0, DOUBLE_PI, true);
+            ctx.fill();
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(playerMapX, playerMapY);
+            ctx.lineTo(playerMapX + Math.sin(playerAngle) * 5, playerMapY + Math.cos(playerAngle) * 5);
+            ctx.stroke();
         }
 
         //inf loop
