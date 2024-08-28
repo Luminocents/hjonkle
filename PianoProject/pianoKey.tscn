@@ -34,8 +34,7 @@ animation = &"off"
 [node name="Area2D" type="Area2D" parent="AnimatedSprite2D"]
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="AnimatedSprite2D/Area2D"]
-scale = Vector2(0.873367, 6.80294)
-polygon = PackedVector2Array(-10.3049, -9.99568, 10.3049, -9.99568, 10.3049, 9.99568, -10.3049, 9.99568)
+polygon = PackedVector2Array(-4, 25, 2, 25, 6, 25, 9, 25, 9, 68, -9, 68, -9, 25, -6, 25)
 
 [node name="keyTimer" type="Timer" parent="."]
 
