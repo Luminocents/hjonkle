@@ -2,7 +2,14 @@ extends Node2D
 
 var prevKey = 0
 var nopes = {}
-var time_accuracy = 0.1
+var time_accuracy = .1
+var timerStart = false
+var timer = 0
+
+func _process(delta: float) -> void:
+	if timerStart:
+		timer += delta
+		$Label.text = str(timer)
 
 func _ready():
 	OS.open_midi_inputs()
@@ -29,7 +36,7 @@ func _input(input_event):
 		_print_midi_info(input_event)
 
 func _on_timer_timeout():
-	var time_of_song = str(snapped($Music.get_playback_position(), time_accuracy))
+	var time_of_song = str(snapped(timer, time_accuracy))
 	
 	if nopes.has(time_of_song):
 		play_notes(nopes[time_of_song])
@@ -101,7 +108,8 @@ func start_music(music_json):
 	for track in music_json["tracks"]:
 		for nope in track["notes"]:
 			add_note_to_main_array(nope)
-	$Music.play()
+	timerStart = true
+	timer = 0
 	$Music.volume_db = -100
 	$Timer.start(time_accuracy)
 	

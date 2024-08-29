@@ -324,8 +324,6 @@ text = "--"
 [node name="Music" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_q513a")
 
-[node name="MusicTimer" type="Timer" parent="Music"]
-
 [node name="Timer" type="Timer" parent="."]
 
 [node name="turkeybutton" type="TextureButton" parent="."]
@@ -339,12 +337,12 @@ stretch_mode = 0
 
 [node name="Label" type="Label" parent="turkeybutton"]
 layout_mode = 0
-offset_left = 56.0
-offset_top = 80.0
-offset_right = 138.0
-offset_bottom = 115.0
+offset_left = 48.0
+offset_top = 78.0
+offset_right = 148.0
+offset_bottom = 113.0
 theme_override_font_sizes/font_size = 25
-text = "Turkey"
+text = "Chickish"
 
 [node name="Moon Button" type="TextureButton" parent="."]
 offset_left = 942.0
