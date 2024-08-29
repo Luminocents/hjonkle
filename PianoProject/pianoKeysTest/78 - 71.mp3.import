@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dvthahm3fo8ut"
+path="res://.godot/imported/78 - 71.mp3-4f40f7e657abec1427d2e3eed76185ca.mp3str"
+
+[deps]
+
+source_file="res://pianoKeysTest/78 - 71.mp3"
+dest_files=["res://.godot/imported/78 - 71.mp3-4f40f7e657abec1427d2e3eed76185ca.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

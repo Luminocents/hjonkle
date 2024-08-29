@@ -1,9 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://b6ej3ryq448mt"]
+[gd_scene load_steps=5 format=3 uid="uid://b6ej3ryq448mt"]
 
 [ext_resource type="Texture2D" uid="uid://dhdfb146b3ixd" path="res://pianoSquareBlackPress.png" id="1_8n47o"]
-[ext_resource type="Script" path="res://pianoKeySharp.gd" id="1_larjr"]
+[ext_resource type="Script" path="res://pianoKey.gd" id="1_jjv3o"]
 [ext_resource type="Texture2D" uid="uid://chnpepc0o23x6" path="res://pianoSquareBlack.png" id="2_2r5lr"]
-[ext_resource type="AudioStream" uid="uid://xfc0m46mhtux" path="res://audio/Middle-C-Note.mp3" id="4_rqehk"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_o540o"]
 animations = [{
@@ -25,7 +24,7 @@ animations = [{
 }]
 
 [node name="key" type="Node2D"]
-script = ExtResource("1_larjr")
+script = ExtResource("1_jjv3o")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_o540o")
@@ -37,11 +36,7 @@ animation = &"off"
 scale = Vector2(0.459224, 4.70778)
 polygon = PackedVector2Array(-10.8879, -9.98347, 10.8879, -9.98347, 10.8879, 9.98347, -10.8879, 9.98347)
 
-[node name="keyTimer" type="Timer" parent="."]
-
-[node name="keySound" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("4_rqehk")
-pitch_scale = 1.04
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+attenuation = 2.37841
 
 [connection signal="input_event" from="AnimatedSprite2D/Area2D" to="." method="_on_area_2d_input_event"]
-[connection signal="timeout" from="keyTimer" to="." method="_on_timer_timeout"]

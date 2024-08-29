@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bubb2ul4v2pll"
+path="res://.godot/imported/15 - 2.mp3-303c6452f651887e38d463de9cdde511.mp3str"
+
+[deps]
+
+source_file="res://pianoKeysTest/15 - 2.mp3"
+dest_files=["res://.godot/imported/15 - 2.mp3-303c6452f651887e38d463de9cdde511.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

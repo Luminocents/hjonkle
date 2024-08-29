@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cwk3aoomjxxev"
+path="res://.godot/imported/47 - 48.mp3-b3b079f0bf6fd66694fde61e4d07762f.mp3str"
+
+[deps]
+
+source_file="res://pianoKeysTest/47 - 48.mp3"
+dest_files=["res://.godot/imported/47 - 48.mp3-b3b079f0bf6fd66694fde61e4d07762f.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

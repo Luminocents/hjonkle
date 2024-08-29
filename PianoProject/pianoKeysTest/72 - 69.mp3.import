@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://c4al7w3hj3h36"
+path="res://.godot/imported/72 - 69.mp3-2819f20cc2bffbaa88a6bbe279cf399f.mp3str"
+
+[deps]
+
+source_file="res://pianoKeysTest/72 - 69.mp3"
+dest_files=["res://.godot/imported/72 - 69.mp3-2819f20cc2bffbaa88a6bbe279cf399f.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
