@@ -1,0 +1,412 @@
+[gd_scene load_steps=9 format=3 uid="uid://bx6wvm4jd5366"]
+
+[ext_resource type="Script" path="res://peeScript.gd" id="1_vumsy"]
+[ext_resource type="Texture2D" uid="uid://d04sh4b5o266d" path="res://button.png" id="3_hbdgw"]
+[ext_resource type="Texture2D" uid="uid://c12mk2k1cunfn" path="res://buttonPress.png" id="4_bxqer"]
+[ext_resource type="AudioStream" uid="uid://cahnghlpjxi2t" path="res://audio/Turkish.mp3" id="4_q513a"]
+[ext_resource type="Texture2D" uid="uid://cyy1d42jjweoo" path="res://buttonRed.png" id="7_der2k"]
+[ext_resource type="Texture2D" uid="uid://7epre1fo5rjd" path="res://buttonRedPress.png" id="8_ooaai"]
+[ext_resource type="PackedScene" uid="uid://bf37s6pdg5g2r" path="res://pianoKey.tscn" id="9_6dyxn"]
+[ext_resource type="PackedScene" uid="uid://b6ej3ryq448mt" path="res://pianoKeySharp.tscn" id="10_n5saq"]
+
+[node name="Node2D" type="Node2D"]
+position = Vector2(-2, 0)
+script = ExtResource("1_vumsy")
+
+[node name="key0" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(97, 367)
+
+[node name="key1" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(108, 345)
+
+[node name="key2" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(116, 367)
+
+[node name="key3" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(135, 367)
+
+[node name="key4" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(143, 343)
+
+[node name="key5" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(154, 367)
+
+[node name="key6" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(165, 343)
+
+[node name="key7" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(173, 367)
+
+[node name="key8" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(192, 367)
+
+[node name="key9" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(200, 343)
+
+[node name="key10" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(211, 367)
+
+[node name="key11" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(220, 343)
+
+[node name="key12" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(230, 367)
+
+[node name="key13" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(241, 343)
+
+[node name="key14" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(249, 367)
+
+[node name="key15" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(268, 367)
+
+[node name="key16" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(276, 343)
+
+[node name="key17" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(287, 367)
+
+[node name="key18" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(298, 343)
+
+[node name="key19" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(306, 367)
+
+[node name="key20" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(325, 367)
+
+[node name="key21" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(333, 343)
+
+[node name="key22" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(344, 367)
+
+[node name="key23" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(353, 343)
+
+[node name="key24" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(363, 367)
+
+[node name="key25" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(374, 343)
+
+[node name="key26" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(382, 367)
+
+[node name="key27" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(401, 367)
+
+[node name="key28" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(409, 343)
+
+[node name="key29" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(420, 367)
+
+[node name="key30" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(431, 343)
+
+[node name="key31" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(439, 367)
+
+[node name="key32" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(458, 367)
+
+[node name="key33" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(466, 343)
+
+[node name="key34" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(477, 367)
+
+[node name="key35" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(486, 343)
+
+[node name="key36" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(496, 367)
+
+[node name="key37" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(507, 343)
+
+[node name="key38" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(515, 367)
+
+[node name="key39" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(534, 367)
+
+[node name="key40" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(542, 343)
+
+[node name="key41" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(553, 367)
+
+[node name="key42" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(564, 343)
+
+[node name="key43" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(572, 367)
+
+[node name="key44" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(591, 367)
+
+[node name="key45" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(599, 343)
+
+[node name="key46" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(610, 367)
+
+[node name="key47" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(619, 343)
+
+[node name="key48" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(629, 367)
+
+[node name="key49" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(640, 343)
+
+[node name="key50" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(648, 367)
+
+[node name="key51" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(667, 367)
+
+[node name="key52" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(675, 343)
+
+[node name="key53" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(686, 367)
+
+[node name="key54" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(697, 343)
+
+[node name="key55" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(705, 367)
+
+[node name="key56" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(724, 367)
+
+[node name="key57" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(732, 343)
+
+[node name="key58" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(743, 367)
+
+[node name="key59" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(752, 343)
+
+[node name="key60" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(762, 367)
+
+[node name="key61" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(773, 343)
+
+[node name="key62" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(781, 367)
+
+[node name="key63" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(800, 367)
+
+[node name="key64" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(808, 343)
+
+[node name="key65" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(819, 367)
+
+[node name="key66" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(830, 343)
+
+[node name="key67" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(838, 367)
+
+[node name="key68" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(857, 367)
+
+[node name="key69" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(865, 343)
+
+[node name="key70" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(876, 367)
+
+[node name="key71" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(885, 343)
+
+[node name="key72" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(895, 367)
+
+[node name="key73" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(906, 343)
+
+[node name="key74" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(914, 367)
+
+[node name="key75" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(933, 367)
+
+[node name="key76" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(941, 343)
+
+[node name="key77" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(952, 367)
+
+[node name="key78" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(963, 343)
+
+[node name="key79" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(971, 367)
+
+[node name="key80" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(990, 367)
+
+[node name="key81" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(998, 343)
+
+[node name="key82" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(1009, 367)
+
+[node name="key83" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(1018, 343)
+
+[node name="key84" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(1028, 367)
+
+[node name="key85" parent="." instance=ExtResource("10_n5saq")]
+z_index = 1
+position = Vector2(1039, 343)
+
+[node name="key86" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(1047, 367)
+
+[node name="key87" parent="." instance=ExtResource("9_6dyxn")]
+position = Vector2(1066, 367)
+
+[node name="Label" type="Label" parent="."]
+offset_left = 6.0
+offset_top = 186.0
+offset_right = 166.0
+offset_bottom = 528.0
+theme_override_font_sizes/font_size = 25
+text = "--"
+
+[node name="Music" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_q513a")
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="turkeybutton" type="TextureButton" parent="."]
+offset_top = -3.0
+offset_right = 210.0
+offset_bottom = 161.0
+texture_normal = ExtResource("3_hbdgw")
+texture_pressed = ExtResource("4_bxqer")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="turkeybutton"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 78.0
+offset_right = 148.0
+offset_bottom = 113.0
+theme_override_font_sizes/font_size = 25
+text = "Chickish"
+
+[node name="Moon Button" type="TextureButton" parent="."]
+offset_left = 942.0
+offset_top = -4.0
+offset_right = 1152.0
+offset_bottom = 160.0
+texture_normal = ExtResource("3_hbdgw")
+texture_pressed = ExtResource("4_bxqer")
+ignore_texture_size = true
+stretch_mode = 0
+flip_h = true
+
+[node name="Label" type="Label" parent="Moon Button"]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 80.0
+offset_right = 138.0
+offset_bottom = 115.0
+theme_override_font_sizes/font_size = 25
+text = "3rd Moon"
+
+[node name="Ocarina Button" type="TextureButton" parent="."]
+offset_top = 484.0
+offset_right = 210.0
+offset_bottom = 648.0
+texture_normal = ExtResource("3_hbdgw")
+texture_pressed = ExtResource("4_bxqer")
+ignore_texture_size = true
+stretch_mode = 0
+flip_v = true
+
+[node name="Label" type="Label" parent="Ocarina Button"]
+layout_mode = 0
+offset_left = 68.0
+offset_top = 47.0
+offset_right = 150.0
+offset_bottom = 82.0
+theme_override_font_sizes/font_size = 25
+text = "Fairy"
+
+[node name="E Button" type="TextureButton" parent="."]
+offset_left = 433.0
+offset_top = 633.0
+offset_right = 643.0
+offset_bottom = 797.0
+rotation = -0.615641
+texture_normal = ExtResource("7_der2k")
+texture_pressed = ExtResource("8_ooaai")
+ignore_texture_size = true
+stretch_mode = 0
+flip_v = true
+
+[node name="Label" type="Label" parent="E Button"]
+layout_mode = 0
+offset_left = 112.598
+offset_top = 24.2019
+offset_right = 146.598
+offset_bottom = 93.2019
+rotation = 0.613006
+theme_override_font_sizes/font_size = 50
+text = "E"
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="pressed" from="turkeybutton" to="." method="_on_turkey_button_pressed"]
+[connection signal="pressed" from="Moon Button" to="." method="_on_moon_button_pressed"]
+[connection signal="pressed" from="Ocarina Button" to="." method="_on_ocarina_button_pressed"]
+[connection signal="pressed" from="E Button" to="." method="_on_e_button_pressed"]

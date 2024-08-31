@@ -1,22 +1,20 @@
 extends Node2D
 
-var prevKey = 0
 var nopes = {}
 var time_accuracy = .1
-var timerStart = false
+var timerStart = true
 var timer = 0
 
 func _process(delta: float) -> void:
 	if timerStart:
-		timer += delta
+		timer += 1 * delta
 		$Label.text = str(timer)
 
 func _ready():
 	OS.open_midi_inputs()
-	
 
 func add_note_to_main_array(nope):
-	var time = str(snapped(nope["time"], time_accuracy))
+	var time = str(snapped(nope["time"], .1))
 	
 	if !nopes.has(time):
 		nopes[time] = []
@@ -31,37 +29,10 @@ func play_notes(nopes):
 		
 		get_node("key" + nope_number).key_on(duration, velocity)
 
-func _input(input_event):
-	if input_event is InputEventMIDI:
-		_print_midi_info(input_event)
-
 func _on_timer_timeout():
-	var time_of_song = str(snapped(timer, time_accuracy))
-	
-	if nopes.has(time_of_song):
-		play_notes(nopes[time_of_song])
-
-
-func _print_midi_info(midi_event):
-	var key = midi_event.pitch - 21
-	var state = int(midi_event.message)
-	var note = "err"
-	var notes = ["A", "A#", "B", "C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
-	"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
-	"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
-	"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
-	"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
-	"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
-	"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C"]
-	if state == 9:
-		note = notes[key]
-		$Label.text = str(note)
-		key = str(midi_event.pitch - 21)
-		get_node("key" + key).get_child(0).animation = "on"
-	else:
-		note = notes[key]
-		key = str(midi_event.pitch - 21)
-		get_node("key" + key).get_child(0).animation = "off"
+	var temp = str(snapped(timer, .01))
+	if nopes.has(temp):
+		play_notes(nopes[temp])
 
 func _on_turkey_button_pressed():
 	var file = FileAccess.open("res://audio/turkish.txt", FileAccess.READ)
@@ -71,7 +42,6 @@ func _on_turkey_button_pressed():
 	file.close()
 	$Music.stream = load("res://audio/Turkish.mp3")
 	start_music(music_json)
-
 
 func _on_moon_button_pressed():
 	nopes = {}
@@ -111,7 +81,32 @@ func start_music(music_json):
 	timerStart = true
 	timer = 0
 	$Music.volume_db = -100
-	$Timer.start(time_accuracy)
+	$Timer.start(.001)
 	
 	if nopes.has("0"):
 		play_notes(nopes["0"])
+
+#func _input(input_event):
+	#if input_event is InputEventMIDI:
+		#_print_midi_info(input_event)
+
+#func _print_midi_info(midi_event):
+	#var key = midi_event.pitch - 21
+	#var state = int(midi_event.message)
+	#var note = "err"
+	#var notes = ["A", "A#", "B", "C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+	#"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+	#"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+	#"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+	#"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+	#"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+	#"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C"]
+	#if state == 9:
+		#note = notes[key]
+		#$Label.text = str(note)
+		#key = str(midi_event.pitch - 21)
+		#get_node("key" + key).get_child(0).animation = "on"
+	#else:
+		#note = notes[key]
+		#key = str(midi_event.pitch - 21)
+		#get_node("key" + key).get_child(0).animation = "off"
