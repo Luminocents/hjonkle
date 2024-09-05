@@ -57,11 +57,11 @@ func _print_midi_info(midi_event):
 		note = notes[key]
 		$Label.text = str(note)
 		key = str(midi_event.pitch - 21)
-		get_node("key" + key).get_child(0).animation = "on"
+		get_node("key" + key).key_click()
 	else:
 		note = notes[key]
 		key = str(midi_event.pitch - 21)
-		get_node("key" + key).get_child(0).animation = "off"
+		get_node("key" + key).key_clickOut()
 
 func _on_turkey_button_pressed():
 	var file = FileAccess.open("res://audio/turkish.txt", FileAccess.READ)
