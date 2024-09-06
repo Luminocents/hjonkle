@@ -1,7 +1,7 @@
 extends Node2D
 
 var nopes = {}
-var time_accuracy = .01
+var time_accuracy = .1
 var timerStart = true
 var timer = 0
 
@@ -80,7 +80,7 @@ func start_music(music_json):
 	timerStart = true
 	timer = 0
 	$Music.volume_db = -100
-	$Timer.start(.001)
+	$Timer.start(time_accuracy)
 	
 	if nopes.has("0"):
 		play_notes(nopes["0"])
