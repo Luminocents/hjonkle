@@ -1,20 +1,19 @@
 extends Node2D
 
 var nopes = {}
-var time_accuracy = .1
+var time_accuracy = .01
 var timerStart = true
 var timer = 0
 
 func _process(delta: float) -> void:
 	if timerStart:
 		timer += 1 * delta
-		$Label.text = str(timer)
 
 func _ready():
 	OS.open_midi_inputs()
 
 func add_note_to_main_array(nope):
-	var time = str(snapped(nope["time"], .1))
+	var time = str(snapped(nope["time"], time_accuracy))
 	
 	if !nopes.has(time):
 		nopes[time] = []
@@ -30,7 +29,7 @@ func play_notes(nopes):
 		get_node("key" + nope_number).key_on(duration, velocity)
 
 func _on_timer_timeout():
-	var temp = str(snapped(timer, .01))
+	var temp = str(snapped(timer, time_accuracy))
 	if nopes.has(temp):
 		play_notes(nopes[temp])
 
@@ -85,28 +84,3 @@ func start_music(music_json):
 	
 	if nopes.has("0"):
 		play_notes(nopes["0"])
-
-#func _input(input_event):
-	#if input_event is InputEventMIDI:
-		#_print_midi_info(input_event)
-
-#func _print_midi_info(midi_event):
-	#var key = midi_event.pitch - 21
-	#var state = int(midi_event.message)
-	#var note = "err"
-	#var notes = ["A", "A#", "B", "C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
-	#"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
-	#"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
-	#"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
-	#"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
-	#"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
-	#"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C"]
-	#if state == 9:
-		#note = notes[key]
-		#$Label.text = str(note)
-		#key = str(midi_event.pitch - 21)
-		#get_node("key" + key).get_child(0).animation = "on"
-	#else:
-		#note = notes[key]
-		#key = str(midi_event.pitch - 21)
-		#get_node("key" + key).get_child(0).animation = "off"
