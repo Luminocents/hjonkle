@@ -84,3 +84,29 @@ func start_music(music_json):
 	
 	if nopes.has("0"):
 		play_notes(nopes["0"])
+
+
+func _input(input_event):
+	if input_event is InputEventMIDI:
+		_print_midi_info(input_event)
+
+func _print_midi_info(midi_event):
+	var key = midi_event.pitch - 21
+	var state = int(midi_event.message)
+	var note = "err"
+	var notes = ["A", "A#", "B", "C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+	"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+	"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+	"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+	"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+	"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+	"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C"]
+	if state == 9:
+		note = notes[key]
+		$Label.text = str(note)
+		key = str(midi_event.pitch - 21)
+		get_node("key" + key).key_click()
+	else:
+		note = notes[key]
+		key = str(midi_event.pitch - 21)
+		get_node("key" + key).key_clickOut()
