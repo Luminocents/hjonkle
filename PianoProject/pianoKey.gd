@@ -1,19 +1,14 @@
 extends Node2D
 
-var music = AudioStreamPlayer2D.new()
+var music
 var stream
 var timer = Timer.new()
-var fading = false
 var strang
-var noteDuration
 var sus = false
 
 func _ready() -> void:
 	strang = str(int($AnimatedSprite2D.get_parent().name.get_slice("key", 1)) + 1)
 	stream = load("pianoKeySounds/" + strang + ".mp3")
-	music.set_stream(stream)
-	music.max_polyphony = 88
-	$AnimatedSprite2D.get_parent().add_child(music)
 	$AnimatedSprite2D.get_parent().add_child(timer)
 	timer.timeout.connect(_on_timer_timeout)
 
@@ -22,12 +17,16 @@ func _process(delta: float) -> void:
 
 
 func key_on(duration, velocity):
+	music = AudioStreamPlayer2D.new()
+	music.set_stream(stream)
+	$AnimatedSprite2D.get_parent().add_child(music)
+	
+	$AnimatedSprite2D.animation = "on"
+	music.volume_db = 0
 	music.play()
 	timer.start(duration)
 	$AnimatedSprite2D.animation = "on"
 	music.volume_db = -15 + (15 * velocity)
-	noteDuration = duration
-	
 
 func _on_timer_timeout() -> void:
 	$AnimatedSprite2D.animation = "off"
@@ -47,7 +46,8 @@ func key_click():
 func key_clickOut():
 	$AnimatedSprite2D.animation = "off"
 	if sus:
-		create_tween().tween_property(music, "volume_db", -80, 2)
+		var tween = create_tween()
+		tween.tween_property(music, "volume_db", -80, 2)
 
 func sustain():
 	if sus:
