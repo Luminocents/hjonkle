@@ -101,12 +101,19 @@ func _print_midi_info(midi_event):
 	"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
 	"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
 	"C", "C#", "D","D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C"]
-	if state == 9:
-		note = notes[key]
-		$Label.text = str(note)
-		key = str(midi_event.pitch - 21)
-		get_node("key" + key).key_click()
-	else:
-		note = notes[key]
-		key = str(midi_event.pitch - 21)
-		get_node("key" + key).key_clickOut()
+	if key >= 0 or key <= 87 and key % 1 != 0:
+		if state == 9:
+			note = notes[key]
+			$Label.text = str(note)
+			key = str(midi_event.pitch - 21)
+			get_node("key" + key).key_click()
+		else:
+			note = notes[key]
+			key = str(midi_event.pitch - 21)
+			get_node("key" + key).key_clickOut()
+
+
+func _on_sustain_pressed() -> void:
+	for nope in 88:
+		var nope_number = str(nope)
+		get_node("key" + nope_number).sustain()

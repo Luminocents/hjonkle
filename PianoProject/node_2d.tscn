@@ -405,8 +405,31 @@ rotation = 0.613006
 theme_override_font_sizes/font_size = 50
 text = "E"
 
+[node name="Sustain" type="TextureButton" parent="."]
+offset_left = 664.0
+offset_top = 18.0
+offset_right = 878.0
+offset_bottom = 185.0
+rotation = -3.73556
+texture_normal = ExtResource("7_der2k")
+texture_pressed = ExtResource("8_ooaai")
+ignore_texture_size = true
+stretch_mode = 0
+flip_v = true
+
+[node name="Label" type="Label" parent="Sustain"]
+layout_mode = 0
+offset_left = 145.705
+offset_top = 123.737
+offset_right = 326.705
+offset_bottom = 192.737
+rotation = 3.7341
+theme_override_font_sizes/font_size = 35
+text = "SuStain"
+
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="pressed" from="turkeybutton" to="." method="_on_turkey_button_pressed"]
 [connection signal="pressed" from="Moon Button" to="." method="_on_moon_button_pressed"]
 [connection signal="pressed" from="Ocarina Button" to="." method="_on_ocarina_button_pressed"]
 [connection signal="pressed" from="E Button" to="." method="_on_e_button_pressed"]
+[connection signal="pressed" from="Sustain" to="." method="_on_sustain_pressed"]

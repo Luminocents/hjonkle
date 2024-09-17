@@ -6,6 +6,7 @@ var timer = Timer.new()
 var fading = false
 var strang
 var noteDuration
+var sus = false
 
 func _ready() -> void:
 	strang = str(int($AnimatedSprite2D.get_parent().name.get_slice("key", 1)) + 1)
@@ -30,6 +31,9 @@ func key_on(duration, velocity):
 
 func _on_timer_timeout() -> void:
 	$AnimatedSprite2D.animation = "off"
+	if sus:
+		var tween = create_tween()
+		tween.tween_property(music, "volume_db", -80, 2)
 
 func key_click():
 	music = AudioStreamPlayer2D.new()
@@ -42,8 +46,14 @@ func key_click():
 	
 func key_clickOut():
 	$AnimatedSprite2D.animation = "off"
-	var tween = create_tween()
-	tween.tween_property(music, "volume_db", -80, 2)
+	if sus:
+		create_tween().tween_property(music, "volume_db", -80, 2)
+
+func sustain():
+	if sus:
+		sus = false
+	else:
+		sus = true
 
 func _on_area_2d_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	if event is InputEventMouseButton:
