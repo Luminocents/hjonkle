@@ -18,8 +18,6 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	pass
-	#while fading and music.volume_db >= -20:
-		#music.volume_db -= snapped(noteDuration, .1) + .1
 
 
 func key_on(duration, velocity):
@@ -32,7 +30,6 @@ func key_on(duration, velocity):
 
 func _on_timer_timeout() -> void:
 	$AnimatedSprite2D.animation = "off"
-	fading = true
 
 func key_click():
 	music = AudioStreamPlayer2D.new()
@@ -45,7 +42,8 @@ func key_click():
 	
 func key_clickOut():
 	$AnimatedSprite2D.animation = "off"
-	fading = true
+	var tween = create_tween()
+	tween.tween_property(music, "volume_db", -80, 2)
 
 func _on_area_2d_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	if event is InputEventMouseButton:
