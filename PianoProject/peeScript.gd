@@ -18,7 +18,7 @@ func add_note_to_main_array(nope):
 	if !nopes.has(time):
 		nopes[time] = []
 	
-	nopes[time].append([nope["midi"], nope["duration"], nope["velocity"]])
+	nopes[time].append([nope["midi"], nope["duration"], nope["velocity"], false])
 
 func play_notes(nopes):
 	for nope in nopes:
@@ -26,7 +26,8 @@ func play_notes(nopes):
 		var duration = nope[1]
 		var velocity = nope[2]
 		
-		get_node("key" + nope_number).key_on(duration, velocity)
+		if !nope[3]:
+			get_node("key" + nope_number).key_on(duration, velocity)
 
 func _on_timer_timeout():
 	var temp = str(snapped(timer, time_accuracy))
