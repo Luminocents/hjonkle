@@ -1,0 +1,70 @@
+[gd_scene load_steps=12 format=3 uid="uid://6qytyp86oh6p"]
+
+[ext_resource type="PackedScene" uid="uid://db7xaomgf3hvq" path="res://Player.tscn" id="1_cm6ky"]
+[ext_resource type="PackedScene" uid="uid://cjx3cfklh7gd4" path="res://Ball.tscn" id="1_pxj5o"]
+[ext_resource type="Script" path="res://player.gd" id="2_g8vd2"]
+[ext_resource type="Texture2D" uid="uid://boxbb8p8qie00" path="res://grassGround.png" id="4_3p6nn"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5ed2b"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_shodo"]
+sky_material = SubResource("ProceduralSkyMaterial_5ed2b")
+
+[sub_resource type="Environment" id="Environment_sv6l6"]
+background_mode = 2
+sky = SubResource("Sky_shodo")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xcwos"]
+size = Vector3(39, 1, 37)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n7ssp"]
+albedo_texture = ExtResource("4_3p6nn")
+refraction_scale = 1.0
+uv1_scale = Vector3(2, 2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_seq1f"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_gtxbo"]
+
+[node name="Main" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_sv6l6")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Player" parent="." instance=ExtResource("1_cm6ky")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.13867, 3.45123)
+script = ExtResource("2_g8vd2")
+
+[node name="Ball" parent="." instance=ExtResource("1_pxj5o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.939116, -6)
+
+[node name="Environment" type="Node3D" parent="."]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_xcwos")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+transform = Transform3D(39.9525, 0, 0, 0, 1, 0, 0, 0, 37.3735, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_n7ssp")
+mesh = SubResource("BoxMesh_seq1f")
+
+[node name="SoftBody3D" type="SoftBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.15497, 0)
+mesh = SubResource("SphereMesh_gtxbo")
+simulation_precision = 100
+total_mass = 20.01
+linear_stiffness = 1.0
+pressure_coefficient = 100.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SoftBody3D"]
