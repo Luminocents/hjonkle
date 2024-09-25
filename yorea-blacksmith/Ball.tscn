@@ -8,14 +8,12 @@ disable_receive_shadows = true
 
 [sub_resource type="SphereMesh" id="SphereMesh_0rhjd"]
 
-[node name="Ball" type="Node3D"]
+[node name="Ball" type="RigidBody3D"]
 
-[node name="RigidBody3D" type="RigidBody3D" parent="."]
-mass = 1000.0
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_i8nij")
 
-[node name="Ball" type="MeshInstance3D" parent="RigidBody3D"]
+[node name="Ball" type="MeshInstance3D" parent="."]
 material_override = SubResource("StandardMaterial3D_380pn")
 mesh = SubResource("SphereMesh_0rhjd")
+skeleton = NodePath("")
