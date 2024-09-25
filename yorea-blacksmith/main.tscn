@@ -46,9 +46,6 @@ shadow_enabled = true
 
 [node name="Player" parent="." instance=ExtResource("1_cm6ky")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.13867, 3.45123)
-acceleration = 12
-gravity = -10.0
-sensitivity = 0.002
 
 [node name="Ball" parent="." instance=ExtResource("1_pxj5o")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.939116, -6)

@@ -8,12 +8,19 @@ var acceleration_x = 0
 var acceleration_z = 0
 var jumpBuffer = false
 var jumped = false
+var holding_coords = [0, 0, 0]
+var holding_rotation = [0, 0, 0]
+var orgPos = [0, 0, 0]
 
 @export var acceleration = 12
 @export var gravity = -10.0
 @export var sensitivity = 0.002
 @onready var neck := $Neck
 @onready var camera := $Neck/Camera3D
+
+func _ready() -> void:
+	holding_coords = self.global_position
+	orgPos = self.global_position
 
 # Mouse movement
 func _unhandled_input(event: InputEvent) -> void:
@@ -32,14 +39,29 @@ func _unhandled_input(event: InputEvent) -> void:
 				#child.rotation.x = clamp(camera.rotation.x, deg_to_rad(-70), deg_to_rad(90))
 
 func _physics_process(delta: float) -> void:
-	if looking_at and Input.is_action_just_pressed("mouse1") and !holding:
-		holding = true
-		move_node(looking_at, $Neck/Camera3D/RealArm)
+	# Grabbing Code
+	if holding:
+		var x = (orgPos.global_position.x - self.global_position.x)
+		var y = (orgPos.global_position.y - self.global_position.y)
+		var z = (orgPos.global_position.z - self.global_position.z)
+		print(orgPos.global_position)
+		holding.global_position.x += x
+		holding.global_position.y += y
+		holding.global_position.z += z
+	if looking_at and Input.is_action_just_pressed("mouse1") and !holding and !looking_at.freeze:
+		holding = looking_at
+		holding_coords = holding.global_position
+		orgPos = holding
+		holding_rotation = holding.global_rotation
+		move_node(holding, $Neck/Camera3D/RealArm)
 		#print(looking_at.position.x, looking_at.position.z, looking_at.position.y)
-		looking_at.freeze = true
 	if Input.is_action_just_released("mouse1") and holding:
-		move_node(looking_at, get_parent())
+		holding_coords = holding.global_position
+		holding_rotation = holding.global_rotation
+		move_node(holding, get_parent())
+		holding = false
 		looking_at = false
+		
 		#	Jump Buffer & Jump
 	if Input.is_action_just_pressed("jump") and !is_on_floor():
 		jumpBuffer = true
@@ -85,10 +107,6 @@ func _on_real_arm_body_exited(body: Node3D) -> void:
 	#looking_at = false
 
 func move_node(node, new_parent): # node - the node that you want to move, new_parent - where you want to move the node
-	print(typeof(node))
-	if typeof(node) == 1:
-		return
-	print(node)
-	node.get_parent().remove_child(node) # Get node's parent and remove node from it
-	print(new_parent)
-	new_parent.add_child(node) # Add node to new parent as a child   
+	node.global_position = holding_coords
+	print(holding_rotation)
+	node.global_rotation = holding_rotation

@@ -1,19 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://cjx3cfklh7gd4"]
+[gd_scene load_steps=5 format=3 uid="uid://cjx3cfklh7gd4"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_i8nij"]
+[ext_resource type="Texture2D" uid="uid://boxbb8p8qie00" path="res://grassGround.png" id="1_ghiio"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_380pn"]
-albedo_color = Color(0.235294, 0.454902, 1, 1)
-disable_receive_shadows = true
+[sub_resource type="BoxShape3D" id="BoxShape3D_7w7ua"]
+size = Vector3(3, 1, 1)
 
-[sub_resource type="SphereMesh" id="SphereMesh_0rhjd"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r5t3e"]
+albedo_texture = ExtResource("1_ghiio")
+
+[sub_resource type="BoxMesh" id="BoxMesh_8yb8d"]
 
 [node name="Ball" type="RigidBody3D"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("SphereShape3D_i8nij")
+shape = SubResource("BoxShape3D_7w7ua")
 
 [node name="Ball" type="MeshInstance3D" parent="."]
-material_override = SubResource("StandardMaterial3D_380pn")
-mesh = SubResource("SphereMesh_0rhjd")
+transform = Transform3D(3, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_r5t3e")
+mesh = SubResource("BoxMesh_8yb8d")
 skeleton = NodePath("")
