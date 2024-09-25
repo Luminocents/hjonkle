@@ -1,9 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://6qytyp86oh6p"]
+[gd_scene load_steps=13 format=3 uid="uid://bk733wqfcergj"]
 
-[ext_resource type="PackedScene" uid="uid://cs8c5hhpuxi5k" path="res://Graphics.tscn" id="1_8hllw"]
-[ext_resource type="PackedScene" uid="uid://db7xaomgf3hvq" path="res://Player.tscn" id="1_cm6ky"]
-[ext_resource type="PackedScene" uid="uid://cjx3cfklh7gd4" path="res://Ball.tscn" id="1_pxj5o"]
-[ext_resource type="Texture2D" uid="uid://boxbb8p8qie00" path="res://grassGround.png" id="4_3p6nn"]
+[ext_resource type="PackedScene" uid="uid://cs8c5hhpuxi5k" path="res://Graphics.tscn" id="1_y0shk"]
+[ext_resource type="PackedScene" uid="uid://db7xaomgf3hvq" path="res://Player.tscn" id="2_ciumm"]
+[ext_resource type="PackedScene" uid="uid://cjx3cfklh7gd4" path="res://Ball.tscn" id="3_8hy37"]
+[ext_resource type="Texture2D" uid="uid://boxbb8p8qie00" path="res://grassGround.png" id="4_2mvjg"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5ed2b"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -22,7 +22,7 @@ glow_enabled = true
 size = Vector3(39, 1, 37)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n7ssp"]
-albedo_texture = ExtResource("4_3p6nn")
+albedo_texture = ExtResource("4_2mvjg")
 refraction_scale = 1.0
 uv1_scale = Vector3(2, 2, 2)
 
@@ -34,8 +34,7 @@ uv1_scale = Vector3(2, 2, 2)
 
 [node name="Main" type="Node3D"]
 
-[node name="Graphics" parent="." instance=ExtResource("1_8hllw")]
-metadata/_edit_use_anchors_ = true
+[node name="Graphics" parent="." instance=ExtResource("1_y0shk")]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_sv6l6")
@@ -44,13 +43,10 @@ environment = SubResource("Environment_sv6l6")
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Player" parent="." instance=ExtResource("1_cm6ky")]
+[node name="Player" parent="." instance=ExtResource("2_ciumm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.13867, 3.45123)
-acceleration = 12
-gravity = -10.0
-sensitivity = 0.002
 
-[node name="Ball" parent="." instance=ExtResource("1_pxj5o")]
+[node name="Ball" parent="." instance=ExtResource("3_8hy37")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.939116, -6)
 
 [node name="Environment" type="Node3D" parent="."]

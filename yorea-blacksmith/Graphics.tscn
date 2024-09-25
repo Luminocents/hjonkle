@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://cs8c5hhpuxi5k"]
+
+[ext_resource type="Texture2D" uid="uid://b5yaf71kbqc6n" path="res://cursor.png" id="1_iusg0"]
+
+[node name="Graphics" type="CenterContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -576.0
+offset_bottom = -324.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("1_iusg0")
