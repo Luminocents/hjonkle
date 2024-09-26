@@ -1,16 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://db7xaomgf3hvq"]
+[gd_scene load_steps=5 format=3 uid="uid://db7xaomgf3hvq"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_5brhk"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ccqb6"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0dulj"]
-albedo_color = Color(0, 0, 0, 1)
-
-[sub_resource type="SphereMesh" id="SphereMesh_n45qk"]
-material = SubResource("StandardMaterial3D_0dulj")
-
-[sub_resource type="SphereMesh" id="SphereMesh_hwmgb"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5cyn6"]
 albedo_color = Color(0.698039, 0.827451, 0, 1)
@@ -35,19 +27,10 @@ target_position = Vector3(0, 1, 0)
 
 [node name="InteractPos" type="StaticBody3D" parent="Neck/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.44966)
-visible = false
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Neck/Camera3D/InteractPos"]
-transform = Transform3D(0.421764, 0, 0, 0, 0.421764, 0, 0, 0, 0.421764, 0, 0, 0)
-mesh = SubResource("SphereMesh_n45qk")
 
 [node name="SpringArm3D" type="SpringArm3D" parent="Neck/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4.30649)
 spring_length = 0.0
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Neck/Camera3D/SpringArm3D"]
-transform = Transform3D(0.441716, 0, 0, 0, 0.441716, 0, 0, 0, 0.441716, 0, 0, 0)
-mesh = SubResource("SphereMesh_hwmgb")
 
 [node name="Bean" type="MeshInstance3D" parent="Neck"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.62177, 0)

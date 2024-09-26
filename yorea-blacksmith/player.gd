@@ -11,6 +11,10 @@ var jumpBuffer = false
 var jumped = false
 var rayCast
 var spring
+var rightClickHeld = false
+var lockTurn = false
+var relX = 0
+var relY = 0
 
 @export var acceleration = 12
 @export var gravity = -10.0
@@ -31,31 +35,54 @@ func _unhandled_input(event: InputEvent) -> void:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		if event is InputEventMouseMotion:
-			neck.rotate_y(-event.relative.x * sensitivity)
-			camera.rotate_x(-event.relative.y * sensitivity)
-			camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-70), deg_to_rad(90))
-#			Rotate things attatched to character
-			#for child in $Neck/Bean.get_children():
-				#child.rotate_x(-event.relative.y * 0.01)
-				#child.rotation.x = clamp(camera.rotation.x, deg_to_rad(-70), deg_to_rad(90))
+			relX = -event.relative.x
+			relY = -event.relative.y
+			if !lockTurn:
+				neck.rotate_y(-event.relative.x * sensitivity)
+				camera.rotate_x(-event.relative.y * sensitivity)
+				camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-70), deg_to_rad(90))
+	#			Rotate things attatched to character
+				#for child in $Neck/Bean.get_children():
+					#child.rotate_x(-event.relative.y * 0.01)
+					#child.rotation.x = clamp(camera.rotation.x, deg_to_rad(-70), deg_to_rad(90))
 
 func _physics_process(delta: float) -> void:
-	print(looking_pos)
+	if Input.is_action_just_pressed("mouse2"):
+		rightClickHeld = true
+	if Input.is_action_just_released("mouse2"):
+		rightClickHeld = false
+	if holding:
+		if rightClickHeld:
+			pass
+			lockTurn = true
+			print(holding.rotation)
+			holding.rotate_y(-relX * sensitivity)
+			camera.rotate_x(-relY * sensitivity)
+		else:
+			lockTurn = false
+	# Grabbing Code
 	if rayCast.get_collider() and !holding:
 		looking_at = rayCast.get_collider()
 		looking_pos = rayCast.get_collision_point()
-	# Grabbing Code
-	if looking_at and Input.is_action_just_pressed("mouse1") and !holding and !looking_at.freeze:
+		
+	if looking_at and Input.is_action_just_pressed("mouse1") and !holding and looking_at.get_class() == "RigidBody3D":
 		pass
+		if looking_at.freeze == true:
+			return
 		holding = looking_at
 		var interact = $Neck/Camera3D/InteractPos
-		interact.global_position = looking_pos
-		spring.global_position = looking_pos
+		var orgRot = holding.global_rotation
+		holding.gravity_scale = 0
+		interact.global_position = holding.global_position
+		spring.global_position = holding.global_position
 		move_node(holding, $Neck/Camera3D/SpringArm3D)
+		holding.global_rotation = orgRot
+		
 	if Input.is_action_just_released("mouse1") and holding:
 		pass
 		var orgPos = holding.global_position
 		var orgRot = holding.global_rotation
+		holding.gravity_scale = 1
 		move_node(holding, $"..")
 		holding.global_position = orgPos
 		holding.global_rotation = orgRot
@@ -100,6 +127,6 @@ func _physics_process(delta: float) -> void:
 
 
 func move_node(node, new_parent): # node - the node that you want to move, new_parent - where you want to move the node
-	node.linear_velocity = Vector3(0, 0, 0)
 	node.get_parent().remove_child(node)
 	new_parent.add_child(node)
+	node.linear_velocity = Vector3(0, 0, 0)
