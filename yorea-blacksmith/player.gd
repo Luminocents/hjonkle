@@ -11,6 +11,7 @@ var jumped = false
 var holding_coords = [0, 0, 0]
 var holding_rotation = [0, 0, 0]
 var orgPos = [0, 0, 0]
+var Reference
 
 @export var acceleration = 12
 @export var gravity = -10.0
@@ -19,6 +20,7 @@ var orgPos = [0, 0, 0]
 @onready var camera := $Neck/Camera3D
 
 func _ready() -> void:
+	Reference = $Neck/Camera3D/RealArm/Reference
 	holding_coords = self.global_position
 	orgPos = self.global_position
 
@@ -41,17 +43,12 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	# Grabbing Code
 	if holding:
-		var x = (orgPos.global_position.x - self.global_position.x)
-		var y = (orgPos.global_position.y - self.global_position.y)
-		var z = (orgPos.global_position.z - self.global_position.z)
-		print(orgPos.global_position)
-		holding.global_position.x += x
-		holding.global_position.y += y
-		holding.global_position.z += z
+		holding.global_position = Reference.global_position
+		holding.rotation_degrees.z -= .1
 	if looking_at and Input.is_action_just_pressed("mouse1") and !holding and !looking_at.freeze:
 		holding = looking_at
 		holding_coords = holding.global_position
-		orgPos = holding
+		Reference.global_position = holding.global_position
 		holding_rotation = holding.global_rotation
 		move_node(holding, $Neck/Camera3D/RealArm)
 		#print(looking_at.position.x, looking_at.position.z, looking_at.position.y)
@@ -107,6 +104,6 @@ func _on_real_arm_body_exited(body: Node3D) -> void:
 	#looking_at = false
 
 func move_node(node, new_parent): # node - the node that you want to move, new_parent - where you want to move the node
-	node.global_position = holding_coords
 	print(holding_rotation)
+	node.linear_velocity = Vector3(0, 0, 0)
 	node.global_rotation = holding_rotation

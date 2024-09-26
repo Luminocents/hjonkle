@@ -11,6 +11,7 @@ albedo_texture = ExtResource("1_ghiio")
 [sub_resource type="BoxMesh" id="BoxMesh_8yb8d"]
 
 [node name="Ball" type="RigidBody3D"]
+center_of_mass_mode = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_7w7ua")

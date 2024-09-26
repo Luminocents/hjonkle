@@ -4,12 +4,12 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ccqb6"]
 
-[sub_resource type="SphereMesh" id="SphereMesh_q3p0c"]
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_jeg2y"]
 size = Vector3(0.00997162, 0.00840759, 2.15723)
 
 [sub_resource type="BoxMesh" id="BoxMesh_3vyi8"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_lyvs8"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5cyn6"]
 albedo_color = Color(0.698039, 0.827451, 0, 1)
@@ -28,15 +28,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.62177, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Neck"]
 
-[node name="Holder" type="PinJoint3D" parent="Neck/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.62177, 0)
-node_a = NodePath("../../..")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Neck/Camera3D/Holder"]
-transform = Transform3D(0.0812261, 0, 0, 0, 0.0812261, 0, 0, 0, 0.0812261, 0, 0, 0)
-mesh = SubResource("SphereMesh_q3p0c")
-skeleton = NodePath("../../../..")
-
 [node name="RealArm" type="Area3D" parent="Neck/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.46377, 0)
 
@@ -45,11 +36,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00208685, 0.461355, -1.5727
 shape = SubResource("BoxShape3D_jeg2y")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Neck/Camera3D/RealArm"]
-transform = Transform3D(0.0764398, 0, 0, 0, 0.074172, 0, 0, 0, 3.01204, 0.00777006, 0.470276, -1.13986)
+transform = Transform3D(0.0764398, 0, 0, 0, 0.074172, 0, 0, 0, 3.01204, 0.00771549, 0.470276, -1.13986)
 mesh = SubResource("BoxMesh_3vyi8")
 
-[node name="GrabSpot" type="Marker3D" parent="Neck/Camera3D/RealArm"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.458814, -2.62247)
+[node name="Reference" type="Marker3D" parent="Neck/Camera3D/RealArm"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.89679e-05, 0.458814, -2.62247)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Neck/Camera3D/RealArm/Reference"]
+transform = Transform3D(0.162066, 0, 0, 0, 0.162066, 0, 0, 0, 0.162066, 0, 0, 0)
+mesh = SubResource("SphereMesh_lyvs8")
 
 [node name="Bean" type="MeshInstance3D" parent="Neck"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.62177, 0)
