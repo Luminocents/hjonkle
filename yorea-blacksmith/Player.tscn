@@ -4,12 +4,13 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ccqb6"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_jeg2y"]
-size = Vector3(0.00997162, 0.00840759, 2.15723)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0dulj"]
+albedo_color = Color(0, 0, 0, 1)
 
-[sub_resource type="BoxMesh" id="BoxMesh_3vyi8"]
+[sub_resource type="SphereMesh" id="SphereMesh_n45qk"]
+material = SubResource("StandardMaterial3D_0dulj")
 
-[sub_resource type="SphereMesh" id="SphereMesh_lyvs8"]
+[sub_resource type="SphereMesh" id="SphereMesh_hwmgb"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5cyn6"]
 albedo_color = Color(0.698039, 0.827451, 0, 1)
@@ -28,28 +29,27 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.62177, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Neck"]
 
-[node name="RealArm" type="Area3D" parent="Neck/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.46377, 0)
+[node name="RealArm" type="RayCast3D" parent="Neck/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, -1.21581e-07, 1, 0, -2.78145, -4.37114e-08, 0, 0, 0)
+target_position = Vector3(0, 1, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Neck/Camera3D/RealArm"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00208685, 0.461355, -1.57272)
-shape = SubResource("BoxShape3D_jeg2y")
+[node name="InteractPos" type="StaticBody3D" parent="Neck/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.44966)
+visible = false
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Neck/Camera3D/RealArm"]
-transform = Transform3D(0.0764398, 0, 0, 0, 0.074172, 0, 0, 0, 3.01204, 0.00771549, 0.470276, -1.13986)
-mesh = SubResource("BoxMesh_3vyi8")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Neck/Camera3D/InteractPos"]
+transform = Transform3D(0.421764, 0, 0, 0, 0.421764, 0, 0, 0, 0.421764, 0, 0, 0)
+mesh = SubResource("SphereMesh_n45qk")
 
-[node name="Reference" type="Marker3D" parent="Neck/Camera3D/RealArm"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.89679e-05, 0.458814, -2.62247)
+[node name="SpringArm3D" type="SpringArm3D" parent="Neck/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4.30649)
+spring_length = 0.0
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Neck/Camera3D/RealArm/Reference"]
-transform = Transform3D(0.162066, 0, 0, 0, 0.162066, 0, 0, 0, 0.162066, 0, 0, 0)
-mesh = SubResource("SphereMesh_lyvs8")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Neck/Camera3D/SpringArm3D"]
+transform = Transform3D(0.441716, 0, 0, 0, 0.441716, 0, 0, 0, 0.441716, 0, 0, 0)
+mesh = SubResource("SphereMesh_hwmgb")
 
 [node name="Bean" type="MeshInstance3D" parent="Neck"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.62177, 0)
 mesh = SubResource("CapsuleMesh_ftbkn")
 skeleton = NodePath("../..")
-
-[connection signal="body_entered" from="Neck/Camera3D/RealArm" to="." method="_on_real_arm_body_entered"]
-[connection signal="body_exited" from="Neck/Camera3D/RealArm" to="." method="_on_real_arm_body_exited"]

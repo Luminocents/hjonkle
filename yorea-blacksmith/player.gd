@@ -2,16 +2,15 @@ extends CharacterBody3D
 
 const SPEED = 5.0
 var looking_at = false
+var looking_pos = [0, 0, 0]
 var holding = false
 const JUMP_VELOCITY = 0.1
 var acceleration_x = 0
 var acceleration_z = 0
 var jumpBuffer = false
 var jumped = false
-var holding_coords = [0, 0, 0]
-var holding_rotation = [0, 0, 0]
-var orgPos = [0, 0, 0]
-var Reference
+var rayCast
+var spring
 
 @export var acceleration = 12
 @export var gravity = -10.0
@@ -20,9 +19,9 @@ var Reference
 @onready var camera := $Neck/Camera3D
 
 func _ready() -> void:
-	Reference = $Neck/Camera3D/RealArm/Reference
-	holding_coords = self.global_position
-	orgPos = self.global_position
+	spring = $Neck/Camera3D/SpringArm3D
+	rayCast = $Neck/Camera3D/RealArm
+	rayCast.add_exception($".")
 
 # Mouse movement
 func _unhandled_input(event: InputEvent) -> void:
@@ -41,21 +40,25 @@ func _unhandled_input(event: InputEvent) -> void:
 				#child.rotation.x = clamp(camera.rotation.x, deg_to_rad(-70), deg_to_rad(90))
 
 func _physics_process(delta: float) -> void:
+	print(looking_pos)
+	if rayCast.get_collider() and !holding:
+		looking_at = rayCast.get_collider()
+		looking_pos = rayCast.get_collision_point()
 	# Grabbing Code
-	if holding:
-		holding.global_position = Reference.global_position
-		holding.rotation_degrees.z -= .1
 	if looking_at and Input.is_action_just_pressed("mouse1") and !holding and !looking_at.freeze:
+		pass
 		holding = looking_at
-		holding_coords = holding.global_position
-		Reference.global_position = holding.global_position
-		holding_rotation = holding.global_rotation
-		move_node(holding, $Neck/Camera3D/RealArm)
-		#print(looking_at.position.x, looking_at.position.z, looking_at.position.y)
+		var interact = $Neck/Camera3D/InteractPos
+		interact.global_position = looking_pos
+		spring.global_position = looking_pos
+		move_node(holding, $Neck/Camera3D/SpringArm3D)
 	if Input.is_action_just_released("mouse1") and holding:
-		holding_coords = holding.global_position
-		holding_rotation = holding.global_rotation
-		move_node(holding, get_parent())
+		pass
+		var orgPos = holding.global_position
+		var orgRot = holding.global_rotation
+		move_node(holding, $"..")
+		holding.global_position = orgPos
+		holding.global_rotation = orgRot
 		holding = false
 		looking_at = false
 		
@@ -95,15 +98,8 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 
-func _on_real_arm_body_entered(body: Node3D) -> void:
-	if body != self:
-		looking_at = body
-
-func _on_real_arm_body_exited(body: Node3D) -> void:
-	pass
-	#looking_at = false
 
 func move_node(node, new_parent): # node - the node that you want to move, new_parent - where you want to move the node
-	print(holding_rotation)
 	node.linear_velocity = Vector3(0, 0, 0)
-	node.global_rotation = holding_rotation
+	node.get_parent().remove_child(node)
+	new_parent.add_child(node)
