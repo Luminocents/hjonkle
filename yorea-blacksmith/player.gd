@@ -13,21 +13,19 @@ var rightClickHeld = false
 var lockTurn = false
 var relX = 0
 var relY = 0
-const LERPERM = 0.2
-var lerpy = LERPERM
 var crouching = false
 var holdingCollision = false
+var mouseMovement = false
 
 @export var acceleration = 12
 @export var gravity = -10.0
 @export var sensitivity = 0.002
 @onready var neck := $Neck
 @onready var camera := $Neck/Camera3D
-@onready var spring = $Neck/Camera3D/SpringArm3D
+@onready var marker = $Neck/Camera3D/Marker3D
 @onready var rayCast = $Neck/Camera3D/RealArm
 @onready var initialHeight = camera.position.y
 @onready var crouchHeight = initialHeight / 20
-@onready var hitboxCopy = $Neck/Camera3D/SpringArm3D/Area3D/HitboxCopy
 
 func _ready() -> void:
 	rayCast.add_exception($".")
@@ -40,9 +38,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		if event is InputEventMouseMotion:
+			mouseMovement = true
 			relX = -event.relative.x
 			relY = -event.relative.y
 			if !lockTurn:
+				if holding:
+					holding.linear_velocity = Vector3(0, 0, 0)
+					holding.angular_velocity = Vector3(0, 0, 0)
 				neck.rotate_y(-event.relative.x * sensitivity)
 				camera.rotate_x(-event.relative.y * sensitivity)
 				camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-70), deg_to_rad(90))
@@ -50,31 +52,34 @@ func _unhandled_input(event: InputEvent) -> void:
 				#for child in $Neck/Bean.get_children():
 					#child.rotate_x(-event.relative.y * 0.01)
 					#child.rotation.x = clamp(camera.rotation.x, deg_to_rad(-70), deg_to_rad(90))
+		else:
+			mouseMovement = false
 
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("mouse2"):
 		rightClickHeld = true
 	if Input.is_action_just_released("mouse2"):
 		rightClickHeld = false
+	# Holding Physics
 	if holding:
+		var target = marker.global_position
+		var distance = (holding.global_position - marker.global_transform.origin).normalized()
+		var distance_to_taraget = (holding.global_position - marker.global_transform.origin).length()
+		var threshold = 0.1
 		
-		var angle = holding.position
-		var target = Basis.looking_at(angle)
-		if !holdingCollision:
-			hitboxCopy.scale = holding.get_child(2).scale
-			hitboxCopy.global_rotation = holding.global_rotation
-			holding.global_position = lerp(holding.global_position, spring.global_position, lerpy)
-			hitboxCopy.global_position = holding.global_position
-		if holdingCollision:
-			lerpy = 0.001
-		if !looking_at:
-			lerpy = LERPERM
+		# If item is close to where you are holding
+		if distance_to_taraget > threshold:
+			holding.linear_velocity = (-distance * SPEED) + $".".velocity
+		elif !mouseMovement or distance_to_taraget < threshold:
+			holding.linear_velocity = (-distance * SPEED * delta) + $".".velocity
+			
+			holding.look_at($".".global_position)
+			
+		# Turn Held Item
 		if rightClickHeld:
-			pass
 			lockTurn = true
-			print(holding.rotation)
-			holding.rotate_y(-relX * sensitivity)
-			holding.rotate_x(-relY * sensitivity)
+			holding.rotate_y(-relX * (sensitivity / 2))
+			holding.rotate_x(-relY * (sensitivity / 2))
 		else:
 			lockTurn = false
 		
@@ -84,23 +89,25 @@ func _physics_process(delta: float) -> void:
 		looking_pos = rayCast.get_collision_point()
 	else:
 		looking_at = false
-		
+	
+	# If looking at an item, left click, are not currently holding an item, and item is a rigid body
 	if looking_at and Input.is_action_just_pressed("mouse1") and !holding and looking_at.get_class() == "RigidBody3D":
-		pass
 		if looking_at.freeze == true:
 			return
 		holding = looking_at
 		holding.gravity_scale = 0
 		holding.linear_velocity = Vector3(0, 0, 0)
-		spring.global_position = looking_pos
-		
+		marker.global_position = looking_pos
+	
+	# On release of left click and you are holding an item
 	if Input.is_action_just_released("mouse1") and holding:
-		pass
+		holding.linear_velocity = Vector3(0, 0, 0)
+		holding.angular_velocity = Vector3(0, 0, 0)
 		holding.gravity_scale = 1
 		holding = false
 		looking_at = false
 		
-		# Jump Buffer & Jump
+	# Jump Buffer & Jump
 	if Input.is_action_just_pressed("jump") and !is_on_floor():
 		jumpBuffer = true
 	if is_on_floor():
@@ -108,16 +115,13 @@ func _physics_process(delta: float) -> void:
 			velocity.y = JUMP_VELOCITY / delta
 			jumped = true
 			jumpBuffer = false
+	
 	# Crouching
 	if Input.is_action_just_pressed("crouch"):
 		$PlayerShape.disabled = true
-		$Neck/Bean.visible = false
-		$Neck/BeanSmall.visible = true
 		crouching = true
 	if Input.is_action_just_released("crouch"):
 		$PlayerShape.disabled = false
-		$Neck/Bean.visible = true
-		$Neck/BeanSmall.visible = false
 		crouching = false
 	if crouching:
 		camera.position.y = lerpf(camera.position.y, crouchHeight, acceleration * delta)
@@ -131,6 +135,7 @@ func _physics_process(delta: float) -> void:
 	var direction = (neck.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
 		if is_on_floor():
+			# Smooths Movement
 			if jumped and acceleration_z > 4.5:
 				velocity.z = direction.z * acceleration_z
 				acceleration_z = lerpf(acceleration_x, 20, acceleration * delta)
@@ -147,24 +152,14 @@ func _physics_process(delta: float) -> void:
 		acceleration_x = 0
 		acceleration_z = 0
 	
+	# Gravity
 	velocity.y += gravity * delta
 	
 	move_and_slide()
 
 
-# node - the node that you want to move, new_parent - where you want to move the node
+# the node that you want to move, and where you want to move the node
 func move_node(node, new_parent): 
 	node.get_parent().remove_child(node)
 	new_parent.add_child(node)
 	node.linear_velocity = Vector3(0, 0, 0)
-
-
-func _on_area_3d_body_entered(body: Node3D) -> void:
-	if body.name == "Ball" || body.name == "Player":
-		return
-	print(body)
-	holdingCollision = body.global_position
-
-
-func _on_area_3d_body_exited(body: Node3D) -> void:
-	holdingCollision = false
