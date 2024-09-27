@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://6qytyp86oh6p"]
+[gd_scene load_steps=15 format=3 uid="uid://6qytyp86oh6p"]
 
 [ext_resource type="PackedScene" uid="uid://cs8c5hhpuxi5k" path="res://Graphics.tscn" id="1_8hllw"]
 [ext_resource type="PackedScene" uid="uid://db7xaomgf3hvq" path="res://Player.tscn" id="1_cm6ky"]
@@ -31,6 +31,11 @@ uv1_scale = Vector3(2, 2, 2)
 [sub_resource type="SphereShape3D" id="SphereShape3D_niju6"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_xkdx0"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6pgk0"]
+size = Vector3(1, 4.07788, 5.91125)
+
+[sub_resource type="BoxMesh" id="BoxMesh_eh1un"]
 
 [node name="Main" type="Node3D"]
 
@@ -73,3 +78,16 @@ shape = SubResource("SphereShape3D_niju6")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="test"]
 mesh = SubResource("SphereMesh_xkdx0")
+
+[node name="test2" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.22272, 1.207, -0.00148952)
+freeze = true
+freeze_mode = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="test2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.354858, -0.00299072)
+shape = SubResource("BoxShape3D_6pgk0")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="test2"]
+transform = Transform3D(1, 0, 0, 0, 3.40451, 0, 0, 0, 5.89943, 0, 0, 0)
+mesh = SubResource("BoxMesh_eh1un")

@@ -9,22 +9,27 @@ var acceleration_x = 0
 var acceleration_z = 0
 var jumpBuffer = false
 var jumped = false
-var rayCast
-var spring
 var rightClickHeld = false
 var lockTurn = false
 var relX = 0
 var relY = 0
+const LERPERM = 0.2
+var lerpy = LERPERM
+var crouching = false
+var holdingCollision = false
 
 @export var acceleration = 12
 @export var gravity = -10.0
 @export var sensitivity = 0.002
 @onready var neck := $Neck
 @onready var camera := $Neck/Camera3D
+@onready var spring = $Neck/Camera3D/SpringArm3D
+@onready var rayCast = $Neck/Camera3D/RealArm
+@onready var initialHeight = camera.position.y
+@onready var crouchHeight = initialHeight / 20
+@onready var hitboxCopy = $Neck/Camera3D/SpringArm3D/Area3D/HitboxCopy
 
 func _ready() -> void:
-	spring = $Neck/Camera3D/SpringArm3D
-	rayCast = $Neck/Camera3D/RealArm
 	rayCast.add_exception($".")
 
 # Mouse movement
@@ -52,44 +57,50 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_released("mouse2"):
 		rightClickHeld = false
 	if holding:
+		
+		var angle = holding.position
+		var target = Basis.looking_at(angle)
+		if !holdingCollision:
+			hitboxCopy.scale = holding.get_child(2).scale
+			hitboxCopy.global_rotation = holding.global_rotation
+			holding.global_position = lerp(holding.global_position, spring.global_position, lerpy)
+			hitboxCopy.global_position = holding.global_position
+		if holdingCollision:
+			lerpy = 0.001
+		if !looking_at:
+			lerpy = LERPERM
 		if rightClickHeld:
 			pass
 			lockTurn = true
 			print(holding.rotation)
 			holding.rotate_y(-relX * sensitivity)
-			camera.rotate_x(-relY * sensitivity)
+			holding.rotate_x(-relY * sensitivity)
 		else:
 			lockTurn = false
+		
 	# Grabbing Code
-	if rayCast.get_collider() and !holding:
+	if rayCast.get_collider():
 		looking_at = rayCast.get_collider()
 		looking_pos = rayCast.get_collision_point()
+	else:
+		looking_at = false
 		
 	if looking_at and Input.is_action_just_pressed("mouse1") and !holding and looking_at.get_class() == "RigidBody3D":
 		pass
 		if looking_at.freeze == true:
 			return
 		holding = looking_at
-		var interact = $Neck/Camera3D/InteractPos
-		var orgRot = holding.global_rotation
 		holding.gravity_scale = 0
-		interact.global_position = holding.global_position
-		spring.global_position = holding.global_position
-		move_node(holding, $Neck/Camera3D/SpringArm3D)
-		holding.global_rotation = orgRot
+		holding.linear_velocity = Vector3(0, 0, 0)
+		spring.global_position = looking_pos
 		
 	if Input.is_action_just_released("mouse1") and holding:
 		pass
-		var orgPos = holding.global_position
-		var orgRot = holding.global_rotation
 		holding.gravity_scale = 1
-		move_node(holding, $"..")
-		holding.global_position = orgPos
-		holding.global_rotation = orgRot
 		holding = false
 		looking_at = false
 		
-		#	Jump Buffer & Jump
+		# Jump Buffer & Jump
 	if Input.is_action_just_pressed("jump") and !is_on_floor():
 		jumpBuffer = true
 	if is_on_floor():
@@ -97,6 +108,22 @@ func _physics_process(delta: float) -> void:
 			velocity.y = JUMP_VELOCITY / delta
 			jumped = true
 			jumpBuffer = false
+	# Crouching
+	if Input.is_action_just_pressed("crouch"):
+		$PlayerShape.disabled = true
+		$Neck/Bean.visible = false
+		$Neck/BeanSmall.visible = true
+		crouching = true
+	if Input.is_action_just_released("crouch"):
+		$PlayerShape.disabled = false
+		$Neck/Bean.visible = true
+		$Neck/BeanSmall.visible = false
+		crouching = false
+	if crouching:
+		camera.position.y = lerpf(camera.position.y, crouchHeight, acceleration * delta)
+	elif camera.position.y < initialHeight:
+		camera.position.y = lerpf(camera.position.y, initialHeight, acceleration * delta)
+	
 #	Movement Inputs
 	var input_dir := Input.get_vector("left", "right", "forward", "back")
 	if jumped:
@@ -125,8 +152,19 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 
-
-func move_node(node, new_parent): # node - the node that you want to move, new_parent - where you want to move the node
+# node - the node that you want to move, new_parent - where you want to move the node
+func move_node(node, new_parent): 
 	node.get_parent().remove_child(node)
 	new_parent.add_child(node)
 	node.linear_velocity = Vector3(0, 0, 0)
+
+
+func _on_area_3d_body_entered(body: Node3D) -> void:
+	if body.name == "Ball" || body.name == "Player":
+		return
+	print(body)
+	holdingCollision = body.global_position
+
+
+func _on_area_3d_body_exited(body: Node3D) -> void:
+	holdingCollision = false
