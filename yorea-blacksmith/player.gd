@@ -64,22 +64,26 @@ func _physics_process(delta: float) -> void:
 	if holding:
 		var target = marker.global_position
 		var distance = (holding.global_position - marker.global_transform.origin).normalized()
-		var distance_to_taraget = (holding.global_position - marker.global_transform.origin).length()
+		var distance_to_target = (holding.global_position - marker.global_transform.origin).length()
 		var threshold = 0.1
+		var min_speed = -5.0    # Minimum speed at the target
 		
-		# If item is close to where you are holding
-		if distance_to_taraget > threshold:
-			holding.linear_velocity = (-distance * SPEED) + $".".velocity
-		elif !mouseMovement or distance_to_taraget < threshold:
-			holding.linear_velocity = (-distance * SPEED * delta) + $".".velocity
+		# Calculate speed based on distance
+		print(distance_to_target)
+		var speed = lerp(SPEED, min_speed, -distance_to_target)
+		
+		if distance_to_target < 0.01:
+			holding.linear_velocity = Vector3(0, 0, 0)
+		else:
+			holding.linear_velocity = lerp(-distance, distance * speed, -distance_to_target)
 			
-			holding.look_at($".".global_position)
+		#holding.look_at($".".global_position)
 			
 		# Turn Held Item
 		if rightClickHeld:
 			lockTurn = true
-			holding.rotate_y(-relX * (sensitivity / 2))
-			holding.rotate_x(-relY * (sensitivity / 2))
+			holding.rotate_y(-relX * (sensitivity))
+			holding.rotate_x(-relY * (sensitivity))
 		else:
 			lockTurn = false
 		
