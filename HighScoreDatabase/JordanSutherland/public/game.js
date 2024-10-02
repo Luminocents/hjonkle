@@ -2,6 +2,15 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
 // Wait Stuff
+const xhr = new XMLHttpRequest();
+var name = prompt("Who is this brave individual?");
+xhr.open("POST", "/highscores", true);
+xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+function sendScore(name, score) {
+    xhr.send(JSON.stringify({ name: name, score: score }));
+}
+
 var score = 0;
 var textOpacity1 = 1;
 var textOpacity2 = 1;
@@ -114,14 +123,9 @@ document.addEventListener('keydown', function (event) {
         case 65: playerMoveAngle = 1; youmoved = true; break; // a
         case 68: playerMoveAngle = -1; youmoved = true; break; // d
     }
-    if (youmoved && !playAudio && textOpacity3 >= 1) {
-        var audio = new Audio(scaryAudio);
-        scaryMusic.pause();
-        audio.play();
-        playAudio = true;
-        score = String(Stopwatch.toFixed(2));
-        failed = true;
-    }
+});
+document.addEventListener('mousemove', function (event) {
+    youmoved = true
 });
 document.addEventListener('keyup', function (event) {
     var key = event.keyCode;
@@ -281,11 +285,21 @@ function gameLoop() {
         } else if (textOpacity3 < 1) {
             let tempWatch = String(Stopwatch.toFixed(2));
             textOpacity3 = textFadeOut(tempWatch, textOpacity3, 0.01);; // decrease opacity (fade out)
+            youmoved = false;
         }
 
         if (textOpacity3 >= 1) {
             let tempWatch = Stopwatch.toFixed(2);
             textOpacity3 = textFadeOut(tempWatch, textOpacity3, 0);; // decrease opacity (fade out)
+            if (youmoved && !playAudio) {
+                var audio = new Audio(scaryAudio);
+                scaryMusic.pause();
+                audio.play();
+                playAudio = true;
+                score = String(Stopwatch.toFixed(2));
+                failed = true;
+                sendScore(name, score);
+            }
         }
         lastTime = Stopwatch;
     } else if (failed) {
