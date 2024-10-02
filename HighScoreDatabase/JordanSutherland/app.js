@@ -5,7 +5,6 @@ const app = express();
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-app.use(express.static('static'))
 
 app.get('/', (req, res) => {
     res.render('index', {} );
@@ -18,6 +17,8 @@ app.get('/highscores', (req, res) => {
 app.get('/game', (req, res) => {
     res.render('game', {} );
 });
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 const PORT = 3000;
 app.listen(PORT, () => {
