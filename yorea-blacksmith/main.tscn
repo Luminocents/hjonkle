@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://cs8c5hhpuxi5k" path="res://Graphics.tscn" id="1_8hllw"]
 [ext_resource type="PackedScene" uid="uid://db7xaomgf3hvq" path="res://Player.tscn" id="1_cm6ky"]
 [ext_resource type="Texture2D" uid="uid://boxbb8p8qie00" path="res://grassGround.png" id="4_3p6nn"]
-[ext_resource type="PackedScene" uid="uid://dy88m4ue4y4g3" path="res://Hammer.tscn" id="4_bhrcg"]
+[ext_resource type="PackedScene" uid="uid://dtv4yh4w8y3u4" path="res://Hammer.tscn" id="4_bhrcg"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5ed2b"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -90,4 +90,4 @@ transform = Transform3D(1, 0, 0, 0, 3.40451, 0, 0, 0, 5.89943, 0, 0, 0)
 mesh = SubResource("BoxMesh_eh1un")
 
 [node name="Hammer" parent="." instance=ExtResource("4_bhrcg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.36398)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.5608, -2.17013)

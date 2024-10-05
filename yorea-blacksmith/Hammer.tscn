@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://dy88m4ue4y4g3"]
+[gd_scene load_steps=6 format=3 uid="uid://dtv4yh4w8y3u4"]
 
 [ext_resource type="Texture2D" uid="uid://boxbb8p8qie00" path="res://grassGround.png" id="1_jpj4f"]
 
@@ -11,31 +11,36 @@ albedo_texture = ExtResource("1_jpj4f")
 [sub_resource type="BoxMesh" id="BoxMesh_8yb8d"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_g56wi"]
-size = Vector3(1.65477, 0.103378, 0.104633)
+size = Vector3(0.761959, 0.103378, 0.104633)
 
 [node name="Hammer" type="Node3D"]
 
-[node name="PinJoint3D" type="PinJoint3D" parent="."]
+[node name="JoltPinJoint3D" type="PinJoint3D" parent="."]
+node_a = NodePath("../RigidBody3D2")
 node_b = NodePath("../RigidBody3D")
 
 [node name="RigidBody3D" type="RigidBody3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0.000727475, 0.00170045, 1.75239)
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0.000727475, 0.00170045, 0.762868)
 shape = SubResource("BoxShape3D_7w7ua")
 
 [node name="Ball" type="MeshInstance3D" parent="RigidBody3D"]
-transform = Transform3D(0.495, 0, 0, 0, 0.258913, 0, 0, 0, 0.273855, 0, 0, 1.75308)
+transform = Transform3D(0.495, 0, 0, 0, 0.258913, 0, 0, 0, 0.273855, 0, 0, 0.763558)
 material_override = SubResource("StandardMaterial3D_r5t3e")
 mesh = SubResource("BoxMesh_8yb8d")
 skeleton = NodePath("")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="RigidBody3D"]
-transform = Transform3D(-4.18409e-08, 0, -0.957209, 0, 0.957209, 0, 0.957209, 0, -4.18409e-08, -0.00026679, 0.000407692, 0.731176)
+transform = Transform3D(-4.18409e-08, 0, -0.957209, 0, 0.957209, 0, 0.957209, 0, -4.18409e-08, -0.000266771, 0.000407692, 0.303873)
 shape = SubResource("BoxShape3D_g56wi")
 
 [node name="Ball2" type="MeshInstance3D" parent="RigidBody3D"]
-transform = Transform3D(-7.24156e-08, 0, -0.1, 0, 0.1, 0, 1.65668, 0, -4.37114e-09, -1.77636e-15, 0, 0.774647)
+transform = Transform3D(-3.19186e-08, 0, -0.1, 0, 0.1, 0, 0.730215, 0, -4.37114e-09, -1.77636e-15, 0, 0.303933)
 material_override = SubResource("StandardMaterial3D_r5t3e")
 mesh = SubResource("BoxMesh_8yb8d")
 skeleton = NodePath("")
+
+[node name="RigidBody3D2" type="RigidBody3D" parent="."]
+axis_lock_angular_y = true
+lock_rotation = true

@@ -4,7 +4,7 @@ const SPEED = 5.0
 var looking_at = false
 var looking_pos = [0, 0, 0]
 var holding = false
-var holding_pin = false
+var holding_pinB = false
 const JUMP_VELOCITY = 0.1
 var acceleration_x = 0
 var acceleration_z = 0
@@ -39,22 +39,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		if event is InputEventMouseMotion:
-			mouseMovement = true
-			relX = -event.relative.x
-			relY = -event.relative.y
-			if !lockTurn:
-				if holding:
-					holding.linear_velocity = Vector3(0, 0, 0)
-					holding.angular_velocity = Vector3(0, 0, 0)
-				neck.rotate_y(-event.relative.x * sensitivity)
-				camera.rotate_x(-event.relative.y * sensitivity)
-				camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-70), deg_to_rad(90))
-	#			Rotate things attatched to character
-				#for child in $Neck/Bean.get_children():
-					#child.rotate_x(-event.relative.y * 0.01)
-					#child.rotation.x = clamp(camera.rotation.x, deg_to_rad(-70), deg_to_rad(90))
-		else:
-			mouseMovement = false
+			neck.rotate_y(-event.relative.x * sensitivity)
+			camera.rotate_x(-event.relative.y * sensitivity)
+			camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-70), deg_to_rad(90))
+	#		Rotate things attatched to character
+			#for child in $Neck/Bean.get_children():
+				#child.rotate_x(-event.relative.y * 0.01)
+				#child.rotation.x = clamp(camera.rotation.x, deg_to_rad(-70), deg_to_rad(90))
 
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("mouse2"):
@@ -63,10 +54,9 @@ func _physics_process(delta: float) -> void:
 		rightClickHeld = false
 	# Holding Physics
 	if holding:
-		holding_pin.global_position = marker.global_transform.origin
 		var target = marker.global_position
-		var distance = (holding.global_position - marker.global_transform.origin).normalized()
-		var distance_to_target = (holding.global_position - holding_pin.global_transform.origin).length()
+		var distance = (holding_pinB.global_position - marker.global_transform.origin).normalized()
+		var distance_to_target = (holding_pinB.global_position - marker.global_transform.origin).length()
 		var threshold = 0.1
 		var min_speed = -5.0    # Minimum speed at the target
 		
@@ -74,19 +64,11 @@ func _physics_process(delta: float) -> void:
 		var speed = lerp(SPEED, min_speed, -distance_to_target)
 		
 		if distance_to_target < 0.01:
-			holding.linear_velocity = Vector3(0, 0, 0)
+			holding_pinB.gravity_scale = 0
+			holding_pinB.linear_velocity = lerp(-distance, distance * speed, -distance_to_target) / speed
 		else:
-			holding.linear_velocity = lerp(-distance, distance * speed, -distance_to_target)
-			
-		#holding.look_at($".".global_position)
-			
-		# Turn Held Item
-		if rightClickHeld:
-			lockTurn = true
-			holding.rotate_y(-relX * (sensitivity))
-			holding.rotate_x(-relY * (sensitivity))
-		else:
-			lockTurn = false
+			holding_pinB.gravity_scale = 1
+			holding_pinB.linear_velocity = lerp(-distance, distance * speed, -distance_to_target)
 		
 	# Grabbing Code
 	if rayCast.get_collider():
@@ -99,19 +81,15 @@ func _physics_process(delta: float) -> void:
 	if looking_at and Input.is_action_just_pressed("mouse1") and !holding and looking_at.get_class() == "RigidBody3D":
 		if looking_at.freeze == true:
 			return
-		holding_pin = looking_at.get_parent().get_child(0)
+		holding_pinB = looking_at.get_parent().get_child(2)
 		holding = looking_at
-		print(holding_pin)
-		holding.gravity_scale = 1
-		holding.linear_velocity = Vector3(0, 0, 0)
+		print(holding)
 		marker.global_position = looking_pos
 	
 	# On release of left click and you are holding an item
 	if Input.is_action_just_released("mouse1") and holding:
-		holding.linear_velocity = Vector3(0, 0, 0)
-		holding.angular_velocity = Vector3(0, 0, 0)
-		holding.gravity_scale = 1
 		holding = false
+		holding_pinB = false
 		looking_at = false
 		
 	# Jump Buffer & Jump
