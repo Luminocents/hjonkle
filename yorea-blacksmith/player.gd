@@ -5,7 +5,7 @@ var looking_at = false
 var looking_pos = [0, 0, 0]
 var holding = false
 var holding_pinB = false
-const JUMP_VELOCITY = 0.1
+const JUMP_VELOCITY = 5.0
 var acceleration_x = 0
 var acceleration_z = 0
 var jumpBuffer = false
@@ -19,6 +19,8 @@ var holdingCollision = false
 var mouseMovement = false
 var currentFrame = 0
 var bhop = false
+
+var bestHeight = 0
 
 @onready var hammerNode = $"../Hammer"
 @onready var neck := $Neck
@@ -34,6 +36,8 @@ var bhop = false
 
 func _ready() -> void:
 	rayCast.add_exception($".")
+	Input.use_accumulated_input = true
+	set_physics_process(true)
 
 # Mouse movement
 func _unhandled_input(event: InputEvent) -> void:
@@ -121,15 +125,19 @@ func _physics_process(delta: float) -> void:
 			hammerNode.flying = false
 			hammerNode.thrown = false
 		if jumpBuffer and Engine.get_physics_frames() - currentFrame < 10:
-			velocity.y = JUMP_VELOCITY / delta
+			velocity.y = JUMP_VELOCITY + JUMP_VELOCITY * delta
 			jumped = true
 			jumpBuffer = false
 			bhop = true
 		elif Input.is_action_just_pressed("jump"):
-			velocity.y = JUMP_VELOCITY / delta
+			velocity.y = JUMP_VELOCITY + JUMP_VELOCITY * delta
+			
 			jumped = true
 			jumpBuffer = false
 	
+	if self.global_position.y > bestHeight:
+		print(bestHeight)
+		bestHeight = self.global_position.y
 	# Crouching
 	if Input.is_action_just_pressed("crouch"):
 		$PlayerShape.disabled = true
@@ -159,7 +167,7 @@ func _physics_process(delta: float) -> void:
 				acceleration_z = lerpf(acceleration_z, SPEED, acceleration * delta)
 				velocity.z = direction.z * acceleration_z
 		elif !is_on_floor():
-			direction *= SPEED
+			direction *= SPEED * delta
 			velocity = velocity.move_toward(direction, SPEED * delta)
 	# Smooths Movement
 	elif !direction and is_on_floor() and !bhop:

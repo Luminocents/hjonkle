@@ -48,10 +48,7 @@ func _process(delta: float) -> void:
 		var threshold = 0.1
 		var min_speed = -5.0    # Minimum speed at the target
 		
-		# Calculate speed based on distance
-		var speed = lerp(SPEED, min_speed, -distance_to_target)
-		
-		hammer.linear_velocity = lerp(-distance, distance, -distance_to_target)
+		hammer.linear_velocity = lerp(-distance, (distance * SPEED * SPEED) * delta, -distance_to_target)
 		
 		if distance_to_target < 2.5:
 			bring = false
