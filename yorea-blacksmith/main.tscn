@@ -19,12 +19,10 @@ tonemap_mode = 2
 glow_enabled = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_xcwos"]
-size = Vector3(39, 1, 37)
+size = Vector3(522.258, 1, 729.007)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n7ssp"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2yjmw"]
 albedo_texture = ExtResource("4_3p6nn")
-refraction_scale = 1.0
-uv1_scale = Vector3(2, 2, 2)
 
 [sub_resource type="BoxMesh" id="BoxMesh_seq1f"]
 
@@ -52,42 +50,49 @@ shadow_enabled = true
 [node name="Player" parent="." instance=ExtResource("1_cm6ky")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.13867, 3.45123)
 
+[node name="Hammer" parent="." instance=ExtResource("4_bhrcg")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.331017, 1.5608, -2.17013)
+
 [node name="Environment" type="Node3D" parent="."]
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
+[node name="StaticBody3D" type="StaticBody3D" parent="Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+collision_layer = 255
+collision_mask = 255
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0397339, 0, 0.000366211)
 shape = SubResource("BoxShape3D_xcwos")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
-transform = Transform3D(39.9525, 0, 0, 0, 1, 0, 0, 0, 37.3735, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_n7ssp")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment/StaticBody3D"]
+transform = Transform3D(522.34, 0, 0, 0, 1, 0, 0, 0, 729.06, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_2yjmw")
 mesh = SubResource("BoxMesh_seq1f")
 
-[node name="test" type="RigidBody3D" parent="."]
+[node name="test" type="RigidBody3D" parent="Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.207, -0.00148952)
+collision_layer = 255
+collision_mask = 255
 freeze = true
 freeze_mode = 1
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="test"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/test"]
 shape = SubResource("SphereShape3D_niju6")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="test"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment/test"]
 mesh = SubResource("SphereMesh_xkdx0")
 
-[node name="test2" type="RigidBody3D" parent="."]
+[node name="test2" type="RigidBody3D" parent="Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.22272, 1.207, -0.00148952)
+collision_layer = 255
+collision_mask = 255
 freeze = true
 freeze_mode = 1
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="test2"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/test2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.354858, -0.00299072)
 shape = SubResource("BoxShape3D_6pgk0")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="test2"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment/test2"]
 transform = Transform3D(1, 0, 0, 0, 3.40451, 0, 0, 0, 5.89943, 0, 0, 0)
 mesh = SubResource("BoxMesh_eh1un")
-
-[node name="Hammer" parent="." instance=ExtResource("4_bhrcg")]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.5608, -2.17013)

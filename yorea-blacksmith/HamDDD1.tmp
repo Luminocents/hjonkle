@@ -1,22 +1,18 @@
-[gd_scene load_steps=9 format=3 uid="uid://dtv4yh4w8y3u4"]
+[gd_scene load_steps=7 format=3 uid="uid://dtv4yh4w8y3u4"]
 
 [ext_resource type="Texture2D" uid="uid://boxbb8p8qie00" path="res://grassGround.png" id="1_jpj4f"]
 [ext_resource type="Script" path="res://hammer.gd" id="1_npeuy"]
-[ext_resource type="Texture2D" uid="uid://brau8nwk7cdha" path="res://pexels-francesco-ungaro-281260.jpg" id="2_055so"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7w7ua"]
 size = Vector3(4.9, 2.60862, 2.72571)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_brnwm"]
-albedo_texture = ExtResource("2_055so")
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r5t3e"]
+albedo_texture = ExtResource("1_jpj4f")
 
 [sub_resource type="BoxMesh" id="BoxMesh_8yb8d"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_g56wi"]
 size = Vector3(0.761959, 0.103378, 0.104633)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r5t3e"]
-albedo_texture = ExtResource("1_jpj4f")
 
 [node name="Hammer" type="Node3D"]
 script = ExtResource("1_npeuy")
@@ -34,7 +30,7 @@ shape = SubResource("BoxShape3D_7w7ua")
 
 [node name="Ball" type="MeshInstance3D" parent="RigidBody3D"]
 transform = Transform3D(0.495, 0, 0, 0, 0.258913, 0, 0, 0, 0.273855, 0, 0, 0.763558)
-material_override = SubResource("StandardMaterial3D_brnwm")
+material_override = SubResource("StandardMaterial3D_r5t3e")
 mesh = SubResource("BoxMesh_8yb8d")
 skeleton = NodePath("")
 
@@ -48,11 +44,6 @@ material_override = SubResource("StandardMaterial3D_r5t3e")
 mesh = SubResource("BoxMesh_8yb8d")
 skeleton = NodePath("")
 
-[node name="Timer" type="Timer" parent="RigidBody3D"]
-wait_time = 5.0
-
 [node name="RigidBody3D2" type="RigidBody3D" parent="."]
 axis_lock_angular_y = true
 lock_rotation = true
-
-[connection signal="timeout" from="RigidBody3D/Timer" to="." method="_on_timer_timeout"]
