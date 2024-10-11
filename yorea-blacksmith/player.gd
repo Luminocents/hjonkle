@@ -157,24 +157,24 @@ func _physics_process(delta: float) -> void:
 	input_dir = input_dir.limit_length(1.0)
 	input_dir.y = velocity.y
 	var direction = (neck.transform.basis * Vector3(input_dir.x, 0, input_dir.z)).normalized()
-	if direction:
-		# Jump Stuff
-		if is_on_floor() and !bhop:
-			if direction[0]:
-				acceleration_x = lerpf(acceleration_x, SPEED, acceleration * delta)
-				velocity.x = direction.x * acceleration_x
-			if direction[2]:
-				acceleration_z = lerpf(acceleration_z, SPEED, acceleration * delta)
-				velocity.z = direction.z * acceleration_z
-		elif !is_on_floor():
-			direction *= SPEED * delta
-			velocity = velocity.move_toward(direction, SPEED * delta)
+	# Jump Stuff
+	var tempSpeed = SPEED
+	if bhop:
+		tempSpeed = SPEED * SPEED
+	if is_on_floor() and direction:
+		if direction[0]:
+			velocity.x = lerpf(velocity.x, tempSpeed * direction[0], acceleration * delta)
+		if direction[2]:
+			velocity.z = lerpf(velocity.z, tempSpeed * direction[2], acceleration * delta)
+	elif !is_on_floor() and direction:
+		if direction[0]:
+			velocity.x = lerpf(velocity.x, tempSpeed * direction[0], 1 * delta)
+		if direction[2]:
+			velocity.z = lerpf(velocity.z, tempSpeed * direction[2], 1 * delta)
 	# Smooths Movement
 	elif !direction and is_on_floor() and !bhop:
 		velocity.x = lerpf(velocity.x, 0, acceleration * delta)
 		velocity.z = lerpf(velocity.z, 0, acceleration * delta)
-		acceleration_x = 0
-		acceleration_z = 0
 	elif bhop:
 		bhop = false
 	
