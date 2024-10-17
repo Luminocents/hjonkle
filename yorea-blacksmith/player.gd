@@ -19,6 +19,7 @@ var holdingCollision = false
 var mouseMovement = false
 var currentFrame = 0
 var bhop = false
+var tempSpeed = SPEED
 
 var bestSpeed = 0
 
@@ -111,7 +112,7 @@ func _physics_process(delta: float) -> void:
 	if holding:
 		var distance = (holding_pinB.global_position - marker.global_transform.origin).normalized()
 		var distance_to_target = (holding_pinB.global_position - marker.global_transform.origin).length()
-		var min_speed = -5.0    # Minimum speed at the target
+		var min_speed = -SPEED	# Minimum speed at the target
 		if holding_pinB.linear_velocity.length() <= 4 and distance_to_target >= 1:
 			holding = false
 		
@@ -128,6 +129,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("jump") and !is_on_floor():
 		currentFrame = Engine.get_physics_frames()
 		jumpBuffer = true
+		bhop = true
 	if is_on_floor():
 		if hammerNode.thrown:
 			hammerNode.flying = false
@@ -136,7 +138,6 @@ func _physics_process(delta: float) -> void:
 			velocity.y = JUMP_VELOCITY + JUMP_VELOCITY * delta
 			jumped = true
 			jumpBuffer = false
-			bhop = true
 		elif Input.is_action_just_pressed("jump"):
 			velocity.y = JUMP_VELOCITY + JUMP_VELOCITY * delta
 			
@@ -163,25 +164,26 @@ func _physics_process(delta: float) -> void:
 	input_dir.y = velocity.y
 	var direction = (neck.transform.basis * Vector3(input_dir.x, 0, input_dir.z)).normalized()
 	# Jump Stuff
-	var tempSpeed = SPEED
+	print(bhop)
 	if bhop:
 		tempSpeed = SPEED * SPEED
+		bhop = false
 	if is_on_floor() and direction:
 		if direction[0]:
 			velocity.x = lerpf(velocity.x, tempSpeed * direction[0], acceleration * delta)
 		if direction[2]:
 			velocity.z = lerpf(velocity.z, tempSpeed * direction[2], acceleration * delta)
+		tempSpeed = SPEED
 	elif !is_on_floor() and direction:
 		if direction[0]:
 			velocity.x = lerpf(velocity.x, tempSpeed * direction[0], 1 * delta)
 		if direction[2]:
 			velocity.z = lerpf(velocity.z, tempSpeed * direction[2], 1 * delta)
+		tempSpeed = SPEED
 	# Smooths Movement
 	elif !direction and is_on_floor() and !bhop:
 		velocity.x = lerpf(velocity.x, 0, acceleration * delta)
 		velocity.z = lerpf(velocity.z, 0, acceleration * delta)
-	elif bhop:
-		bhop = false
 	
 	# Gravity
 	velocity.y += gravity * delta

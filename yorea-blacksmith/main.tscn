@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://db7xaomgf3hvq" path="res://Player.tscn" id="1_cm6ky"]
 [ext_resource type="Texture2D" uid="uid://boxbb8p8qie00" path="res://grassGround.png" id="4_3p6nn"]
 [ext_resource type="PackedScene" uid="uid://dy88m4ue4y4g3" path="res://Hammer.tscn" id="4_bhrcg"]
-[ext_resource type="PackedScene" uid="uid://dpc7u8q6ffltw" path="res://donut.tscn" id="5_6gkll"]
+[ext_resource type="PackedScene" uid="uid://bsywp2pmd75xv" path="res://donut.tscn" id="5_6gkll"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5ed2b"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -99,4 +99,22 @@ transform = Transform3D(1, 0, 0, 0, 3.40451, 0, 0, 0, 5.89943, 0, 0, 0)
 mesh = SubResource("BoxMesh_eh1un")
 
 [node name="Donut" parent="." instance=ExtResource("5_6gkll")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.96895, 0.411854, 0)
+
+[node name="Donut2" parent="." instance=ExtResource("5_6gkll")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.96895, 0.411854, 0)
+
+[node name="Donut3" parent="." instance=ExtResource("5_6gkll")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.96895, 0.411854, 0)
+
+[node name="Donut4" parent="." instance=ExtResource("5_6gkll")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.96895, 0.411854, 0)
+
+[node name="Donut5" parent="." instance=ExtResource("5_6gkll")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.96895, 0.411854, 0)
+
+[node name="Donut6" parent="." instance=ExtResource("5_6gkll")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.96895, 0.411854, 0)
+
+[node name="Donut7" parent="." instance=ExtResource("5_6gkll")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.96895, 0.411854, 0)
