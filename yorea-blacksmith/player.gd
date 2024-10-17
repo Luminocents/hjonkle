@@ -20,7 +20,7 @@ var mouseMovement = false
 var currentFrame = 0
 var bhop = false
 
-var bestHeight = 0
+var bestSpeed = 0
 
 @onready var hammerNode = $"../Hammer"
 @onready var neck := $Neck
@@ -78,12 +78,17 @@ func _physics_process(delta: float) -> void:
 			hammerNode.gravity = 1
 			hammerNode.mass = 1
 			hammerNode.thrown = false
+			holding_pinB = looking_at.get_parent().get_child(2)
+		else:
+			holding_pinB = looking_at
+			holding_pinB.set_collision_mask_value(1, false)
+			holding_pinB.set_collision_mask_value(2, true)
+			holding_pinB.gravity_scale = 1
+			holding_pinB.mass = 1
 		
 		if looking_at.freeze == true:
 			return
-		holding_pinB = looking_at.get_parent().get_child(2)
 		holding = looking_at
-		print(holding)
 		marker.global_position = looking_pos
 	
 	# On release of left click and you are holding an item
@@ -95,21 +100,24 @@ func _physics_process(delta: float) -> void:
 			hammerNode.gravity = 8
 			hammerNode.mass = 5
 			hammerNode.thrown = true
+		else:
+			holding_pinB.set_collision_mask_value(1, true)
+			holding_pinB.set_collision_mask_value(2, false)
+			holding_pinB.gravity_scale = 3
+			holding_pinB.mass = 1
 		holding_pinB = false
-		looking_at = false
 	
 	# Holding Physics
 	if holding:
-		var target = marker.global_position
 		var distance = (holding_pinB.global_position - marker.global_transform.origin).normalized()
 		var distance_to_target = (holding_pinB.global_position - marker.global_transform.origin).length()
-		var threshold = 0.1
 		var min_speed = -5.0    # Minimum speed at the target
+		if holding_pinB.linear_velocity.length() <= 4 and distance_to_target >= 1:
+			holding = false
 		
 		# Calculate speed based on distance
 		var speed = lerp(SPEED, min_speed, -distance_to_target)
-		
-		if distance_to_target < 0.01:
+		if distance_to_target < 0.01 && holding_pinB:
 			holding_pinB.gravity_scale = 0
 			holding_pinB.linear_velocity = lerp(-distance, distance * speed, -distance_to_target) / speed
 		else:
@@ -135,9 +143,6 @@ func _physics_process(delta: float) -> void:
 			jumped = true
 			jumpBuffer = false
 	
-	if self.global_position.y > bestHeight:
-		print(bestHeight)
-		bestHeight = self.global_position.y
 	# Crouching
 	if Input.is_action_just_pressed("crouch"):
 		$PlayerShape.disabled = true

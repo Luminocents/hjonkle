@@ -33,6 +33,8 @@ func _process(delta: float) -> void:
 	elif Input.is_action_pressed("b") and flying:
 		thrown = false
 		floating = true
+		bring = true
+		
 	
 	if floating:
 		hammer.linear_velocity = lerp(playerNode.velocity, -Vector3.UP, SPEED * delta)
@@ -40,17 +42,17 @@ func _process(delta: float) -> void:
 		playerNode.velocity = lerp(playerNode.velocity, -Vector3.UP, SPEED * delta)
 	
 	if bring:
-		hammer.angular_velocity = Vector3.ZERO
-		hammerHandle.angular_velocity = Vector3.ZERO
-		var target = hammerSpot.global_position
+		if !flying:
+			hammer.angular_velocity = Vector3.ZERO
+			hammerHandle.angular_velocity = Vector3.ZERO
+		else:
+			bring = false
 		var distance = (hammer.global_position - hammerSpot.global_transform.origin).normalized()
 		var distance_to_target = (hammer.global_position - playerNode.global_transform.origin).length()
-		var threshold = 0.1
-		var min_speed = -5.0    # Minimum speed at the target
 		
 		hammer.linear_velocity = lerp(-distance, (distance * SPEED * SPEED) * delta, -distance_to_target)
 		
-		if distance_to_target < 2.5:
+		if distance_to_target < 2.5 and !flying:
 			bring = false
 			hammer.freeze = true
 	else:
@@ -63,14 +65,10 @@ func _process(delta: float) -> void:
 			flying = true
 			gravity = 6
 			mass = 3.25
-			var target = hammer.global_position
 			var distance = (playerNode.global_position - hammer.global_transform.origin).normalized()
 			var distance_to_target = (playerNode.global_position - hammer.global_transform.origin).length()
-			var threshold = 0.1
-			var min_speed = -5.0    # Minimum speed at the target
 		
 			# Calculate speed based on distance
-			var speed = lerp(SPEED, min_speed, -distance_to_target) 
 			playerNode.velocity = lerp(-distance, distance * 10, -distance_to_target)
 		else:
 			flying = false
