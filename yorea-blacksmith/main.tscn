@@ -1,10 +1,10 @@
 [gd_scene load_steps=16 format=3 uid="uid://6qytyp86oh6p"]
 
+[ext_resource type="Script" path="res://main.gd" id="1_6d2o0"]
 [ext_resource type="PackedScene" uid="uid://cs8c5hhpuxi5k" path="res://Graphics.tscn" id="1_8hllw"]
-[ext_resource type="PackedScene" uid="uid://db7xaomgf3hvq" path="res://Player.tscn" id="1_cm6ky"]
 [ext_resource type="Texture2D" uid="uid://boxbb8p8qie00" path="res://grassGround.png" id="4_3p6nn"]
 [ext_resource type="PackedScene" uid="uid://dy88m4ue4y4g3" path="res://Hammer.tscn" id="4_bhrcg"]
-[ext_resource type="PackedScene" uid="uid://bsywp2pmd75xv" path="res://donut.tscn" id="5_6gkll"]
+[ext_resource type="PackedScene" uid="uid://drq70e8knque3" path="res://donut.tscn" id="5_6gkll"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5ed2b"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -37,6 +37,7 @@ size = Vector3(1, 4.07788, 5.91125)
 [sub_resource type="BoxMesh" id="BoxMesh_eh1un"]
 
 [node name="Main" type="Node3D"]
+script = ExtResource("1_6d2o0")
 
 [node name="Graphics" parent="." instance=ExtResource("1_8hllw")]
 metadata/_edit_use_anchors_ = true
@@ -47,9 +48,6 @@ environment = SubResource("Environment_sv6l6")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 shadow_enabled = true
-
-[node name="Player" parent="." instance=ExtResource("1_cm6ky")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.90156, 3.45123)
 
 [node name="Hammer" parent="." instance=ExtResource("4_bhrcg")]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.331017, 1.5608, -2.17013)
@@ -101,20 +99,26 @@ mesh = SubResource("BoxMesh_eh1un")
 [node name="Donut" parent="." instance=ExtResource("5_6gkll")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.96895, 0.411854, 0)
 
-[node name="Donut2" parent="." instance=ExtResource("5_6gkll")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.96895, 0.411854, 0)
+[node name="Pause" type="CanvasLayer" parent="."]
 
-[node name="Donut3" parent="." instance=ExtResource("5_6gkll")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.96895, 0.411854, 0)
+[node name="VR" type="Button" parent="Pause"]
+offset_left = 628.0
+offset_top = 33.0
+offset_right = 1086.0
+offset_bottom = 178.0
+theme_override_font_sizes/font_size = 100
+text = "START VR
+"
 
-[node name="Donut4" parent="." instance=ExtResource("5_6gkll")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.96895, 0.411854, 0)
+[node name="Desktop" type="Button" parent="Pause"]
+visible = false
+offset_left = 628.0
+offset_top = 33.0
+offset_right = 1086.0
+offset_bottom = 178.0
+theme_override_font_sizes/font_size = 100
+text = "Desktop
+"
 
-[node name="Donut5" parent="." instance=ExtResource("5_6gkll")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.96895, 0.411854, 0)
-
-[node name="Donut6" parent="." instance=ExtResource("5_6gkll")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.96895, 0.411854, 0)
-
-[node name="Donut7" parent="." instance=ExtResource("5_6gkll")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.96895, 0.411854, 0)
+[connection signal="pressed" from="Pause/VR" to="." method="_on_vr_pressed"]
+[connection signal="pressed" from="Pause/Desktop" to="." method="_on_desktop_pressed"]

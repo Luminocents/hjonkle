@@ -9,10 +9,10 @@ var gravity = 8
 var mass = 5
 var initialDistance = 0
 
-@onready var playerNode = $"../Player"
-@onready var hammer = $RigidBody3D
-@onready var hammerSpot = $"../Player/Neck/Camera3D/HammerSpot"
-@onready var hammerHandle = self.get_child(2)
+var playerNode
+var hammer
+var hammerSpot
+var hammerHandle
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
