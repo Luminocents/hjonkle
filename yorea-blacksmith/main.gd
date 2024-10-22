@@ -1,6 +1,9 @@
 extends Node3D
 
 var interface
+var once = false
+var playerPos = Vector3.ZERO
+var playerRot = Vector3.ZERO
 
 @onready var hammerNode = $"Hammer"
 
@@ -25,16 +28,20 @@ func _process(delta: float) -> void:
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 			$Pause.visible = true
 
+
 func _on_desktop_pressed() -> void:
 	$Pause/VR.visible = true
 	$Pause/Desktop.visible = false
-	remove_child(interface.instantiate())
+	playerPos = interface.global_position
+	playerRot = interface.global_rotation.y
 	
-	var Dekstop = load("res://Player.tscn")
-	add_child(Dekstop.instantiate())
+	remove_child(interface)
+	interface.queue_free()
 	
-	interface = load("res://Player.tscn")
-	add_child(interface.instantiate())
+	interface = load("res://Player.tscn").instantiate()
+	interface.global_position = playerPos
+	interface.global_rotation.y = playerRot
+	add_child(interface)
 	
 	hammerNode.playerNode = $"Player"
 	hammerNode.hammerSpot = $"Player/Neck/Camera3D/HammerSpot"
@@ -42,13 +49,21 @@ func _on_desktop_pressed() -> void:
 func _on_vr_pressed() -> void:
 	$Pause/VR.hide()
 	$Pause/Desktop.show()
-	remove_child(interface.instantiate())
+	if interface.get_class() == "PackedScene":
+		remove_child(interface.instantiate())
+		interface.instantiate().queue_free()
+	else:
+		playerPos = interface.global_position
+		playerRot = interface.global_rotation.y
+		remove_child(interface)
+		interface.queue_free()
 	
-	var VR = load("res://addons/godot-xr-tools/xr/start_xr.tscn")
-	add_child(VR.instantiate())
+	var VR = load("res://addons/godot-xr-tools/xr/start_xr.tscn").instantiate()
+	add_child(VR)
 	
-	interface = load("res://vrplayer.tscn")
-	add_child(interface.instantiate())
+	interface = load("res://vrplayer.tscn").instantiate()
+	interface.global_position = playerPos
+	interface.global_rotation.y = playerRot
+	add_child(interface)
 	
 	hammerNode.playerNode = $"Vrplayer"
-	hammerNode.hammerSpot = $"Player/Neck/Camera3D/HammerSpot"

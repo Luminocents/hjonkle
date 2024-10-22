@@ -96,7 +96,7 @@ shape = SubResource("BoxShape3D_6pgk0")
 transform = Transform3D(1, 0, 0, 0, 3.40451, 0, 0, 0, 5.89943, 0, 0, 0)
 mesh = SubResource("BoxMesh_eh1un")
 
-[node name="Donut" parent="." instance=ExtResource("5_6gkll")]
+[node name="Donut" parent="Environment" instance=ExtResource("5_6gkll")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.96895, 0.411854, 0)
 
 [node name="Pause" type="CanvasLayer" parent="."]
