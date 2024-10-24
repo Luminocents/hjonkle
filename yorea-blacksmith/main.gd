@@ -32,15 +32,11 @@ func _process(delta: float) -> void:
 func _on_desktop_pressed() -> void:
 	$Pause/VR.visible = true
 	$Pause/Desktop.visible = false
-	playerPos = interface.global_position
-	playerRot = interface.global_rotation.y
 	
 	remove_child(interface)
 	interface.queue_free()
 	
 	interface = load("res://Player.tscn").instantiate()
-	interface.global_position = playerPos
-	interface.global_rotation.y = playerRot
 	add_child(interface)
 	
 	hammerNode.playerNode = $"Player"
@@ -49,21 +45,12 @@ func _on_desktop_pressed() -> void:
 func _on_vr_pressed() -> void:
 	$Pause/VR.hide()
 	$Pause/Desktop.show()
-	if interface.get_class() == "PackedScene":
-		remove_child(interface.instantiate())
-		interface.instantiate().queue_free()
-	else:
-		playerPos = interface.global_position
-		playerRot = interface.global_rotation.y
-		remove_child(interface)
-		interface.queue_free()
 	
 	var VR = load("res://addons/godot-xr-tools/xr/start_xr.tscn").instantiate()
 	add_child(VR)
 	
 	interface = load("res://vrplayer.tscn").instantiate()
-	interface.global_position = playerPos
-	interface.global_rotation.y = playerRot
-	add_child(interface)
+	if !get_node("Player/Neck/Vrplayer"):
+		get_node("Player/Neck").add_child(interface)
 	
 	hammerNode.playerNode = $"Vrplayer"
