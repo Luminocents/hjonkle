@@ -88,5 +88,5 @@ rendering_device/occlusion_rays_per_thread=512
 
 [xr]
 
-openxr/enabled=true
+openxr/enabled="false"
 shaders/enabled=true

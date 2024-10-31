@@ -9,6 +9,8 @@ var playerRot = Vector3.ZERO
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	ProjectSettings.set_setting("xr/openxr/enabled", "false")
+	ProjectSettings.save()
 	interface = load("res://Player.tscn")
 	add_child(interface.instantiate())
 	
@@ -35,9 +37,6 @@ func _on_desktop_pressed() -> void:
 	
 	remove_child(interface)
 	interface.queue_free()
-	
-	interface = load("res://Player.tscn").instantiate()
-	add_child(interface)
 	
 	hammerNode.playerNode = $"Player"
 	hammerNode.hammerSpot = $"Player/Neck/Camera3D/HammerSpot"
