@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming</title>
+    <style>
+        html,
+        body,
+        canvas {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    let users = [];
+    let user = {
+        name: '<%= user %>',
+        userId: socket.id,
+    };
+
+    socket.emit('new-user', user);
+    socket.on('user-connected', data => {
+        console.log(data.user.name + ' connected');
+    });
+    socket.on('user-disconnected', data => {
+        console.log(data.user.name + ' disconnected');
+    });
+    socket.on('update', (data) => {
+        // Update the local player list
+        users = data.users;
+        user = data.users[socket.id];
+        console.log(user)
+    });
+
+
+    window.onresize = function () {
+        socket.emit('resize', {
+            canvasWidth: window.innerWidth * 0.4,
+            canvasHeight: window.innerHeight * 0.4,
+            WIDTH: Math.floor(window.innerWidth / 3),
+            HEIGHT: Math.floor(window.innerHeight / 3),
+            HALF_WIDTH: Math.floor(window.innerWidth / 3) / 2,
+            HALF_HEIGHT: Math.floor(window.innerHeight / 3) / 2,
+        });
+    }
+
+    document.onload = function () {
+        socket.emit('resize', {
+            canvasWidth: window.innerWidth * 0.4,
+            canvasHeight: window.innerHeight * 0.4,
+            WIDTH: Math.floor(canvasWidth * 1.4 / 3),
+            HEIGHT: Math.floor(canvasHeight * 1.4 / 3),
+            HALF_WIDTH: WIDTH / 2,
+            HALF_HEIGHT: HEIGHT / 2,
+        });
+    }
+
+</script>
+
+<body>
+    <canvas id="canvas" height="100%" width="100%"></canvas>
+
+</body>
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    // FPS
+    const FPS = 60;
+    const cycleDelay = Math.floor(1000 / FPS);
+    var oldCycleTime = 0;
+    var cycleCount = 0;
+    var fps_rate = '...';
+
+    // map
+    const MAP_SIZE = 32;
+    const MAP_SCALE = 128;
+    const MAP_RANGE = MAP_SCALE * MAP_SIZE;
+    const MAP_SPEED = (MAP_SCALE / 2) / 10;
+    var map = [
+        1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    ];
+    var showMap = false;
+
+    // handle key down events
+    document.addEventListener('keydown', function (event) {
+        var key = event.keyCode;
+        socket.emit('keydown', key);
+    });
+    document.addEventListener('keyup', function (event) {
+        var key = event.keyCode;
+        socket.emit('keyup', key);
+        switch (key) {
+            case 77: showMap = !showMap; break;
+        }
+    });
+
+    // screen
+    const WIDTH = Math.floor(window.innerHeight / 3), HALF_WIDTH = WIDTH / 2;
+    const HEIGHT = Math.floor(window.innerHeight / 3), HALF_HEIGHT = HEIGHT / 2;
+
+    // camera
+    const DOUBLE_PI = Math.PI * 2;
+    const FOV = Math.PI / 3;
+    const HALF_FOV = FOV / 2;
+    const STEP_ANGLE = FOV / WIDTH;
+
+    // graphics
+    const WALLS = [];
+
+    // load wall textures
+    for (var filename = 0; filename < 3; filename++) {
+        var img = document.createElement('img');
+        img.src = "static/walls/" + filename + ".png";
+        WALLS.push(img);
+    }
+
+    // Game Loop
+    function gameLoop() {
+        // Update FPS
+        cycleCount++;
+        if (cycleCount >= 60) cycleCount = 0;
+        var startTime = Date.now();
+        var cycleTime = startTime - oldCycleTime;
+        oldCycleTime = startTime;
+        if (cycleCount % 60 == 0) fps_rate = Math.floor(1000 / cycleTime);
+
+        // player
+        var playerX = user.playerX;
+        var playerY = user.playerY;
+        var playerAngle = user.playerAngle;
+        // Resize dynamically
+        canvas.width = window.innerWidth * 0.4;
+        canvas.height = window.innerHeight * 0.4;
+
+
+
+        // update player position
+        var mapTargetX = user.mapTargetX;
+        var mapTargetY = user.mapTargetY;
+
+        // Calculate map & player offsets
+        var mapOffsetX = user.mapOffsetX;
+        var mapOffsetY = user.mapOffsetY;
+        var playerMapX = user.playerMapX;
+        var playerMapY = user.playerMapY;
+
+        for (user in users) {
+            if (users[user].userId == socket.id) { continue } else {
+                let user = users[user];
+                // player
+                playerX = user.playerX;
+                playerY = user.playerY;
+                playerAngle = user.playerAngle;
+                // Resize dynamically
+                canvas.width = window.innerWidth * 0.4;
+                canvas.height = window.innerHeight * 0.4;
+
+
+
+                // update player position
+                mapTargetX = user.mapTargetX;
+                mapTargetY = user.mapTargetY;
+
+                // Calculate map & player offsets
+                mapOffsetX = user.mapOffsetX;
+                mapOffsetY = user.mapOffsetY;
+                playerMapX = user.playerMapX;
+                playerMapY = user.playerMapY;
+            };
+            let otherUser = users[user];
+
+        }
+        console.log(playerMapX,
+            playerMapY,
+            mapOffsetX,
+            mapOffsetY,
+            mapTargetX,
+            mapTargetY,
+            playerX,
+            playerY,
+        );
+
+        // Draw Background
+        ctx.drawImage(WALLS[0], canvas.width / 2 - HALF_WIDTH, canvas.height / 2 - HALF_HEIGHT, WIDTH, HEIGHT);
+
+        // Raycasting
+        var currentAngle = playerAngle + HALF_FOV;
+        var rayStartX = Math.floor(playerX / MAP_SCALE) * MAP_SCALE;
+        var rayStartY = Math.floor(playerY / MAP_SCALE) * MAP_SCALE;
+
+
+        // loop for casted rays
+        for (var ray = 0; ray < WIDTH; ray++) {
+            // get current angle sin & cos
+            var currentSin = Math.sin(currentAngle); currentSin = currentSin ? currentSin : .000001;
+            var currentCos = Math.cos(currentAngle); currentCos = currentCos ? currentCos : .000001;
+
+            // vertical line intersection
+            var rayEndX, rayEndY, rayDirectionX, verticalDepth, textureEndY, textureY;
+            if (currentSin > 0) { rayEndX = rayStartX + MAP_SCALE; rayDirectionX = 1 }
+            else { rayEndX = rayStartX; rayDirectionX = -1 }
+            for (var offset = 0; offset < MAP_RANGE; offset += MAP_SCALE) {
+                verticalDepth = (rayEndX - playerX) / currentSin;
+                rayEndY = playerY + verticalDepth * currentCos;
+                var mapTargetX = Math.floor(rayEndX / MAP_SCALE);
+                var mapTargetY = Math.floor(rayEndY / MAP_SCALE);
+                if (currentSin <= 0) mapTargetX += rayDirectionX;
+                var targetSquare = mapTargetY * MAP_SIZE + mapTargetX;
+                if (targetSquare < 0 || targetSquare >= map.length - 1) break;
+                if (map[targetSquare] != 0) { textureY = map[targetSquare]; break; };
+                rayEndX += rayDirectionX * MAP_SCALE;
+            }
+            textureEndY = rayEndY;
+
+            // horizontal line intersection
+            var rayEndY, rayEndX, rayDirectionY, horizontalDepth, textureEndX, textureX;
+            if (currentCos > 0) { rayEndY = rayStartY + MAP_SCALE; rayDirectionY = 1 }
+            else { rayEndY = rayStartY; rayDirectionY = -1 }
+            for (var offset = 0; offset < MAP_RANGE; offset += MAP_SCALE) {
+                horizontalDepth = (rayEndY - playerY) / currentCos;
+                rayEndX = playerX + horizontalDepth * currentSin;
+                var mapTargetX = Math.floor(rayEndX / MAP_SCALE);
+                var mapTargetY = Math.floor(rayEndY / MAP_SCALE);
+                if (currentCos <= 0) mapTargetY += rayDirectionY;
+                var targetSquare = mapTargetY * MAP_SIZE + mapTargetX;
+                if (targetSquare < 0 || targetSquare >= map.length - 1) break;
+                if (map[targetSquare] != 0) { textureX = map[targetSquare]; break; };
+                rayEndY += rayDirectionY * MAP_SCALE;
+            }
+            textureEndX = rayEndX;
+
+            // render 3D projection
+            var depth = verticalDepth < horizontalDepth ? verticalDepth : horizontalDepth;
+            var textureImage = verticalDepth < horizontalDepth ? textureY : textureX;
+            var textureOffset = verticalDepth < horizontalDepth ? textureEndY : textureEndX;
+            textureOffset = textureOffset - Math.floor(textureOffset / MAP_SCALE) * MAP_SCALE;
+            depth *= Math.cos(playerAngle - currentAngle);
+            var wallHeight = Math.min(Math.floor(MAP_SCALE * 300 / (depth + 0.0001)), 50000);
+            // ctx.fillStyle = verticalDepth < horizontalDepth ? '#bbb' : '#aaa';
+            // ctx.fillRect(mapOffsetX + ray, mapOffsetY + (HALF_HEIGHT - wallHeight / 2), 1, wallHeight);
+
+            try {
+                ctx.drawImage(
+                    WALLS[textureImage],
+                    textureOffset,  // Source img x offset
+                    0,  // Source img y offset
+                    1, // Source img width
+                    128, // Source img height
+                    mapOffsetX + ray, // Target image x offset
+                    mapOffsetY + (HALF_HEIGHT - Math.floor(wallHeight / 2)), // Target image y offset
+                    1, // Target image width
+                    wallHeight, // Target image height
+
+                );
+            } catch (error) {
+                console.log(error);
+            }
+
+            // update current angle
+            currentAngle -= STEP_ANGLE;
+        }
+
+
+        // Draw 2d map
+        if (showMap) {
+            for (var row = 0; row < MAP_SIZE; row++) {
+                for (var col = 0; col < MAP_SIZE; col++) {
+                    var square = row * MAP_SIZE + col;
+                    if (map[square] != 0) {
+                        ctx.fillStyle = 'green';
+                        ctx.fillRect(mapOffsetX + col * 5, mapOffsetY + row * 5, 5, 5);
+                    } else {
+                        ctx.fillStyle = '#aaa';
+                        ctx.fillRect(mapOffsetX + col * 5, mapOffsetY + row * 5, 5, 5);
+                    }
+                }
+            }
+
+            // Draw player on 2D map
+            ctx.fillStyle = 'red';
+            ctx.beginPath();
+            ctx.arc(playerMapX, playerMapY, 2, 0, DOUBLE_PI, true);
+            ctx.fill();
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(playerMapX, playerMapY);
+            ctx.lineTo(playerMapX + Math.sin(playerAngle) * 5, playerMapY + Math.cos(playerAngle) * 5);
+            ctx.stroke();
+        }
+
+        // fix wall layout
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, mapOffsetY);
+        ctx.fillRect(0, mapOffsetY + WIDTH, canvas.width, canvas.width - mapOffsetY + WIDTH);
+
+        //inf loop
+        setTimeout(gameLoop, cycleDelay);
+
+        // Draw FPS
+        ctx.fillStyle = 'black';
+        ctx.font = '1vi Arial';
+        ctx.fillText('FPS: ' + fps_rate, 5, 15);
+        let temp = 15;
+        for (user in users) {
+            ctx.fillText(users[user].name, 5, 30 + Object.keys(users).indexOf(users[user].name) * 15 + temp);
+            temp += 15;
+        }
+
+        // draw other players on 2d map
+        // for (user in users) {
+        //     if (users[user].userId == socket.id) continue;
+        //     let otherUser = users[user];
+        //     ctx.fillStyle = 'blue';
+        //     ctx.beginPath();
+        //     ctx.arc(otherUser.x, otherUser.y, 2, 0, DOUBLE_PI, true);
+        //     ctx.fill();
+        //     ctx.strokeStyle = 'blue';
+        //     ctx.lineWidth = 1;
+        //     ctx.beginPath();
+        //     ctx.moveTo(otherUser.x, otherUser.y);
+        //     ctx.lineTo(otherUser.x + Math.sin(otherUser.playerAngle) * 5, otherUser.y + Math.cos(otherUser.playerAngle) * 5);
+        //     ctx.stroke();
+        // }
+
+    } window.onload = function () { gameLoop(); };
+</script>
+
+</html>
