@@ -1,10 +1,11 @@
-[gd_scene load_steps=16 format=3 uid="uid://6qytyp86oh6p"]
+[gd_scene load_steps=17 format=3 uid="uid://6qytyp86oh6p"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_6d2o0"]
 [ext_resource type="PackedScene" uid="uid://cs8c5hhpuxi5k" path="res://Graphics.tscn" id="1_8hllw"]
 [ext_resource type="Texture2D" uid="uid://boxbb8p8qie00" path="res://grassGround.png" id="4_3p6nn"]
 [ext_resource type="PackedScene" uid="uid://dy88m4ue4y4g3" path="res://Hammer.tscn" id="4_bhrcg"]
 [ext_resource type="PackedScene" uid="uid://drq70e8knque3" path="res://donut.tscn" id="5_6gkll"]
+[ext_resource type="PackedScene" uid="uid://dswb8beyomsda" path="res://whole_rock_1.tscn" id="6_xmhg1"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5ed2b"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -68,12 +69,10 @@ transform = Transform3D(522.34, 0, 0, 0, 1, 0, 0, 0, 729.06, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_2yjmw")
 mesh = SubResource("BoxMesh_seq1f")
 
-[node name="test" type="RigidBody3D" parent="Environment"]
+[node name="test" type="StaticBody3D" parent="Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.207, -0.00148952)
 collision_layer = 255
 collision_mask = 255
-freeze = true
-freeze_mode = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/test"]
 shape = SubResource("SphereShape3D_niju6")
@@ -81,12 +80,10 @@ shape = SubResource("SphereShape3D_niju6")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Environment/test"]
 mesh = SubResource("SphereMesh_xkdx0")
 
-[node name="test2" type="RigidBody3D" parent="Environment"]
+[node name="test2" type="StaticBody3D" parent="Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.22272, 1.207, -0.00148952)
 collision_layer = 255
 collision_mask = 255
-freeze = true
-freeze_mode = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/test2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.354858, -0.00299072)
@@ -98,6 +95,9 @@ mesh = SubResource("BoxMesh_eh1un")
 
 [node name="Donut" parent="Environment" instance=ExtResource("5_6gkll")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.96895, 0.411854, 0)
+
+[node name="WholeRock1" parent="Environment" instance=ExtResource("6_xmhg1")]
+transform = Transform3D(0.996195, 0.0871557, 0, -0.0871557, 0.996195, 0, 0, 0, 1, 3, -0.6, -5)
 
 [node name="Pause" type="CanvasLayer" parent="."]
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=4 uid="uid://cjkdhs3aoj2ct"]
+[gd_scene load_steps=25 format=4 uid="uid://cjkdhs3aoj2ct"]
 
 [ext_resource type="Texture2D" uid="uid://d30w5u5i3hyv6" path="res://donut_donut base.png" id="1_jxogg"]
 [ext_resource type="Script" path="res://left_hand.gd" id="1_llhiq"]
@@ -347,8 +347,6 @@ points = PackedVector3Array(-0.0193311, -0.0500027, 0.0148387, 0.0188775, 0.0555
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_0tsaq"]
 points = PackedVector3Array(-0.0193311, -0.0500027, 0.0148387, 0.0188775, 0.0555981, 0.00222456, 0.0188841, 0.0556183, -0.00509723, 0.0573197, -0.0176969, -0.00142743, -0.0413807, -0.0107931, -0.0262532, -0.0349168, 0.0254038, 0.0234264, 0.041482, 0.0165881, 0.0235103, 0.0328899, -0.0335475, -0.0229747, 0.0435212, 0.0274407, -0.021112, -0.0317914, 0.0419251, -0.0175915, -0.0582275, -0.0140848, 0.00590989, -0.0229132, -0.0481632, -0.0194698, 0.0148636, -0.0441326, 0.0200571, -0.0406299, -0.0226875, 0.0236558, 0.0223384, -0.0520591, -0.00868704, 0.0516138, 0.0316, 0.00585998, -0.0121115, 0.0494425, 0.0166692, -0.0485748, 0.0297136, -0.00506253, 0.0165912, 0.043365, -0.0228037, 0.0490696, -0.0209691, 0.0165553, -0.0487162, -0.0358895, -0.00690369, 0.0257021, 0.0436894, 0.0201396, -0.00325971, -0.0393869, 0.0252183, 0.0062586, -0.0374746, -0.0262532, -0.0540151, 0.00241684, -0.0177966, 0.0547811, 0.00781952, -0.0176909, -0.0267599, 0.0497812, 0.00585708, -0.050409, 0.0169819, 0.0167717, 0.059146, 0.00426076, 0.00771938, 0.0405179, -0.0411924, 0.00402087, 0.00421643, -0.0562665, 0.00590239, -0.0280288, 0.0330423, -0.0243386)
 
-[sub_resource type="BoxMesh" id="BoxMesh_mpmt6"]
-
 [node name="Vrplayer" type="XROrigin3D"]
 script = SubResource("GDScript_8yl2h")
 
@@ -412,9 +410,6 @@ shape = SubResource("ConvexPolygonShape3D_0tsaq")
 [node name="Marker3D" type="Marker3D" parent="RightHand/RHammerSpot"]
 
 [node name="PlayerBody" parent="." instance=ExtResource("3_2n2ni")]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_mpmt6")
 
 [connection signal="button_pressed" from="LeftHand" to="LeftHand" method="_on_button_pressed"]
 [connection signal="button_released" from="LeftHand" to="LeftHand" method="_on_button_released"]

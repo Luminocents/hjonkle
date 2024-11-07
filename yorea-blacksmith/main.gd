@@ -9,8 +9,6 @@ var playerRot = Vector3.ZERO
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	ProjectSettings.set_setting("xr/openxr/enabled", "false")
-	ProjectSettings.save()
 	interface = load("res://Player.tscn")
 	add_child(interface.instantiate())
 	
