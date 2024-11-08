@@ -249,5 +249,18 @@ function gameLoop() {
     ctx.fillStyle = 'black';
     ctx.font = '1vi Arial';
     ctx.fillText('FPS: ' + fps_rate, 5, 15);
+    console.log(
+        'canvasWidth: ' + canvas.width,
+        'playerX: ' + playerX,
+        'playerY: ' + playerY,
+        'playerAngle: ' + playerAngle,
+        'mapTargetX: ' + mapTargetX,
+        'mapTargetY: ' + mapTargetY,
+        'mapOffsetX: ' + mapOffsetX,
+        'mapOffsetY: ' + mapOffsetY,
+        'playerMapX: ' + playerMapX,
+        'playerMapY: ' + playerMapY,
+    )
+
 
 } window.onload = function () { gameLoop(); };

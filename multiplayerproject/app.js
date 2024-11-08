@@ -14,7 +14,6 @@ app.use(express.urlencoded({ extended: true }));
 const { Server } = require('socket.io');
 const io = new Server(server);
 
-
 function loggedIn(req, res, next) {
     let user = req.query.user;
     if (user) {
@@ -34,6 +33,12 @@ app.get('/game', loggedIn, (req, res) => {
     res.render('game', { title: 'Welcome to Express with EJS', user });
 });
 
+var availableCorners = [
+    'bottom-left',
+    'bottom-right',
+    'top-left',
+    'top-right',
+];
 
 let users = {};
 
@@ -44,20 +49,26 @@ const MAP_RANGE = MAP_SCALE * MAP_SIZE;
 const MAP_SPEED = (MAP_SCALE / 2) / 10;
 
 io.on('connection', (socket) => {
+    if (users.length > 4) {
+        socket.emit('full');
+        socket.disconnect();
+        return;
+    }
     users[socket.id] = {
         name: 'unknown',
         userId: socket.id,
-        // player
         playerSocket: socket,
+        //player
         playerX: MAP_SCALE + 20,
         playerY: MAP_SCALE + 20,
         playerAngle: Math.PI / 3,
         playerMoveX: 0,
         playerMoveY: 0,
         playerMoveAngle: 0,
-        canvasWidth: 800,
-        canvasHeight: 600,
+        corner: 'undecided',
     }
+
+    let user = users[socket.id];
 
     socket.on('new-user', (data) => {
         console.log('New name connected: ' + data.name);
@@ -68,6 +79,9 @@ io.on('connection', (socket) => {
         console.log('A user disconnected');
         delete users[socket.id];
         console.log('')
+        if (user.corner != 'undecided') {
+            availableCorners.push(user.corner);
+        }
     });
 
     socket.on('resize', (data) => {
@@ -78,6 +92,13 @@ io.on('connection', (socket) => {
         users[socket.id].HALF_WIDTH = data.HALF_WIDTH;
         users[socket.id].HALF_HEIGHT = data.HALF_HEIGHT;
     });
+
+    user.corner = availableCorners[0];
+    availableCorners.shift();
+    for (var i in users) {
+        let user = users[i];
+        console.log('user.corner: ' + user.corner);
+    }
 });
 
 
@@ -101,6 +122,40 @@ io.on('connection', (socket) => {
     });
 });
 
+var map = [
+    1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+];
 
 setInterval(() => { step(); }, 1000 / 1000);
 
@@ -110,45 +165,42 @@ function step() {
     for (var i in users) {
         let user = users[i];
 
-        var playerAngle = Math.PI / 3;
-        var playerX = MAP_SCALE + 20;
-        var playerY = MAP_SCALE + 20;
-
-        var playerMoveX = 0;
-        var playerMoveY = 0;
-        var playerMoveAngle = 0;
+        // player
+        var playerX = user.playerX;
+        var playerY = user.playerY;
+        var playerAngle = user.playerAngle;
+        var playerMoveX = user.playerMoveX;
+        var playerMoveY = user.playerMoveY;
+        var playerMoveAngle = user.playerMoveAngle;
 
         // update player position
         var playerOffsetX = Math.sin(playerAngle) * MAP_SPEED;
         var playerOffsetY = Math.cos(playerAngle) * MAP_SPEED;
-        var mapTargetX = Math.floor(playerY / MAP_SCALE) * MAP_SIZE + Math.floor((playerX + playerOffsetX * playerMoveX * 5) / MAP_SCALE)
-        var mapTargetY = Math.floor((playerY + playerOffsetY * playerMoveY * 5) / MAP_SCALE) * MAP_SIZE + Math.floor(playerX / MAP_SCALE)
+        var mapTargetX = Math.floor(playerY / MAP_SCALE) * MAP_SIZE + Math.floor((playerX + playerOffsetX * playerMoveX * 5) / MAP_SCALE);
+        var mapTargetY = Math.floor((playerY + playerOffsetY * playerMoveY * 5) / MAP_SCALE) * MAP_SIZE + Math.floor(playerX / MAP_SCALE);
 
         if (playerMoveX && map[mapTargetX] == 0) playerX += playerOffsetX * playerMoveX;
         if (playerMoveY && map[mapTargetY] == 0) playerY += playerOffsetY * playerMoveY;
         if (playerMoveAngle) playerAngle += 0.06 * playerMoveAngle;
 
-        // Calculate map & player offsets
-        var mapOffsetX = Math.floor(user.canvasWidth / 2 - user.HALF_WIDTH);
-        var mapOffsetY = Math.floor(user.canvasHeight / 2 - user.HALF_HEIGHT);
-        var playerMapX = (playerX / MAP_SCALE) * 5 + mapOffsetX;
-        var playerMapY = (playerY / MAP_SCALE) * 5 + mapOffsetY;
+        // Update user object with new position
+        user.playerX = playerX;
+        user.playerY = playerY;
+        user.playerAngle = playerAngle;
 
-        console.log(
-            'canvasWidth: ' + user.WIDTH,
-            'playerX: ' + playerX,
-            'playerY: ' + playerY,
-            'playerAngle: ' + playerAngle,
-            'playerMoveX: ' + playerMoveX,
-            'playerMoveY: ' + playerMoveY,
-            'playerMoveAngle: ' + playerMoveAngle,
-            'mapTargetX: ' + mapTargetX,
-            'mapTargetY: ' + mapTargetY,
-            'mapOffsetX: ' + mapOffsetX,
-            'mapOffsetY: ' + mapOffsetY,
-            'playerMapX: ' + playerMapX,
-            'playerMapY: ' + playerMapY,
-        )
+        // console.log(
+        //     'canvasWidth: ' + user.canvasWidth,
+        //     'playerX: ' + playerX,
+        //     'playerY: ' + playerY,
+        //     'playerAngle: ' + playerAngle,
+        //     'mapTargetX: ' + mapTargetX,
+        //     'mapTargetY: ' + mapTargetY,
+        //     'mapOffsetX: ' + mapOffsetX,
+        //     'mapOffsetY: ' + mapOffsetY,
+        //     'playerMapX: ' + playerMapX,
+        //     'playerMapY: ' + playerMapY,
+        // );
+
         // add the player to the temp player list
         tempUserList[user.userId] = {
             name: user.name,
@@ -156,13 +208,10 @@ function step() {
             // Raycast stuff
             mapTargetX: mapTargetX,
             mapTargetY: mapTargetY,
-            mapOffsetX: mapOffsetX,
-            mapOffsetY: mapOffsetY,
-            playerMapX: playerMapX,
-            playerMapY: playerMapY,
             playerX: playerX,
             playerY: playerY,
-
+            playerAngle: playerAngle,
+            corner: user.corner,
         };
     }
 
@@ -173,6 +222,7 @@ function step() {
         user.playerSocket.emit('update', { users: tempUserList });
     }
 }
+
 
 
 
