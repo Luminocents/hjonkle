@@ -33,13 +33,6 @@ app.get('/game', loggedIn, (req, res) => {
     res.render('game', { title: 'Welcome to Express with EJS', user });
 });
 
-var availableCorners = [
-    'bottom-left',
-    'bottom-right',
-    'top-left',
-    'top-right',
-];
-
 let users = {};
 
 // map
@@ -68,7 +61,6 @@ io.on('connection', (socket) => {
         playerMoveX: 0,
         playerMoveY: 0,
         playerMoveAngle: 0,
-        corner: 'undecided',
     }
 
     let user = users[socket.id];
@@ -82,9 +74,6 @@ io.on('connection', (socket) => {
         console.log('A user disconnected');
         delete users[socket.id];
         console.log('')
-        if (user.corner != 'undecided') {
-            availableCorners.push(user.corner);
-        }
    });
 
     socket.on('resize', (data) => {
@@ -95,15 +84,6 @@ io.on('connection', (socket) => {
         users[socket.id].HALF_WIDTH = data.HALF_WIDTH;
         users[socket.id].HALF_HEIGHT = data.HALF_HEIGHT;
     });
-
-    user.corner = availableCorners[0];
-    availableCorners.shift();
-    for (var i in users) {
-        let user = users[i];
-        console.log('user.corner: ' + user.corner);
-    }
-
-    io.emit('corners', { corners: availableCorners });
 });
 
 // key inputs
@@ -216,7 +196,6 @@ function step() {
             playerX: playerX,
             playerY: playerY,
             playerAngle: playerAngle,
-            corner: user.corner,
         };
     }
 
