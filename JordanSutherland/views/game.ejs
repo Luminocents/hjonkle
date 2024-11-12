@@ -159,6 +159,9 @@
     const WIDTH = Math.floor(window.innerWidth / 4), HALF_WIDTH = WIDTH / 2;
     const HEIGHT = Math.floor(window.innerHeight / 4), HALF_HEIGHT = HEIGHT / 2;
 
+    let mainCornerX = 0;
+    let mainCornerY = 0;
+
     // camera
     const DOUBLE_PI = Math.PI * 2;
     const FOV = Math.PI / 3;
@@ -171,13 +174,18 @@
     // load wall textures
     for (var filename = 0; filename < 3; filename++) {
         var img = new Image();
-        img.src = "static/walls/" + filename + ".png";
+        img.src = "walls/" + filename + ".png";
         WALLS.push(img);
     }
 
+    const EMPQ = [];
+
     // load empty question mark
-    var emptyQuestion = new Image();
-    emptyQuestion.src = "emptyQuestion.png";
+    for (var filename = 0; filename < 4; filename++) {
+        var img = new Image();
+        img.src = "empQs/" + filename + ".png";
+        EMPQ.push(img);
+    }
 
 
 
@@ -196,7 +204,6 @@
         canvas.height = window.innerHeight / 2;
 
         // Draw Background
-        // Draw Background
         ctx.drawImage(WALLS[0], 0, 0, WIDTH * 4, HEIGHT); // Top half
         ctx.drawImage(WALLS[0], 0, HEIGHT, WIDTH * 4, HEIGHT); // Bottom half
 
@@ -205,9 +212,9 @@
         ctx.font = '1vi Arial';
         ctx.fillText('FPS: ' + fps_rate, 5, 15);
         let temp = 15;
-        for (user in users) {
-            let itUser = users[user];
-            ctx.fillText(users[user].name, 5, 30 + Object.keys(users).indexOf(users[user].name) * 15 + temp);
+        for (i in users) {
+            let itUser = users[i];
+            ctx.fillText(itUser.name, 5, 30 + Object.keys(users).indexOf(itUser.name) * 15 + temp);
             temp += 15;
             switch (itUser.corner) {
                 case "top-left":
@@ -215,16 +222,16 @@
                     cornerY = 0;
                     break;
                 case "top-right":
-                    cornerX = canvas.width / 2;
+                    cornerX = WIDTH;
                     cornerY = 0;
                     break;
                 case "bottom-left":
                     cornerX = 0;
-                    cornerY = canvas.height / 2;
+                    cornerY = HEIGHT;
                     break;
                 case "bottom-right":
-                    cornerX = canvas.width / 2;
-                    cornerY = canvas.height / 2;
+                    cornerX = WIDTH;
+                    cornerY = HEIGHT;
                     break;
                 default:
                     cornerX = 0;
@@ -232,179 +239,151 @@
                     break;
             }
 
-
-            // Raycast other users
-            var otherUserX = itUser.playerX;
-            var otherUserY = itUser.playerY;
-            var otherUserAngle = itUser.playerAngle;
-
-            var otherCurrentAngle = otherUserAngle + HALF_FOV;
-            var otherRayStartX = Math.floor(otherUserX / MAP_SCALE) * MAP_SCALE;
-            var otherRayStartY = Math.floor(otherUserY / MAP_SCALE) * MAP_SCALE;
-
-            for (var otherRay = 0; otherRay < WIDTH; otherRay++) {
-                var otherCurrentSin = Math.sin(otherCurrentAngle); otherCurrentSin = otherCurrentSin ? otherCurrentSin : .000001;
-                var otherCurrentCos = Math.cos(otherCurrentAngle); otherCurrentCos = otherCurrentCos ? otherCurrentCos : .000001;
-
-                // Vertical Raycast intersection
-                var otherRayEndX, otherRayEndY, otherRayDirectionX, otherVerticalDepth, otherTextureEndY, otherTextureY;
-                if (otherCurrentSin > 0) { otherRayEndX = otherRayStartX + MAP_SCALE; otherRayDirectionX = 1 }
-                else { otherRayEndX = otherRayStartX; otherRayDirectionX = -1 }
-                for (var otherOffset = 0; otherOffset < MAP_RANGE; otherOffset += MAP_SCALE) {
-                    otherVerticalDepth = (otherRayEndX - otherUserX) / otherCurrentSin;
-                    otherRayEndY = otherUserY + otherVerticalDepth * otherCurrentCos;
-                    var otherMapTargetX = Math.floor(otherRayEndX / MAP_SCALE);
-                    var otherMapTargetY = Math.floor(otherRayEndY / MAP_SCALE);
-                    if (otherCurrentSin <= 0) otherMapTargetX += otherRayDirectionX;
-                    var otherTargetSquare = otherMapTargetY * MAP_SIZE + otherMapTargetX;
-                    if (otherTargetSquare < 0 || otherTargetSquare >= map.length - 1) break;
-                    if (map[otherTargetSquare] != 0) { otherTextureY = map[otherTargetSquare]; break; };
-                    otherRayEndX += otherRayDirectionX * MAP_SCALE;
-                }
-                otherTextureEndY = otherRayEndY;
-
-                // Horizontal Raycast intersection
-                var otherRayEndY, otherRayEndX, otherRayDirectionY, otherHorizontalDepth, otherTextureEndX, otherTextureX;
-                if (otherCurrentCos > 0) { otherRayEndY = otherRayStartY + MAP_SCALE; otherRayDirectionY = 1 }
-                else { otherRayEndY = otherRayStartY; otherRayDirectionY = -1 }
-                for (var otherOffset = 0; otherOffset < MAP_RANGE; otherOffset += MAP_SCALE) {
-                    otherHorizontalDepth = (otherRayEndY - otherUserY) / otherCurrentCos;
-                    otherRayEndX = otherUserX + otherHorizontalDepth * otherCurrentSin;
-                    var otherMapTargetX = Math.floor(otherRayEndX / MAP_SCALE);
-                    var otherMapTargetY = Math.floor(otherRayEndY / MAP_SCALE);
-                    if (otherCurrentCos <= 0) otherMapTargetY += otherRayDirectionY;
-                    var otherTargetSquare = otherMapTargetY * MAP_SIZE + otherMapTargetX;
-                    if (otherTargetSquare < 0 || otherTargetSquare >= map.length - 1) break;
-                    if (map[otherTargetSquare] != 0) { otherTextureX = map[otherTargetSquare]; break; };
-                    otherRayEndY += otherRayDirectionY * MAP_SCALE;
-                }
-                otherTextureEndX = otherRayEndX;
-
-                var otherDepth = otherVerticalDepth < otherHorizontalDepth ? otherVerticalDepth : otherHorizontalDepth;
-                var otherTextureImage = otherVerticalDepth < otherHorizontalDepth ? otherTextureY : otherTextureX;
-                var otherTextureOffset = otherVerticalDepth < otherHorizontalDepth ? otherTextureEndY : otherTextureEndX;
-                otherTextureOffset = otherTextureOffset - Math.floor(otherTextureOffset / MAP_SCALE) * MAP_SCALE;
-                otherDepth *= Math.cos(otherUserAngle - otherCurrentAngle);
-                var otherWallHeight = Math.min(Math.floor(MAP_SCALE * 300 / (otherDepth + 0.0001)), 50000);
-
-                if (!otherTextureImage) {
-                    ctx.fillStyle = 'black';
-                    let drawHeight = otherWallHeight;
-                    let drawY = cornerY + (HALF_HEIGHT - otherWallHeight / 2);
-                    if (drawY < cornerY) {
-                        drawHeight -= (cornerY - drawY);
-                        drawY = cornerY;
-                    }
-                    if (drawY + drawHeight > cornerY + canvas.height / 2) {
-                        drawHeight = (cornerY + canvas.height / 2) - drawY;
-                    }
-                    ctx.fillRect(cornerX + otherRay, drawY, 1, drawHeight);
-                } else {
-                    let drawHeight = otherWallHeight;
-                    let drawY = cornerY + (HALF_HEIGHT - Math.floor(otherWallHeight / 2));
-                    if (drawY < cornerY) {
-                        drawHeight -= (cornerY - drawY);
-                        drawY = cornerY;
-                    }
-                    if (drawY + drawHeight > cornerY + canvas.height / 2) {
-                        drawHeight = (cornerY + canvas.height / 2) - drawY;
-                    }
-                    ctx.drawImage(
-                        WALLS[otherTextureImage],
-                        otherTextureOffset,
-                        0,
-                        1,
-                        128,
-                        cornerX + otherRay,
-                        drawY,
-                        1,
-                        drawHeight,
-                    );
-                }
-
-
-
-
-                otherCurrentAngle -= STEP_ANGLE;
+            if (itUser.userId == socket.id) {
+                mainCornerX = cornerX;
+                mainCornerY = cornerY;
             }
 
-            let mainCornerX = 0;
-            let mainCornerY = 0;
+            // Raycast users
+            var userX = itUser.playerX;
+            var userY = itUser.playerY;
+            var userAngle = itUser.playerAngle;
 
-            // User Map Stuff
-            if (itUser.userId == socket.id) {
-                // Calculate map & player offsets
-                var mapOffsetX = Math.floor(canvas.width / 2 - HALF_WIDTH);
-                var mapOffsetY = Math.floor(canvas.height / 2 - HALF_HEIGHT);
-                var playerMapX = (itUser.playerX / MAP_SCALE) * 5 + mapOffsetX;
-                var playerMapY = (itUser.playerY / MAP_SCALE) * 5 + mapOffsetY;
+            // Raycasting
+            var currentAngle = userAngle + HALF_FOV;
+            var rayStartX = Math.floor(userX / MAP_SCALE) * MAP_SCALE;
+            var rayStartY = Math.floor(userY / MAP_SCALE) * MAP_SCALE;
 
+            // Calculate map & player offsets relative to user's corner
+            var mapOffsetX = cornerX + Math.floor(canvas.width / 2 - HALF_WIDTH);
+            var mapOffsetY = cornerY + Math.floor(canvas.height / 2 - HALF_HEIGHT);
+            var playerMapX = (userX / MAP_SCALE) * 5 + mapOffsetX;
+            var playerMapY = (userY / MAP_SCALE) * 5 + mapOffsetY;
+
+            // loop for casted rays
+            for (var ray = 0; ray < WIDTH; ray++) {
+                // get current angle sin & cos
+                var currentSin = Math.sin(currentAngle); currentSin = currentSin ? currentSin : .000001;
+                var currentCos = Math.cos(currentAngle); currentCos = currentCos ? currentCos : .000001;
+
+                // vertical line intersection
+                var rayEndX, rayEndY, rayDirectionX, verticalDepth, textureEndY, textureY;
+                if (currentSin > 0) { rayEndX = rayStartX + MAP_SCALE; rayDirectionX = 1 }
+                else { rayEndX = rayStartX; rayDirectionX = -1 }
+                for (var offset = 0; offset < MAP_RANGE; offset += MAP_SCALE) {
+                    verticalDepth = (rayEndX - userX) / currentSin;
+                    rayEndY = userY + verticalDepth * currentCos;
+                    var mapTargetX = Math.floor(rayEndX / MAP_SCALE);
+                    var mapTargetY = Math.floor(rayEndY / MAP_SCALE);
+                    if (currentSin <= 0) mapTargetX += rayDirectionX;
+                    var targetSquare = mapTargetY * MAP_SIZE + mapTargetX;
+                    if (targetSquare < 0 || targetSquare >= map.length - 1) break;
+                    if (map[targetSquare] != 0) { textureY = map[targetSquare]; break; };
+                    rayEndX += rayDirectionX * MAP_SCALE;
+                }
+                textureEndY = rayEndY;
+
+                // horizontal line intersection
+                var rayEndY, rayEndX, rayDirectionY, horizontalDepth, textureEndX, textureX;
+                if (currentCos > 0) { rayEndY = rayStartY + MAP_SCALE; rayDirectionY = 1 }
+                else { rayEndY = rayStartY; rayDirectionY = -1 }
+                for (var offset = 0; offset < MAP_RANGE; offset += MAP_SCALE) {
+                    horizontalDepth = (rayEndY - userY) / currentCos;
+                    rayEndX = userX + horizontalDepth * currentSin;
+                    var mapTargetX = Math.floor(rayEndX / MAP_SCALE);
+                    var mapTargetY = Math.floor(rayEndY / MAP_SCALE);
+                    if (currentCos <= 0) mapTargetY += rayDirectionY;
+                    var targetSquare = mapTargetY * MAP_SIZE + mapTargetX;
+                    if (targetSquare < 0 || targetSquare >= map.length - 1) break;
+                    if (map[targetSquare] != 0) { textureX = map[targetSquare]; break; };
+                    rayEndY += rayDirectionY * MAP_SCALE;
+                }
+                textureEndX = rayEndX;
+
+                // render 3D projection
+                var depth = verticalDepth < horizontalDepth ? verticalDepth : horizontalDepth;
+                var textureImage = verticalDepth < horizontalDepth ? textureY : textureX;
+                var textureOffset = verticalDepth < horizontalDepth ? textureEndY : textureEndX;
+                textureOffset = textureOffset - Math.floor(textureOffset / MAP_SCALE) * MAP_SCALE;
+                depth *= Math.cos(userAngle - currentAngle);
+                var wallHeight = Math.min(Math.floor(MAP_SCALE * 300 / (depth + 0.0001)), 50000);
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(cornerX, cornerY, canvas.width / 2, canvas.height / 2);
+                ctx.clip();
+                ctx.drawImage(
+                    WALLS[textureImage],
+                    textureOffset,  // Source img x offset
+                    0,  // Source img y offset
+                    1, // Source img width
+                    128, // Source img height
+                    cornerX + ray, // Target image x offset
+                    cornerY + (HALF_HEIGHT - Math.floor(wallHeight / 2)), // Target image y offset
+                    1, // Target image width
+                    wallHeight, // Target image height
+                );
+                ctx.restore();
+                currentAngle -= STEP_ANGLE;
+
+
+            }
+
+            if (itUser.userId == socket.id && showMap) {
                 // Draw 2d map
-                if (showMap) {
-                    for (var row = 0; row < MAP_SIZE; row++) {
-                        for (var col = 0; col < MAP_SIZE; col++) {
-                            var square = row * MAP_SIZE + col;
-                            if (map[square] != 0) {
-                                ctx.fillStyle = 'green';
-                                ctx.fillRect(cornerX + col * 5, cornerY + row * 5, 5, 5);
-                            } else {
-                                ctx.fillStyle = '#aaa';
-                                ctx.fillRect(cornerX + col * 5, cornerY + row * 5, 5, 5);
-                            }
+                for (var row = 0; row < MAP_SIZE; row++) {
+                    for (var col = 0; col < MAP_SIZE; col++) {
+                        var square = row * MAP_SIZE + col;
+                        if (map[square] != 0) {
+                            ctx.fillStyle = 'green';
+                            ctx.fillRect(cornerX + col * 5, cornerY + row * 5, 5, 5);
+                        } else {
+                            ctx.fillStyle = '#aaa';
+                            ctx.fillRect(cornerX + col * 5, cornerY + row * 5, 5, 5);
                         }
                     }
 
-                    // Draw user on map
-                    ctx.fillStyle = 'red';
-                    ctx.beginPath();
-                    ctx.arc(cornerX + itUser.playerX / MAP_SCALE * 5, cornerY + itUser.playerY / MAP_SCALE * 5, 3, 0, DOUBLE_PI, true);
-                    ctx.fill();
-                    ctx.strokeStyle = 'red';
-                    ctx.lineWidth = 1;
-                    ctx.beginPath();
-                    ctx.moveTo(cornerX + itUser.playerX / MAP_SCALE * 5, cornerY + itUser.playerY / MAP_SCALE * 5);
-                    ctx.lineTo(cornerX + itUser.playerX / MAP_SCALE * 5 + Math.sin(itUser.playerAngle) * 5, cornerY + itUser.playerY / MAP_SCALE * 5 + Math.cos(itUser.playerAngle) * 5);
-                    ctx.stroke();
-                    mainCornerX = cornerX;
-                    mainCornerY = cornerY;
+                    for (i in users) {
+                        let itUser = users[i];
+                        let color = itUser.userId != socket.id ? 'blue' : 'red';
+                        ctx.fillStyle = color;
+                        ctx.beginPath();
+                        ctx.arc(cornerX + itUser.playerX / MAP_SCALE * 5, cornerY + itUser.playerY / MAP_SCALE * 5, 3, 0, DOUBLE_PI, true);
+                        ctx.fill();
+                        ctx.strokeStyle = color;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(cornerX + itUser.playerX / MAP_SCALE * 5, cornerY + itUser.playerY / MAP_SCALE * 5);
+                        ctx.lineTo(cornerX + itUser.playerX / MAP_SCALE * 5 + Math.sin(itUser.playerAngle) * 5, cornerY + itUser.playerY / MAP_SCALE * 5 + Math.cos(itUser.playerAngle) * 5);
+                        ctx.stroke();
 
-                }
-            } else {
-                if (showMap) {
-                    ctx.fillStyle = 'blue';
-                    ctx.beginPath();
-                    ctx.arc(mainCornerX + itUser.playerX / MAP_SCALE * 5, mainCornerY + itUser.playerY / MAP_SCALE * 5, 3, 0, DOUBLE_PI, true);
-                    ctx.fill();
-                    ctx.strokeStyle = 'blue';
-                    ctx.lineWidth = 1;
-                    ctx.beginPath();
-                    ctx.moveTo(mainCornerX + itUser.playerX / MAP_SCALE * 5, mainCornerY + itUser.playerY / MAP_SCALE * 5);
-                    ctx.lineTo(mainCornerX + itUser.playerX / MAP_SCALE * 5 + Math.sin(itUser.playerAngle) * 5, mainCornerY + itUser.playerY / MAP_SCALE * 5 + Math.cos(itUser.playerAngle) * 5);
-                    ctx.stroke();
+                    }
                 }
             }
-
 
             // Border
             ctx.strokeStyle = 'red';
             ctx.lineWidth = 2;
             ctx.strokeRect(cornerX, cornerY, canvas.width / 2, canvas.height / 2);
+
+            // Draw empty question marks
             for (availableCorner in availableCorners) {
                 switch (availableCorners[availableCorner]) {
                     case "top-left":
-                        ctx.drawImage(emptyQuestion, 0, 0, canvas.width / 2, canvas.height / 2);
+                        ctx.drawImage(EMPQ[0], 0, 0, canvas.width / 2, canvas.height / 2);
                         break;
                     case "top-right":
-                        ctx.drawImage(emptyQuestion, canvas.width / 2, 0, canvas.width / 2, canvas.height / 2);
+                        ctx.drawImage(EMPQ[1], canvas.width / 2, 0, canvas.width / 2, canvas.height / 2);
                         break;
                     case "bottom-left":
-                        ctx.drawImage(emptyQuestion, 0, canvas.height / 2, canvas.width / 2, canvas.height / 2);
+                        ctx.drawImage(EMPQ[2], 0, canvas.height / 2, canvas.width / 2, canvas.height / 2);
                         break;
                     case "bottom-right":
-                        ctx.drawImage(emptyQuestion, canvas.width / 2, canvas.height / 2, canvas.width / 2, canvas.height / 2);
+                        ctx.drawImage(EMPQ[3], canvas.width / 2, canvas.height / 2, canvas.width / 2, canvas.height / 2);
                         break;
                 }
             }
+
         }
 
 

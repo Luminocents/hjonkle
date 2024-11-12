@@ -47,12 +47,16 @@ const MAP_SIZE = 32;
 const MAP_SCALE = 128;
 const MAP_SPEED = (MAP_SCALE / 2) / 10;
 
+// initialization
 io.on('connection', (socket) => {
+    // max users
     if (users.length > 4) {
         socket.emit('full');
         socket.disconnect();
         return;
     }
+
+    // template values stuff
     users[socket.id] = {
         name: 'unknown',
         userId: socket.id,
@@ -81,7 +85,7 @@ io.on('connection', (socket) => {
         if (user.corner != 'undecided') {
             availableCorners.push(user.corner);
         }
-    });
+   });
 
     socket.on('resize', (data) => {
         users[socket.id].canvasWidth = data.canvasWidth;
@@ -98,10 +102,11 @@ io.on('connection', (socket) => {
         let user = users[i];
         console.log('user.corner: ' + user.corner);
     }
-    socket.emit('corners', { corners: availableCorners });
+
+    io.emit('corners', { corners: availableCorners });
 });
 
-
+// key inputs
 io.on('connection', (socket) => {
     socket.on('keydown', (key) => {
         switch (key) {
