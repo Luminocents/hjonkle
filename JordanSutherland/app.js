@@ -61,6 +61,7 @@ io.on('connection', (socket) => {
         playerMoveX: 0,
         playerMoveY: 0,
         playerMoveAngle: 0,
+        imgNum: 0,
     }
 
     let user = users[socket.id];
@@ -84,6 +85,9 @@ io.on('connection', (socket) => {
         users[socket.id].HALF_WIDTH = data.HALF_WIDTH;
         users[socket.id].HALF_HEIGHT = data.HALF_HEIGHT;
     });
+
+    user.imgNum = Math.floor(Math.random() * 22) + 1;
+    
 });
 
 // key inputs
@@ -172,7 +176,7 @@ function step() {
         user.playerX = playerX;
         user.playerY = playerY;
         user.playerAngle = playerAngle;
-
+        
         // console.log(
         //     'canvasWidth: ' + user.canvasWidth,
         //     'playerX: ' + playerX,
@@ -196,6 +200,7 @@ function step() {
             playerX: playerX,
             playerY: playerY,
             playerAngle: playerAngle,
+            imgNum: user.imgNum,
         };
     }
 
