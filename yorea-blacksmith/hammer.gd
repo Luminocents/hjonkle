@@ -13,6 +13,7 @@ var playerNode
 var hammer
 var hammerSpot
 var hammerHandle
+var holding = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -67,13 +68,25 @@ func _process(delta: float) -> void:
 			mass = 3.25
 			var distance = (playerNode.global_position - hammer.global_transform.origin).normalized()
 			var distance_to_target = (playerNode.global_position - hammer.global_transform.origin).length()
-		
+			
 			# Calculate speed based on distance
 			playerNode.velocity = lerp(-distance, distance * 10, -distance_to_target)
 		else:
 			flying = false
 			gravity = 8
 			mass = 5
+	print(hammer.linear_velocity.length())
+	if (snappedf(hammer.linear_velocity.y, 0.05) == 0) and !holding and !bring:
+		flying = false
+		hammer.axis_lock_angular_x = true
+		hammer.axis_lock_angular_y = true
+		hammer.axis_lock_angular_z = true
+		gravity = 100
+		mass = 100
+	else:
+		hammer.axis_lock_angular_x = false
+		hammer.axis_lock_angular_y = false
+		hammer.axis_lock_angular_z = false
 	
 	if floating:
 		gravity = 1

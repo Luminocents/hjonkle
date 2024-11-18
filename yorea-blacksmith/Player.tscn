@@ -17,8 +17,8 @@ material = SubResource("StandardMaterial3D_5cyn6")
 [sub_resource type="SphereMesh" id="SphereMesh_vopjo"]
 
 [node name="Player" type="CharacterBody3D"]
-collision_mask = 2
 floor_constant_speed = true
+platform_floor_layers = 4294967292
 script = ExtResource("1_5brhk")
 
 [node name="PlayerShape" type="CollisionShape3D" parent="."]

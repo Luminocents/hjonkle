@@ -40,7 +40,6 @@ func _on_r_hammer_spot_body_entered(body: Node3D) -> void:
 	if body.get_class() == "RigidBody3D" and body.name != "Player" or "Vrplayer":
 		holding_at = body
 		holding_at_pos = holding_at.global_position
-		print(body)
 
 
 func _on_r_hammer_spot_body_exited(body: Node3D) -> void:
