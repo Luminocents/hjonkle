@@ -69,10 +69,8 @@ transform = Transform3D(522.34, 0, 0, 0, 1, 0, 0, 0, 729.06, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_2yjmw")
 mesh = SubResource("BoxMesh_seq1f")
 
-[node name="test" type="StaticBody3D" parent="Environment"]
+[node name="test" type="RigidBody3D" parent="Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.207, -0.00148952)
-collision_layer = 255
-collision_mask = 255
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/test"]
 shape = SubResource("SphereShape3D_niju6")

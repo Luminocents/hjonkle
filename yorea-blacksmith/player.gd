@@ -79,8 +79,8 @@ func _physics_process(delta: float) -> void:
 			holding_pinB = looking_at.get_parent().get_child(2)
 		else:
 			holding_pinB = looking_at
-			holding_pinB.set_collision_mask_value(1, false)
-			holding_pinB.set_collision_mask_value(2, true)
+			holding_pinB.set_collision_layer_value(1, false)
+			holding_pinB.set_collision_layer_value(2, true)
 			holding_pinB.mass = 1
 		
 		if looking_at.freeze == true:
@@ -93,14 +93,14 @@ func _physics_process(delta: float) -> void:
 		holding = false
 		if holding_pinB.get_parent().name == "Hammer":
 			hammerNode.holding = false
-			hammerNode.hammer.set_collision_mask_value(1, true)
-			hammerNode.hammer.set_collision_mask_value(2, false)
+			hammerNode.hammer.set_collision_layer_value(1, true)
+			hammerNode.hammer.set_collision_layer_value(2, false)
 			holding_pinB.gravity_scale = 1
 			hammerNode.mass = 5
 			hammerNode.thrown = true
 		else:
-			holding_pinB.set_collision_mask_value(1, true)
-			holding_pinB.set_collision_mask_value(2, false)
+			holding_pinB.set_collision_layer_value(1, true)
+			holding_pinB.set_collision_layer_value(2, false)
 			holding_pinB.gravity_scale = 1
 			holding_pinB.mass = 1
 		holding_pinB = false

@@ -8,7 +8,6 @@ var floating = false
 var gravity = 8
 var mass = 5
 var initialDistance = 0
-
 var playerNode
 var hammer
 var hammerSpot
