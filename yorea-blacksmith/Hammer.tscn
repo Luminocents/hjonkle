@@ -348,7 +348,6 @@ node_b = NodePath("../RigidBody3D")
 [node name="RigidBody3D" type="RigidBody3D" parent="."]
 transform = Transform3D(0.957583, 0, 0, 0, 0.957583, 0, 0, 0, 0.957583, 0, 0, 0)
 mass = 100.0
-gravity_scale = 100.0
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="RigidBody3D"]
 transform = Transform3D(-4.18409e-08, 0, -0.957209, 0, 0.957209, 0, 0.957209, 0, -4.18409e-08, -0.000266771, 0.000407692, 0.303873)

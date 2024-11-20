@@ -24,7 +24,6 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if flying and playerNode.is_on_floor():
 		flying = false
-		gravity = 8
 		mass = 5
 	if Input.is_action_just_pressed("b") and !flying:
 		bring = true
@@ -55,17 +54,13 @@ func _process(delta: float) -> void:
 		
 		if distance_to_target < 2.5 and !flying:
 			bring = false
-			hammer.freeze = true
-	else:
-		hammer.freeze = false
 		
 	
 	#Flying and Thrown Physics
 	if thrown:
 		if abs(hammer.linear_velocity.x) > 30 or abs(hammer.linear_velocity.z) > 30 or flying:
 			flying = true
-			gravity = 6
-			mass = 3.25
+			mass = 5
 			var distance = (playerNode.global_position - hammer.global_transform.origin).normalized()
 			var distance_to_target = (playerNode.global_position - hammer.global_transform.origin).length()
 			
@@ -73,23 +68,12 @@ func _process(delta: float) -> void:
 			playerNode.velocity = lerp(-distance, distance * 10, -distance_to_target)
 		else:
 			flying = false
-			gravity = 8
 			mass = 5
-	print(hammer.linear_velocity.length())
-	if (snappedf(hammer.linear_velocity.y, 0.05) == 0) and !holding and !bring:
+	if (snappedf(hammer.linear_velocity.y, 0.05) == 0) and (snappedf(hammer.angular_velocity.length(), 0.05) == 0) and !holding and !bring:
 		flying = false
-		hammer.axis_lock_angular_x = true
-		hammer.axis_lock_angular_y = true
-		hammer.axis_lock_angular_z = true
-		gravity = 100
 		mass = 100
-	else:
-		hammer.axis_lock_angular_x = false
-		hammer.axis_lock_angular_y = false
-		hammer.axis_lock_angular_z = false
 	
 	if floating:
-		gravity = 1
 		mass = 1
 		floating = false
 	

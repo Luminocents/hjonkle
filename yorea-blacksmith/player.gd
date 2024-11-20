@@ -20,7 +20,6 @@ var mouseMovement = false
 var currentFrame = 0
 var bhop = false
 var tempSpeed = SPEED
-var worth = 100
 var strength = 100
 
 var bestSpeed = 0
@@ -43,7 +42,6 @@ func _ready() -> void:
 	set_physics_process(true)
 	
 	strength = 100 / strength
-	worth = 100 / worth
 
 # Mouse movement
 func _unhandled_input(event: InputEvent) -> void:
@@ -76,9 +74,6 @@ func _physics_process(delta: float) -> void:
 	if looking_at and Input.is_action_just_pressed("mouse1") and !holding and looking_at.get_class() == "RigidBody3D":
 		if looking_at.get_parent().name == "Hammer":
 			hammerNode.holding = true
-			hammerNode.hammer.set_collision_mask_value(1, false)
-			hammerNode.hammer.set_collision_mask_value(2, true)
-			hammerNode.gravity = worth
 			hammerNode.mass = strength
 			hammerNode.thrown = false
 			holding_pinB = looking_at.get_parent().get_child(2)
@@ -86,7 +81,6 @@ func _physics_process(delta: float) -> void:
 			holding_pinB = looking_at
 			holding_pinB.set_collision_mask_value(1, false)
 			holding_pinB.set_collision_mask_value(2, true)
-			holding_pinB.gravity_scale = 1
 			holding_pinB.mass = 1
 		
 		if looking_at.freeze == true:
@@ -101,7 +95,7 @@ func _physics_process(delta: float) -> void:
 			hammerNode.holding = false
 			hammerNode.hammer.set_collision_mask_value(1, true)
 			hammerNode.hammer.set_collision_mask_value(2, false)
-			hammerNode.gravity = 8
+			holding_pinB.gravity_scale = 1
 			hammerNode.mass = 5
 			hammerNode.thrown = true
 		else:
@@ -167,7 +161,6 @@ func _physics_process(delta: float) -> void:
 	input_dir.y = velocity.y
 	var direction = (neck.transform.basis * Vector3(input_dir.x, 0, input_dir.z)).normalized()
 	# Jump Stuff
-	print(bhop)
 	if bhop:
 		tempSpeed = SPEED * SPEED
 		bhop = false
@@ -190,7 +183,6 @@ func _physics_process(delta: float) -> void:
 	
 	# Gravity
 	velocity.y += gravity * delta
-	
 	_push_away_rigid_bodies()
 	
 	move_and_slide()
@@ -207,7 +199,7 @@ func move_node(node, new_parent):
 func _push_away_rigid_bodies():
 	for i in get_slide_collision_count():
 		var c := get_slide_collision(i)
-		if c.get_collider() is RigidBody3D:
+		if c.get_collider() is RigidBody3D and c.get_collider().get_child(1).get_name() == 'light':
 			var push_dir = -c.get_normal()
 			# How much velocity the object needs to increase to match player velocity in the push direction
 			var velocity_diff_in_push_dir = self.velocity.dot(push_dir) - c.get_collider().linear_velocity.dot(push_dir)
@@ -222,5 +214,5 @@ func _push_away_rigid_bodies():
 			# Don't push object from above/below
 			push_dir.y = 0
 			# 5.0 is a magic number, adjust to your needs
-			var push_force = mass_ratio * 5.0
+			var push_force = mass_ratio * 1.0
 			c.get_collider().apply_impulse(push_dir * velocity_diff_in_push_dir * push_force, c.get_position() - c.get_collider().global_position)
