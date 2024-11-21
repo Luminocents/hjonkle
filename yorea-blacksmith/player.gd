@@ -20,7 +20,9 @@ var mouseMovement = false
 var currentFrame = 0
 var bhop = false
 var tempSpeed = SPEED
-var strength = 100
+var realStrength = 100
+var strength
+var orMass = 1
 
 var bestSpeed = 0
 
@@ -31,6 +33,7 @@ var bestSpeed = 0
 @onready var rayCast = $Neck/Camera3D/RealArm
 @onready var initialHeight = camera.position.y
 @onready var crouchHeight = initialHeight / 20
+@onready var main = self.get_parent()
 @export var hammerGrabButton = "b"
 @export var acceleration = 12
 @export var gravity = -10.0
@@ -41,14 +44,15 @@ func _ready() -> void:
 	Input.use_accumulated_input = true
 	set_physics_process(true)
 	
-	strength = 100 / strength
+	strength = 100 / realStrength
 
 # Mouse movement
 func _unhandled_input(event: InputEvent) -> void:
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		if event is InputEventMouseMotion:
-			neck.rotate_y(-event.relative.x * sensitivity)
-			camera.rotate_x(-event.relative.y * sensitivity)
+			var tempSens = sensitivity / orMass
+			neck.rotate_y(-event.relative.x * tempSens)
+			camera.rotate_x(-event.relative.y * tempSens)
 			camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-70), deg_to_rad(120))
 	#		Rotate things attatched to character
 			#for child in $Neck/Bean.get_children():
@@ -78,15 +82,16 @@ func _physics_process(delta: float) -> void:
 			hammerNode.thrown = false
 			holding_pinB = looking_at.get_parent().get_child(2)
 		else:
+			main.thrown = false
 			holding_pinB = looking_at
+			orMass = holding_pinB.mass / realStrength
 			holding_pinB.set_collision_layer_value(1, false)
 			holding_pinB.set_collision_layer_value(2, true)
-			holding_pinB.mass = 1
 		
 		if looking_at.freeze == true:
 			return
 		holding = looking_at
-		marker.global_position = looking_pos
+		marker.global_position = looking_at.global_position
 	
 	# On release of left click and you are holding an item
 	if Input.is_action_just_released("mouse1") and holding:
@@ -99,10 +104,14 @@ func _physics_process(delta: float) -> void:
 			hammerNode.mass = 5
 			hammerNode.thrown = true
 		else:
+			main.throwNode = holding_pinB
+			print(holding_pinB.mass)
+			main.thrown = true
 			holding_pinB.set_collision_layer_value(1, true)
 			holding_pinB.set_collision_layer_value(2, false)
 			holding_pinB.gravity_scale = 1
-			holding_pinB.mass = 1
+			holding_pinB.mass = orMass
+		orMass = 1
 		holding_pinB = false
 	
 	# Holding Physics
@@ -164,6 +173,7 @@ func _physics_process(delta: float) -> void:
 	if bhop:
 		tempSpeed = SPEED * SPEED
 		bhop = false
+	tempSpeed = tempSpeed / orMass
 	if is_on_floor() and direction:
 		if direction[0]:
 			velocity.x = lerpf(velocity.x, tempSpeed * direction[0], acceleration * delta)

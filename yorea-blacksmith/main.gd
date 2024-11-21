@@ -2,8 +2,11 @@ extends Node3D
 
 var interface
 var once = false
+var thrown = false
 var playerPos = Vector3.ZERO
 var playerRot = Vector3.ZERO
+var player
+var throwNode
 
 @onready var hammerNode = $"Hammer"
 
@@ -12,7 +15,8 @@ func _ready() -> void:
 	interface = load("res://Player.tscn")
 	add_child(interface.instantiate())
 	
-	hammerNode.playerNode = $"Player"
+	player = $"Player"
+	hammerNode.playerNode = player
 	hammerNode.hammer = $Hammer/RigidBody3D
 	hammerNode.hammerSpot = $"Player/Neck/Camera3D/HammerSpot"
 	hammerNode.hammerHandle = $Hammer.get_child(2)
@@ -27,6 +31,16 @@ func _process(delta: float) -> void:
 		else:
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 			$Pause.visible = true
+	
+	if thrown:
+		var throwMass = throwNode.mass
+		var strength = player.realStrength
+		if snappedf(throwNode.linear_velocity.length(), 0.05) > 0.05:
+			throwNode.linear_velocity = throwNode.linear_velocity * strength / throwMass
+			thrown = false
+		
+		if (snappedf(throwNode.linear_velocity.y, 0.05) == 0) and (snappedf(throwNode.angular_velocity.length(), 0.05) == 0):
+			throwNode.mass = throwMass
 
 
 func _on_desktop_pressed() -> void:
@@ -49,5 +63,4 @@ func _on_vr_pressed() -> void:
 	interface = load("res://vrplayer.tscn").instantiate()
 	if !get_node("Player/Neck/Vrplayer"):
 		get_node("Player/Neck").add_child(interface)
-	
-	hammerNode.playerNode = $"Vrplayer"
+	hammerNode.player = $"Vrplayer"

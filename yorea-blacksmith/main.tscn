@@ -71,6 +71,7 @@ mesh = SubResource("BoxMesh_seq1f")
 
 [node name="test" type="RigidBody3D" parent="Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.207, -0.00148952)
+mass = 100.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/test"]
 shape = SubResource("SphereShape3D_niju6")
