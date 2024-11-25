@@ -165,7 +165,8 @@ func _physics_process(delta: float) -> void:
 		holding_pinB.angular_velocity = holding_pinB.angular_velocity * 0.9
 	elif slowNode:
 		if slowNode.linear_velocity.length() > 10:
-			slowNode.linear_damp = 100 / realStrength
+			print(clamp(orMass / realStrength, 1, 100.0))
+			slowNode.linear_damp = clamp(orMass / realStrength, 1, 100.0)
 		else:
 			slowNode.linear_damp = 0
 			slowNode = false
@@ -246,7 +247,7 @@ func move_node(node, new_parent):
 func _push_away_rigid_bodies():
 	for i in get_slide_collision_count():
 		var c := get_slide_collision(i)
-		if c.get_collider() is RigidBody3D and 'light' in c.get_collider().get_child(1).get_name():
+		if c.get_collider() is RigidBody3D and 'light' in c.get_collider().get_name():
 			var push_dir = -c.get_normal()
 			# How much velocity the object needs to increase to match player velocity in the push direction
 			var velocity_diff_in_push_dir = self.velocity.dot(push_dir) - c.get_collider().linear_velocity.dot(push_dir)

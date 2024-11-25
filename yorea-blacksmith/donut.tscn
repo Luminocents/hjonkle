@@ -329,7 +329,7 @@ data = PackedVector3Array(0.0606, 0.0003, 0.0006, 0.0594, 0.0066, 0.0067, 0.0604
 [sub_resource type="SphereShape3D" id="SphereShape3D_aia3i"]
 radius = 0.0259089
 
-[node name="Donut" type="RigidBody3D"]
+[node name="Donut_light" type="RigidBody3D"]
 mass = 0.1
 
 [node name="Bread_001" type="MeshInstance3D" parent="."]

@@ -13,6 +13,7 @@ var hammer
 var hammerSpot
 var hammerHandle
 var holding = false
+var fastest = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -21,6 +22,11 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	if hammer.linear_velocity.length() > fastest:
+		fastest = hammer.linear_velocity.length()
+	if hammer.linear_velocity.length() < 30:
+		fastest = hammer.linear_velocity.length()
+	
 	if flying and playerNode.is_on_floor():
 		flying = false
 		mass = 5
