@@ -10,6 +10,8 @@ var throwNode
 
 @onready var hammerNode = $"Hammer"
 
+var arr = ["event1", "event2", "event3", "event4"]
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	interface = load("res://Player.tscn")
@@ -32,15 +34,16 @@ func _process(delta: float) -> void:
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 			$Pause.visible = true
 	
-	if thrown:
-		var throwMass = throwNode.mass
-		var strength = player.realStrength
-		if snappedf(throwNode.linear_velocity.length(), 0.05) > 0.05:
-			throwNode.linear_velocity = throwNode.linear_velocity * strength / throwMass
-			thrown = false
-		
-		if (snappedf(throwNode.linear_velocity.y, 0.05) == 0) and (snappedf(throwNode.angular_velocity.length(), 0.05) == 0):
-			throwNode.mass = throwMass
+	#if thrown:
+		#var throwMass = throwNode.mass
+		#var strength = player.realStrength
+		#print(throwMass)
+		#if snappedf(throwNode.linear_velocity.length(), 0.05) > 0.05:
+			#throwNode.linear_velocity = throwNode.linear_velocity / throwMass
+			#thrown = false
+		#
+		#if (snappedf(throwNode.linear_velocity.y, 0.05) == 0) and (snappedf(throwNode.angular_velocity.length(), 0.05) == 0):
+			#throwNode.mass = throwMass
 
 
 func _on_desktop_pressed() -> void:

@@ -5,7 +5,7 @@ var looking_at = false
 var looking_pos = [0, 0, 0]
 var holding = false
 var holding_pinB = false
-const JUMP_VELOCITY = 5.0
+@export var JUMP_VELOCITY = 1.0
 var acceleration_x = 0
 var acceleration_z = 0
 var jumpBuffer = false
@@ -20,47 +20,72 @@ var mouseMovement = false
 var currentFrame = 0
 var bhop = false
 var tempSpeed = SPEED
-var realStrength = 100
-var strength
 var orMass = 1
+var damping = 0
+var release = false
+var neck_rotation_velocity = 0.0
+var camera_rotation_velocity = Vector2.ZERO
+var temCoords = Vector3.ZERO
+var slowNode = false
+var once = true
 
 var bestSpeed = 0
 
+@onready var cMarker = $Neck/Camera3D/centerMarker
 @onready var hammerNode = $"../Hammer"
 @onready var neck := $Neck
 @onready var camera := $Neck/Camera3D
 @onready var marker = $Neck/Camera3D/Marker3D
 @onready var rayCast = $Neck/Camera3D/RealArm
+@onready var animPlayer = $AnimationPlayer
 @onready var initialHeight = camera.position.y
 @onready var crouchHeight = initialHeight / 20
 @onready var main = self.get_parent()
 @export var hammerGrabButton = "b"
 @export var acceleration = 12
 @export var gravity = -10.0
-@export var sensitivity = 0.002
+@export var sensitivity = .2
+@export var realStrength = 1
 
 func _ready() -> void:
 	rayCast.add_exception($".")
 	Input.use_accumulated_input = true
 	set_physics_process(true)
-	
-	strength = 100 / realStrength
 
 # Mouse movement
 func _unhandled_input(event: InputEvent) -> void:
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		if event is InputEventMouseMotion:
-			var tempSens = sensitivity / orMass
-			neck.rotate_y(-event.relative.x * tempSens)
-			camera.rotate_x(-event.relative.y * tempSens)
-			camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-70), deg_to_rad(120))
-	#		Rotate things attatched to character
+			var mgNumber = clamp(orMass / realStrength, 1, 100.0)
+			var tempSens = sensitivity
+			if holding:
+				tempSens = tempSens / mgNumber - 0.002
+				damping = mgNumber / 110
+			else:
+				damping = 0
+			neck_rotation_velocity -= event.relative.x * tempSens
+			neck_rotation_velocity = clamp(neck_rotation_velocity, 100 / -(mgNumber), 100 / (mgNumber))
+			camera_rotation_velocity.y -= event.relative.y * tempSens
+			camera_rotation_velocity.y = clamp(camera_rotation_velocity.y, 100 / -(mgNumber), 100 / (mgNumber))
+			# Rotate things attatched to character
 			#for child in $Neck/Bean.get_children():
 				#child.rotate_x(-event.relative.y * 0.01)
 				#child.rotation.x = clamp(camera.rotation.x, deg_to_rad(-70), deg_to_rad(90))
 
 # Physics
 func _physics_process(delta: float) -> void:
+	neck.rotate_y(neck_rotation_velocity * delta)
+	camera.rotate_x(camera_rotation_velocity.y * delta)
+	
+	camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-85), deg_to_rad(90))
+	
+	if damping > 0:
+		neck_rotation_velocity *= damping
+		camera_rotation_velocity *= damping
+	else:
+		neck_rotation_velocity = 0
+		camera_rotation_velocity = Vector2.ZERO
+	
 	# Right Click
 	if Input.is_action_just_pressed("mouse2"):
 		rightClickHeld = true
@@ -78,23 +103,29 @@ func _physics_process(delta: float) -> void:
 	if looking_at and Input.is_action_just_pressed("mouse1") and !holding and looking_at.get_class() == "RigidBody3D":
 		if looking_at.get_parent().name == "Hammer":
 			hammerNode.holding = true
-			hammerNode.mass = strength
+			hammerNode.mass = 1
+			orMass = hammerNode.mass
 			hammerNode.thrown = false
+			hammerNode.bring = false
 			holding_pinB = looking_at.get_parent().get_child(2)
 		else:
-			main.thrown = false
 			holding_pinB = looking_at
-			orMass = holding_pinB.mass / realStrength
+			orMass = holding_pinB.mass
 			holding_pinB.set_collision_layer_value(1, false)
 			holding_pinB.set_collision_layer_value(2, true)
 		
 		if looking_at.freeze == true:
 			return
 		holding = looking_at
-		marker.global_position = looking_at.global_position
+		cMarker.global_position = looking_pos
+		if Input.is_action_pressed('interact'):
+			marker.global_position = cMarker.global_position
+		else:
+			marker.global_position = looking_at.global_position
 	
-	# On release of left click and you are holding an item
-	if Input.is_action_just_released("mouse1") and holding:
+	# On release of left click and you are holding an item or is forced to drop with "release"
+	if Input.is_action_just_released("mouse1") and holding or release:
+		release = false
 		holding = false
 		if holding_pinB.get_parent().name == "Hammer":
 			hammerNode.holding = false
@@ -104,23 +135,23 @@ func _physics_process(delta: float) -> void:
 			hammerNode.mass = 5
 			hammerNode.thrown = true
 		else:
-			main.throwNode = holding_pinB
-			print(holding_pinB.mass)
-			main.thrown = true
 			holding_pinB.set_collision_layer_value(1, true)
 			holding_pinB.set_collision_layer_value(2, false)
 			holding_pinB.gravity_scale = 1
 			holding_pinB.mass = orMass
 		orMass = 1
+		slowNode = holding_pinB
 		holding_pinB = false
 	
 	# Holding Physics
 	if holding:
+		if Input.is_action_pressed('interact'):
+			marker.global_position = cMarker.global_position
 		var distance = (holding_pinB.global_position - marker.global_transform.origin).normalized()
 		var distance_to_target = (holding_pinB.global_position - marker.global_transform.origin).length()
 		var min_speed = -SPEED	# Minimum speed at the target
 		if holding_pinB.linear_velocity.length() <= 4 and distance_to_target >= 1.5:
-			holding = false
+			release = true
 		
 		# Calculate speed based on distance
 		var speed = lerp(SPEED, min_speed, -distance_to_target)
@@ -130,17 +161,28 @@ func _physics_process(delta: float) -> void:
 		else:
 			holding_pinB.gravity_scale = 1
 			holding_pinB.linear_velocity = lerp(-distance, distance * speed, -distance_to_target)
+			
+		holding_pinB.angular_velocity = holding_pinB.angular_velocity * 0.9
+	elif slowNode:
+		if slowNode.linear_velocity.length() > 10:
+			slowNode.linear_damp = 100 / realStrength
+		else:
+			slowNode.linear_damp = 0
+			slowNode = false
 	
 	# Jump Buffer & Jump
-	if Input.is_action_just_pressed("jump") and !is_on_floor():
+	if Input.is_action_just_pressed("jump") and !is_on_floor() and once:
 		currentFrame = Engine.get_physics_frames()
 		jumpBuffer = true
+		once = false
 		bhop = true
+	print
 	if is_on_floor():
+		once = true
 		if hammerNode.thrown:
 			hammerNode.flying = false
 			hammerNode.thrown = false
-		if jumpBuffer and Engine.get_physics_frames() - currentFrame < 10:
+		if jumpBuffer and Engine.get_physics_frames() - currentFrame < 10 * delta:
 			velocity.y = JUMP_VELOCITY + JUMP_VELOCITY * delta
 			jumped = true
 			jumpBuffer = false
@@ -151,16 +193,12 @@ func _physics_process(delta: float) -> void:
 			jumpBuffer = false
 	
 	# Crouching
-	if Input.is_action_just_pressed("crouch"):
-		$PlayerShape.disabled = true
+	if Input.is_action_pressed("crouch") and $PlayerShape.shape.height > .4:
+		$PlayerShape.shape.height = lerpf($PlayerShape.shape.height, 0.4, .15)
 		crouching = true
-	if Input.is_action_just_released("crouch"):
-		$PlayerShape.disabled = false
+	elif $PlayerShape.shape.height < 1.877:
+		$PlayerShape.shape.height = lerpf($PlayerShape.shape.height, 1.877, .15)
 		crouching = false
-	if crouching:
-		camera.position.y = lerpf(camera.position.y, crouchHeight, acceleration * delta)
-	elif camera.position.y < initialHeight:
-		camera.position.y = lerpf(camera.position.y, initialHeight, acceleration * delta)
 	
 #	Movement Inputs
 	var input_dir := Vector3.ZERO
@@ -171,32 +209,32 @@ func _physics_process(delta: float) -> void:
 	var direction = (neck.transform.basis * Vector3(input_dir.x, 0, input_dir.z)).normalized()
 	# Jump Stuff
 	if bhop:
-		tempSpeed = SPEED * SPEED
+		tempSpeed = tempSpeed * 1.25
+		print('bhop', tempSpeed)
 		bhop = false
-	tempSpeed = tempSpeed / orMass
+	
+	if holding:
+		tempSpeed = tempSpeed / clamp(orMass / realStrength, 1, 100.0)
 	if is_on_floor() and direction:
 		if direction[0]:
 			velocity.x = lerpf(velocity.x, tempSpeed * direction[0], acceleration * delta)
 		if direction[2]:
 			velocity.z = lerpf(velocity.z, tempSpeed * direction[2], acceleration * delta)
-		tempSpeed = SPEED
+		tempSpeed = clamp(tempSpeed * .9, 5, 22.5)
 	elif !is_on_floor() and direction:
 		if direction[0]:
 			velocity.x = lerpf(velocity.x, tempSpeed * direction[0], 1 * delta)
 		if direction[2]:
 			velocity.z = lerpf(velocity.z, tempSpeed * direction[2], 1 * delta)
-		tempSpeed = SPEED
 	# Smooths Movement
 	elif !direction and is_on_floor() and !bhop:
 		velocity.x = lerpf(velocity.x, 0, acceleration * delta)
 		velocity.z = lerpf(velocity.z, 0, acceleration * delta)
-	
 	# Gravity
 	velocity.y += gravity * delta
 	_push_away_rigid_bodies()
 	
 	move_and_slide()
-
 
 # the node that you want to move, and where you want to move the node
 func move_node(node, new_parent): 
@@ -204,12 +242,11 @@ func move_node(node, new_parent):
 	new_parent.add_child(node)
 	node.linear_velocity = Vector3.ZERO
 
-# CC0/public domain/use for whatever you want no need to credit
-# Call this function directly before move_and_slide() on your CharacterBody3D script
+# can't push heavy objects
 func _push_away_rigid_bodies():
 	for i in get_slide_collision_count():
 		var c := get_slide_collision(i)
-		if c.get_collider() is RigidBody3D and c.get_collider().get_child(1).get_name() == 'light':
+		if c.get_collider() is RigidBody3D and 'light' in c.get_collider().get_child(1).get_name():
 			var push_dir = -c.get_normal()
 			# How much velocity the object needs to increase to match player velocity in the push direction
 			var velocity_diff_in_push_dir = self.velocity.dot(push_dir) - c.get_collider().linear_velocity.dot(push_dir)

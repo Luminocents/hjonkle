@@ -24,12 +24,12 @@ func _process(delta: float) -> void:
 	if flying and playerNode.is_on_floor():
 		flying = false
 		mass = 5
-	if Input.is_action_just_pressed("b") and !flying:
+	if Input.is_action_just_pressed("b") and !flying and !playerNode.holding:
 		bring = true
 		thrown = false
 		var new_transform = hammerHandle.transform.looking_at(hammerSpot.transform.origin, Vector3.UP)
 		hammerHandle.transform = hammerHandle.transform.interpolate_with(new_transform, 25 * delta)
-	elif Input.is_action_pressed("b") and flying:
+	elif Input.is_action_pressed("b") and flying and !playerNode.holding:
 		thrown = false
 		floating = true
 		bring = true
