@@ -100,7 +100,7 @@ func _physics_process(delta: float) -> void:
 		looking_at = false
 	
 	# If looking at an item, left click, are not currently holding an item, and item is a rigid body
-	if looking_at and Input.is_action_just_pressed("mouse1") and !holding and looking_at.get_class() == "RigidBody3D":
+	if looking_at and Input.is_action_just_pressed("mouse1") and !holding and looking_at.get_class() == "RigidBody3D" and !looking_at.freeze:
 		if looking_at.get_parent().name == "Hammer":
 			hammerNode.holding = true
 			hammerNode.mass = 1
@@ -111,8 +111,8 @@ func _physics_process(delta: float) -> void:
 		else:
 			holding_pinB = looking_at
 			orMass = holding_pinB.mass
-			holding_pinB.set_collision_layer_value(1, false)
-			holding_pinB.set_collision_layer_value(2, true)
+			colSwitch(holding_pinB, 'layer', 1)
+			colSwitch(holding_pinB, 'mask', 2)
 		
 		if looking_at.freeze == true:
 			return
@@ -131,12 +131,17 @@ func _physics_process(delta: float) -> void:
 			hammerNode.holding = false
 			hammerNode.hammer.set_collision_layer_value(1, true)
 			hammerNode.hammer.set_collision_layer_value(2, false)
+			hammerNode.hammer.set_collision_mask_value(1, true)
+			hammerNode.hammer.set_collision_mask_value(2, false)
 			holding_pinB.gravity_scale = 1
 			hammerNode.mass = 5
 			hammerNode.thrown = true
 		else:
-			holding_pinB.set_collision_layer_value(1, true)
-			holding_pinB.set_collision_layer_value(2, false)
+			if 'light' in holding_pinB.get_name():
+				colSwitch(holding_pinB, 'layer', 2)
+			else:
+				colSwitch(holding_pinB, 'layer', 1)
+			colSwitch(holding_pinB, 'mask', 1)
 			holding_pinB.gravity_scale = 1
 			holding_pinB.mass = orMass
 		orMass = 1
@@ -243,24 +248,41 @@ func move_node(node, new_parent):
 	new_parent.add_child(node)
 	node.linear_velocity = Vector3.ZERO
 
+func colSwitch(node, col, a):
+	var b
+	if col == 'layer':
+		for i in range(10):
+			if hammerNode.hammer.get_collision_layer_value(i + 1):
+				b = hammerNode.hammer.get_collision_layer_value(i + 1)
+		hammerNode.hammer.set_collision_layer_value(b, false)
+		hammerNode.hammer.set_collision_layer_value(a, true)
+	if col == 'mask':
+		for i in range(10):
+			if hammerNode.hammer.get_collision_layer_value(i + 1):
+				b = hammerNode.hammer.get_collision_layer_value(i + 1)
+		hammerNode.hammer.set_collision_mask_value(b, false)
+		hammerNode.hammer.set_collision_mask_value(a, true)
+		
+
 # can't push heavy objects
 func _push_away_rigid_bodies():
 	for i in get_slide_collision_count():
 		var c := get_slide_collision(i)
-		if c.get_collider() is RigidBody3D and 'light' in c.get_collider().get_name():
+		if c.get_collider() is RigidBody3D and 'light' not in c.get_collider().get_name() and c.get_collider().get_parent().get_name() != 'Static Environment':
+			print (c.get_collider().get_name())
 			var push_dir = -c.get_normal()
 			# How much velocity the object needs to increase to match player velocity in the push direction
 			var velocity_diff_in_push_dir = self.velocity.dot(push_dir) - c.get_collider().linear_velocity.dot(push_dir)
 			# Only count velocity towards push dir, away from character
 			velocity_diff_in_push_dir = max(0., velocity_diff_in_push_dir)
 			# Objects with more mass than us should be harder to push. But doesn't really make sense to push faster than we are going
-			const MY_APPROX_MASS_KG = 80.0
-			var mass_ratio = min(1., MY_APPROX_MASS_KG / c.get_collider().mass)
+			var MY_APPROX_MASS =  90.0
+			var mass_ratio = min(1., MY_APPROX_MASS / c.get_collider().mass)
 			# Optional add: Don't push object at all if it's 4x heavier or more
 			if mass_ratio < 0.25:
 				continue
 			# Don't push object from above/below
 			push_dir.y = 0
 			# 5.0 is a magic number, adjust to your needs
-			var push_force = mass_ratio * 1.0
+			var push_force = mass_ratio * 25.0
 			c.get_collider().apply_impulse(push_dir * velocity_diff_in_push_dir * push_force, c.get_position() - c.get_collider().global_position)

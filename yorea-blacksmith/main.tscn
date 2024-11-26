@@ -29,6 +29,11 @@ albedo_texture = ExtResource("4_3p6nn")
 
 [sub_resource type="BoxMesh" id="BoxMesh_seq1f"]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_6pgk0"]
+size = Vector3(1, 4.07788, 5.91125)
+
+[sub_resource type="BoxMesh" id="BoxMesh_eh1un"]
+
 [sub_resource type="SphereShape3D" id="SphereShape3D_niju6"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_xkdx0"]
@@ -40,11 +45,6 @@ albedo_texture = ExtResource("4_3p6nn")
 [sub_resource type="BoxShape3D" id="BoxShape3D_4aa80"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_00pni"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_6pgk0"]
-size = Vector3(1, 4.07788, 5.91125)
-
-[sub_resource type="BoxMesh" id="BoxMesh_eh1un"]
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_6d2o0")
@@ -62,24 +62,39 @@ shadow_enabled = true
 [node name="Hammer" parent="." instance=ExtResource("4_bhrcg")]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.331017, 1.5608, -2.17013)
 
-[node name="Environment" type="Node3D" parent="."]
+[node name="Static Environment" type="Node3D" parent="."]
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Environment"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Static Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 collision_layer = 255
 collision_mask = 255
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Static Environment/StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0397339, 0, 0.000366211)
 shape = SubResource("BoxShape3D_xcwos")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment/StaticBody3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Static Environment/StaticBody3D"]
 transform = Transform3D(522.34, 0, 0, 0, 1, 0, 0, 0, 729.06, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_2yjmw")
 mesh = SubResource("BoxMesh_seq1f")
 
+[node name="test2" type="StaticBody3D" parent="Static Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.22272, 1.207, -0.00148952)
+collision_layer = 255
+collision_mask = 255
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Static Environment/test2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.354858, -0.00299072)
+shape = SubResource("BoxShape3D_6pgk0")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Static Environment/test2"]
+transform = Transform3D(1, 0, 0, 0, 3.40451, 0, 0, 0, 5.89943, 0, 0, 0)
+mesh = SubResource("BoxMesh_eh1un")
+
+[node name="Environment" type="Node3D" parent="."]
+
 [node name="test" type="RigidBody3D" parent="Environment"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.207, -0.00148952)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.9618, 1.207, -0.00148952)
 mass = 100.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/test"]
@@ -118,21 +133,18 @@ shape = SubResource("BoxShape3D_4aa80")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Environment/test5"]
 mesh = SubResource("BoxMesh_00pni")
 
-[node name="test2" type="StaticBody3D" parent="Environment"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.22272, 1.207, -0.00148952)
-collision_layer = 255
-collision_mask = 255
+[node name="test6" type="RigidBody3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.28798, 1.207, -0.00148952)
+mass = 100.0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/test2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.354858, -0.00299072)
-shape = SubResource("BoxShape3D_6pgk0")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/test6"]
+shape = SubResource("BoxShape3D_4aa80")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment/test2"]
-transform = Transform3D(1, 0, 0, 0, 3.40451, 0, 0, 0, 5.89943, 0, 0, 0)
-mesh = SubResource("BoxMesh_eh1un")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment/test6"]
+mesh = SubResource("BoxMesh_00pni")
 
-[node name="Donut" parent="Environment" instance=ExtResource("5_6gkll")]
-transform = Transform3D(0.306024, 0, 0, 0, 0.306024, 0, 0, 0, 0.306024, 2.96895, 0.411854, 0)
+[node name="Donut_light" parent="Environment" instance=ExtResource("5_6gkll")]
+transform = Transform3D(0.528048, 0, 0, 0, 0.528048, 0, 0, 0, 0.528048, 2.96895, 0.411854, 0)
 
 [node name="Pause" type="CanvasLayer" parent="."]
 

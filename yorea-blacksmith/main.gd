@@ -22,6 +22,8 @@ func _ready() -> void:
 	hammerNode.hammer = $Hammer/RigidBody3D
 	hammerNode.hammerSpot = $"Player/Neck/Camera3D/HammerSpot"
 	hammerNode.hammerHandle = $Hammer.get_child(2)
+	
+	
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -33,6 +35,8 @@ func _process(delta: float) -> void:
 		else:
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 			$Pause.visible = true
+	
+	
 	
 	#if thrown:
 		#var throwMass = throwNode.mass

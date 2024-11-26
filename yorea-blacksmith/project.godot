@@ -91,8 +91,3 @@ interact={
 textures/canvas_textures/default_texture_filter=0
 anti_aliasing/quality/msaa_3d=3
 rendering_device/occlusion_rays_per_thread=512
-
-[xr]
-
-openxr/enabled="false"
-shaders/enabled=true

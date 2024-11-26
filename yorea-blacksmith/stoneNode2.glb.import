@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://bdcqtxcevnxou"
-path="res://.godot/imported/stoneNode2_Fracture.glb-0bf722dc0d2501d11641aeb6fb8221a0.scn"
+path="res://.godot/imported/stoneNode2.glb-09b2e4e719dc803f6d01288a4ed687e0.scn"
 
 [deps]
 
-source_file="res://stoneNode2_Fracture.glb"
-dest_files=["res://.godot/imported/stoneNode2_Fracture.glb-0bf722dc0d2501d11641aeb6fb8221a0.scn"]
+source_file="res://stoneNode2.glb"
+dest_files=["res://.godot/imported/stoneNode2.glb-09b2e4e719dc803f6d01288a4ed687e0.scn"]
 
 [params]
 
