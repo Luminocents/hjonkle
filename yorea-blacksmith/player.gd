@@ -28,6 +28,8 @@ var camera_rotation_velocity = Vector2.ZERO
 var temCoords = Vector3.ZERO
 var slowNode = false
 var once = true
+var holdLayer = 1
+var holdMask = 1
 
 var bestSpeed = 0
 
@@ -111,6 +113,14 @@ func _physics_process(delta: float) -> void:
 		else:
 			holding_pinB = looking_at
 			orMass = holding_pinB.mass
+			for i in range(10):
+				i += 1
+				if hammerNode.hammer.get_collision_layer_value(i):
+					holdLayer = i
+			for i in range(10):
+				i += 1
+				if hammerNode.hammer.get_collision_mask_value(i):
+					holdMask = i
 			colSwitch(holding_pinB, 'layer', 1)
 			colSwitch(holding_pinB, 'mask', 2)
 		
@@ -137,11 +147,8 @@ func _physics_process(delta: float) -> void:
 			hammerNode.mass = 5
 			hammerNode.thrown = true
 		else:
-			if 'light' in holding_pinB.get_name():
-				colSwitch(holding_pinB, 'layer', 2)
-			else:
-				colSwitch(holding_pinB, 'layer', 1)
-			colSwitch(holding_pinB, 'mask', 1)
+			colSwitch(holding_pinB, 'layer', holdLayer)
+			colSwitch(holding_pinB, 'mask', holdMask)
 			holding_pinB.gravity_scale = 1
 			holding_pinB.mass = orMass
 		orMass = 1
