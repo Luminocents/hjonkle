@@ -1,15 +1,14 @@
 extends CharacterBody3D
 
 const SPEED = 5.0
+const RUN = 7.0
 var looking_at = false
 var looking_pos = [0, 0, 0]
 var holding = false
 var holding_pinB = false
-@export var JUMP_VELOCITY = 1.0
 var acceleration_x = 0
 var acceleration_z = 0
 var jumpBuffer = false
-var jumped = false
 var rightClickHeld = false
 var lockTurn = false
 var relX = 0
@@ -17,7 +16,6 @@ var relY = 0
 var crouching = false
 var holdingCollision = false
 var mouseMovement = false
-var currentFrame = 0
 var bhop = false
 var tempSpeed = SPEED
 var orMass = 1
@@ -27,11 +25,8 @@ var neck_rotation_velocity = 0.0
 var camera_rotation_velocity = Vector2.ZERO
 var temCoords = Vector3.ZERO
 var slowNode = false
-var once = true
-var holdLayer = 1
-var holdMask = 1
-
-var bestSpeed = 0
+var holdLayer = []
+var holdMask = []
 
 @onready var cMarker = $Neck/Camera3D/centerMarker
 @onready var hammerNode = $"../Hammer"
@@ -43,6 +38,7 @@ var bestSpeed = 0
 @onready var initialHeight = camera.position.y
 @onready var crouchHeight = initialHeight / 20
 @onready var main = self.get_parent()
+@export var JUMP_VELOCITY = 1.0
 @export var hammerGrabButton = "b"
 @export var acceleration = 12
 @export var gravity = -10.0
@@ -113,15 +109,12 @@ func _physics_process(delta: float) -> void:
 		else:
 			holding_pinB = looking_at
 			orMass = holding_pinB.mass
-			for i in range(10):
+			for i in range(8):
+				var temp = i
 				i += 1
-				if hammerNode.hammer.get_collision_layer_value(i):
-					holdLayer = i
-			for i in range(10):
-				i += 1
-				if hammerNode.hammer.get_collision_mask_value(i):
-					holdMask = i
-			colSwitch(holding_pinB, 'layer', 1)
+				holdLayer.insert(temp, holding_pinB.get_collision_layer_value(i))
+				holdMask.insert(temp, holding_pinB.get_collision_mask_value(i))
+			colSwitch(holding_pinB, 'layer', 2)
 			colSwitch(holding_pinB, 'mask', 2)
 		
 		if looking_at.freeze == true:
@@ -139,21 +132,21 @@ func _physics_process(delta: float) -> void:
 		holding = false
 		if holding_pinB.get_parent().name == "Hammer":
 			hammerNode.holding = false
-			hammerNode.hammer.set_collision_layer_value(1, true)
-			hammerNode.hammer.set_collision_layer_value(2, false)
-			hammerNode.hammer.set_collision_mask_value(1, true)
-			hammerNode.hammer.set_collision_mask_value(2, false)
-			holding_pinB.gravity_scale = 1
 			hammerNode.mass = 5
 			hammerNode.thrown = true
 		else:
-			colSwitch(holding_pinB, 'layer', holdLayer)
-			colSwitch(holding_pinB, 'mask', holdMask)
+			for i in range(8):
+				var temp = i
+				i += 1
+				holding_pinB.set_collision_layer_value(i, holdLayer[temp])
+				holding_pinB.set_collision_mask_value(i, holdMask[temp])
 			holding_pinB.gravity_scale = 1
 			holding_pinB.mass = orMass
 		orMass = 1
 		slowNode = holding_pinB
 		holding_pinB = false
+		holdLayer = []
+		holdMask = []
 	
 	# Holding Physics
 	if holding:
@@ -177,32 +170,28 @@ func _physics_process(delta: float) -> void:
 		holding_pinB.angular_velocity = holding_pinB.angular_velocity * 0.9
 	elif slowNode:
 		if slowNode.linear_velocity.length() > 10:
-			print(clamp(orMass / realStrength, 1, 100.0))
 			slowNode.linear_damp = clamp(orMass / realStrength, 1, 100.0)
 		else:
 			slowNode.linear_damp = 0
 			slowNode = false
 	
 	# Jump Buffer & Jump
-	if Input.is_action_just_pressed("jump") and !is_on_floor() and once:
-		currentFrame = Engine.get_physics_frames()
+	if Input.is_action_pressed("jump"):
 		jumpBuffer = true
-		once = false
 		bhop = true
-	print
+	else:
+		jumpBuffer = false
+		bhop = false
 	if is_on_floor():
-		once = true
+		bhop = false
 		if hammerNode.thrown:
 			hammerNode.flying = false
 			hammerNode.thrown = false
-		if jumpBuffer and Engine.get_physics_frames() - currentFrame < 10 * delta:
+		if jumpBuffer:
 			velocity.y = JUMP_VELOCITY + JUMP_VELOCITY * delta
-			jumped = true
 			jumpBuffer = false
 		elif Input.is_action_just_pressed("jump"):
 			velocity.y = JUMP_VELOCITY + JUMP_VELOCITY * delta
-			
-			jumped = true
 			jumpBuffer = false
 	
 	# Crouching
@@ -220,12 +209,15 @@ func _physics_process(delta: float) -> void:
 	input_dir = input_dir.limit_length(1.0)
 	input_dir.y = velocity.y
 	var direction = (neck.transform.basis * Vector3(input_dir.x, 0, input_dir.z)).normalized()
-	# Jump Stuff
-	if bhop:
-		tempSpeed = tempSpeed * 1.25
-		print('bhop', tempSpeed)
-		bhop = false
 	
+	# Running
+	if Input.is_action_pressed("shift"):
+		tempSpeed = RUN
+	else:
+		tempSpeed = SPEED
+	
+	if bhop:
+		tempSpeed = RUN
 	if holding:
 		tempSpeed = tempSpeed / clamp(orMass / realStrength, 1, 100.0)
 	if is_on_floor() and direction:
@@ -233,7 +225,6 @@ func _physics_process(delta: float) -> void:
 			velocity.x = lerpf(velocity.x, tempSpeed * direction[0], acceleration * delta)
 		if direction[2]:
 			velocity.z = lerpf(velocity.z, tempSpeed * direction[2], acceleration * delta)
-		tempSpeed = clamp(tempSpeed * .9, 5, 22.5)
 	elif !is_on_floor() and direction:
 		if direction[0]:
 			velocity.x = lerpf(velocity.x, tempSpeed * direction[0], 1 * delta)
@@ -258,25 +249,23 @@ func move_node(node, new_parent):
 func colSwitch(node, col, a):
 	var b
 	if col == 'layer':
-		for i in range(10):
-			if hammerNode.hammer.get_collision_layer_value(i + 1):
-				b = hammerNode.hammer.get_collision_layer_value(i + 1)
-		hammerNode.hammer.set_collision_layer_value(b, false)
-		hammerNode.hammer.set_collision_layer_value(a, true)
+		for i in range(8):
+			node.set_collision_layer_value(i + 1, false)
+		node.set_collision_layer_value(a, true)
 	if col == 'mask':
-		for i in range(10):
-			if hammerNode.hammer.get_collision_layer_value(i + 1):
-				b = hammerNode.hammer.get_collision_layer_value(i + 1)
-		hammerNode.hammer.set_collision_mask_value(b, false)
-		hammerNode.hammer.set_collision_mask_value(a, true)
+		for i in range(8):
+			node.set_collision_mask_value(i + 1, false)
+		node.set_collision_mask_value(a, true)
 		
 
 # can't push heavy objects
 func _push_away_rigid_bodies():
 	for i in get_slide_collision_count():
 		var c := get_slide_collision(i)
-		if c.get_collider() is RigidBody3D and 'light' not in c.get_collider().get_name() and c.get_collider().get_parent().get_name() != 'Static Environment':
-			print (c.get_collider().get_name())
+		if c.get_collider() is RigidBody3D and 'light' not in c.get_collider().get_name() and 'Node' not in c.get_collider().get_parent().get_name():
+			if holding:
+				if c.get_collider() == holding_pinB or c.get_collider().get_parent() == hammerNode:
+					return
 			var push_dir = -c.get_normal()
 			# How much velocity the object needs to increase to match player velocity in the push direction
 			var velocity_diff_in_push_dir = self.velocity.dot(push_dir) - c.get_collider().linear_velocity.dot(push_dir)

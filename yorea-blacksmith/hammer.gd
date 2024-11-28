@@ -22,9 +22,13 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	if hammer.linear_velocity.y < -10:
+		gravity = 1
+	else:
+		gravity = 8
 	if hammer.linear_velocity.length() > fastest:
 		fastest = hammer.linear_velocity.length()
-	if hammer.linear_velocity.length() < 30:
+	if hammer.linear_velocity.length() < 20:
 		fastest = hammer.linear_velocity.length()
 	
 	if flying and playerNode.is_on_floor():

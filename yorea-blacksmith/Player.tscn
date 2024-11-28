@@ -81,10 +81,12 @@ _data = {
 
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-floor_constant_speed = true
+floor_snap_length = 0.01
+platform_on_leave = 2
 platform_floor_layers = 4294967294
 script = ExtResource("1_5brhk")
 JUMP_VELOCITY = 3.5
+sensitivity = 0.25
 realStrength = 100
 
 [node name="PlayerShape" type="CollisionShape3D" parent="."]
@@ -94,6 +96,7 @@ shape = SubResource("CapsuleShape3D_ccqb6")
 
 [node name="Camera3D" type="Camera3D" parent="Neck"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.622, 0)
+fov = 90.0
 
 [node name="RealArm" type="RayCast3D" parent="Neck/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, -1.21581e-07, 1, 0, -2.78145, -4.37114e-08, 0, 0, 0)

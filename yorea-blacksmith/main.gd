@@ -14,27 +14,25 @@ var arr = ["event1", "event2", "event3", "event4"]
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	interface = load("res://Player.tscn")
-	add_child(interface.instantiate())
-	
 	player = $"Player"
 	hammerNode.playerNode = player
 	hammerNode.hammer = $Hammer/RigidBody3D
 	hammerNode.hammerSpot = $"Player/Neck/Camera3D/HammerSpot"
 	hammerNode.hammerHandle = $Hammer.get_child(2)
 	
-	
+	$Graphics/Pause/Desktop.connect('pressed', _on_desktop_pressed)
+	$Graphics/Pause/VR.connect('pressed', _on_vr_pressed)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if Input.is_action_just_released("ui_cancel"):
-		if $Pause.visible:
+		if $Graphics/Pause.visible:
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-			$Pause.visible = false
+			$Graphics/Pause.visible = false
 		else:
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-			$Pause.visible = true
+			$Graphics/Pause.visible = true
 	
 	
 	
@@ -51,9 +49,9 @@ func _process(delta: float) -> void:
 
 
 func _on_desktop_pressed() -> void:
-	$Pause/VR.visible = true
-	$Pause/Desktop.visible = false
-	
+	$Graphics/Pause/VR.visible = true
+	$Graphics/Pause/Desktop.visible = false
+	print('pressedD')
 	remove_child(interface)
 	interface.queue_free()
 	
@@ -61,13 +59,13 @@ func _on_desktop_pressed() -> void:
 	hammerNode.hammerSpot = $"Player/Neck/Camera3D/HammerSpot"
 
 func _on_vr_pressed() -> void:
-	$Pause/VR.hide()
-	$Pause/Desktop.show()
-	
+	$Graphics/Pause/VR.hide()
+	$Graphics/Pause/Desktop.show()
+	print('pressedVR')
 	var VR = load("res://addons/godot-xr-tools/xr/start_xr.tscn").instantiate()
 	add_child(VR)
 	
 	interface = load("res://vrplayer.tscn").instantiate()
 	if !get_node("Player/Neck/Vrplayer"):
 		get_node("Player/Neck").add_child(interface)
-	hammerNode.player = $"Vrplayer"
+	hammerNode.playerNode = $"Vrplayer"

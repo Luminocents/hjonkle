@@ -339,6 +339,7 @@ shadow_mesh = SubResource("ArrayMesh_f8gxq")
 [sub_resource type="SphereMesh" id="SphereMesh_spa0p"]
 
 [node name="Hammer" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.552444, 0)
 script = ExtResource("1_npeuy")
 
 [node name="JoltPinJoint3D" type="PinJoint3D" parent="."]
@@ -377,7 +378,6 @@ mesh = SubResource("ArrayMesh_hpcxe")
 skeleton = NodePath("")
 
 [node name="RigidBody3D2" type="RigidBody3D" parent="."]
-axis_lock_angular_y = true
 lock_rotation = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D2"]
