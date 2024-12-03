@@ -3,6 +3,7 @@ extends Node3D
 var rigs = []
 var pieces = 10
 
+@onready var staticEnv = get_tree().get_root().get_node("Main/Static Environment")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -26,23 +27,13 @@ func _process(delta: float) -> void:
 func _on_body_entered(body, rig):
 	if body.get_parent().name == 'Hammer':
 		if body.get_parent().fastest > 20 and rig.freeze == true and pieces > 5:
-			for i in range(8):
-				i += 1
-				rig.set_collision_layer_value(i, false)
-				rig.set_collision_mask_value(i, false)
-			rig.set_collision_layer_value(1, true)
-			rig.set_collision_mask_value(1, true)
 			rig.freeze = false
+			rig.reparent(staticEnv)
+			rig.linear_velocity = -body.linear_velocity
 			body.linear_velocity = Vector3.ZERO
 			pieces -= 1
 	if pieces <= 5:
 		for tRig in rigs:
-			for i in range(8):
-				i += 1
-				rig.set_collision_layer_value(i, false)
-				rig.set_collision_mask_value(i, false)
-			rig.set_collision_layer_value(1, true)
-			rig.set_collision_mask_value(1, true)
 			tRig.freeze = false
-	if 'Node' in body.get_parent().get_name():
-		pass
+			tRig.reparent(staticEnv)
+		self.queue_free()

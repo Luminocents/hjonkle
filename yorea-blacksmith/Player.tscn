@@ -87,7 +87,6 @@ platform_floor_layers = 4294967294
 script = ExtResource("1_5brhk")
 JUMP_VELOCITY = 3.5
 sensitivity = 0.25
-realStrength = 100
 
 [node name="PlayerShape" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_ccqb6")
