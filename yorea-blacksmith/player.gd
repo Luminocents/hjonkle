@@ -54,7 +54,7 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		if event is InputEventMouseMotion:
-			var mgNumber = clamp(orMass / realStrength, 1, 100.0)
+			var mgNumber = clamp(float(orMass) / realStrength, 1, 100.0)
 			var tempSens = sensitivity
 			if holding:
 				tempSens = tempSens / mgNumber - 0.002
@@ -247,7 +247,6 @@ func move_node(node, new_parent):
 	node.linear_velocity = Vector3.ZERO
 
 func colSwitch(node, col, a):
-	var b
 	if col == 'layer':
 		for i in range(8):
 			node.set_collision_layer_value(i + 1, false)
