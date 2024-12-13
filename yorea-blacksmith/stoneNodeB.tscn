@@ -1,6 +1,7 @@
-[gd_scene load_steps=42 format=4 uid="uid://b6acdm5mvgn5f"]
+[gd_scene load_steps=43 format=4 uid="uid://b6acdm5mvgn5f"]
 
 [ext_resource type="Script" path="res://nodeFracture.gd" id="1_28to6"]
+[ext_resource type="Material" uid="uid://b04m8y438kq3t" path="res://stoneNodeMaterial.tres" id="2_ngvtq"]
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_6si20"]
 points = PackedVector3Array(-0.632304, -1.10637, 0.909158, -0.16163, 1.09605, -0.71568, -0.157397, 1.07489, -0.805901, 1.88406, -0.55017, 0.793902, 0.736789, -1.43535, -0.777111, -1.21543, -0.689723, -0.771146, -0.795864, 0.891601, 0.176435, 1.52004, 0.04668, 1.12267, -1.54964, 0.0414201, 0.329376, -0.370649, -1.52606, 0.752317, -0.692839, 0.471794, -1.09261, 1.09209, -0.84192, 1.32364, -0.685461, -0.792561, -1.13437, -0.852677, 0.790763, -0.829587, 1.138, -1.14953, -0.394991, -0.210633, 0.97843, -0.966951, -1.5345, -0.163637, -0.297804, 1.49375, 0.173985, 1.01696, -0.213778, -0.898021, -1.13531, -0.258967, 0.966185, 0.0720154, 1.76902, -0.538724, 1.30833, -0.00530189, -1.54274, 0.283106, -0.833388, -0.838866, 0.850207, -0.850412, 0.946718, -0.457213, -0.633221, 0.937453, 0.22857, -1.57169, 0.0970414, -0.033005, 0.622989, -0.999818, 1.27336, -1.44121, -0.322252, -0.566995, 1.71649, -0.21605, 0.793902, -0.428372, 1.10696, -0.881182, 1.66956, -0.372965, 1.32665, -0.482727, 1.1107, -0.353152)
@@ -385,6 +386,7 @@ mass = 25.0
 shape = SubResource("ConvexPolygonShape3D_6si20")
 
 [node name="stoneNode2_cell" type="MeshInstance3D" parent="RigidBody3D"]
+material_override = ExtResource("2_ngvtq")
 mesh = SubResource("ArrayMesh_idu5t")
 skeleton = NodePath("")
 
@@ -398,6 +400,7 @@ mass = 25.0
 shape = SubResource("ConvexPolygonShape3D_ve0ao")
 
 [node name="stoneNode2_cell_001" type="MeshInstance3D" parent="RigidBody3D2"]
+material_override = ExtResource("2_ngvtq")
 mesh = SubResource("ArrayMesh_m0352")
 skeleton = NodePath("")
 
@@ -411,6 +414,7 @@ mass = 25.0
 shape = SubResource("ConvexPolygonShape3D_v7lf8")
 
 [node name="stoneNode2_cell_002" type="MeshInstance3D" parent="RigidBody3D3"]
+material_override = ExtResource("2_ngvtq")
 mesh = SubResource("ArrayMesh_mowox")
 skeleton = NodePath("")
 
@@ -424,6 +428,7 @@ mass = 25.0
 shape = SubResource("ConvexPolygonShape3D_ngbw6")
 
 [node name="stoneNode2_cell_003" type="MeshInstance3D" parent="RigidBody3D4"]
+material_override = ExtResource("2_ngvtq")
 mesh = SubResource("ArrayMesh_hput2")
 skeleton = NodePath("")
 
@@ -437,6 +442,7 @@ mass = 25.0
 shape = SubResource("ConvexPolygonShape3D_0i17h")
 
 [node name="stoneNode2_cell_004" type="MeshInstance3D" parent="RigidBody3D5"]
+material_override = ExtResource("2_ngvtq")
 mesh = SubResource("ArrayMesh_alesq")
 skeleton = NodePath("")
 
@@ -450,6 +456,7 @@ mass = 25.0
 shape = SubResource("ConvexPolygonShape3D_bevrb")
 
 [node name="stoneNode2_cell_005" type="MeshInstance3D" parent="RigidBody3D6"]
+material_override = ExtResource("2_ngvtq")
 mesh = SubResource("ArrayMesh_lxc7f")
 skeleton = NodePath("")
 
@@ -463,6 +470,7 @@ mass = 25.0
 shape = SubResource("ConvexPolygonShape3D_68tao")
 
 [node name="stoneNode2_cell_006" type="MeshInstance3D" parent="RigidBody3D7"]
+material_override = ExtResource("2_ngvtq")
 mesh = SubResource("ArrayMesh_plufd")
 skeleton = NodePath("")
 
@@ -476,6 +484,7 @@ mass = 25.0
 shape = SubResource("ConvexPolygonShape3D_ypdsx")
 
 [node name="stoneNode2_cell_007" type="MeshInstance3D" parent="RigidBody3D8"]
+material_override = ExtResource("2_ngvtq")
 mesh = SubResource("ArrayMesh_k5fwx")
 skeleton = NodePath("")
 
@@ -489,6 +498,7 @@ mass = 25.0
 shape = SubResource("ConvexPolygonShape3D_lfr3p")
 
 [node name="stoneNode2_cell_008" type="MeshInstance3D" parent="RigidBody3D9"]
+material_override = ExtResource("2_ngvtq")
 mesh = SubResource("ArrayMesh_qsqom")
 skeleton = NodePath("")
 
@@ -502,5 +512,6 @@ mass = 25.0
 shape = SubResource("ConvexPolygonShape3D_0grjl")
 
 [node name="stoneNode2_cell_009" type="MeshInstance3D" parent="RigidBody3D10"]
+material_override = ExtResource("2_ngvtq")
 mesh = SubResource("ArrayMesh_vdu6n")
 skeleton = NodePath("")

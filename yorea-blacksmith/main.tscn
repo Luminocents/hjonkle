@@ -1,10 +1,11 @@
-[gd_scene load_steps=23 format=3 uid="uid://6qytyp86oh6p"]
+[gd_scene load_steps=24 format=3 uid="uid://6qytyp86oh6p"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_6d2o0"]
 [ext_resource type="PackedScene" uid="uid://cs8c5hhpuxi5k" path="res://Graphics.tscn" id="1_8hllw"]
 [ext_resource type="Texture2D" uid="uid://boxbb8p8qie00" path="res://grassGround.png" id="4_3p6nn"]
 [ext_resource type="PackedScene" uid="uid://dy88m4ue4y4g3" path="res://Hammer.tscn" id="4_bhrcg"]
 [ext_resource type="PackedScene" uid="uid://drq70e8knque3" path="res://donut.tscn" id="5_6gkll"]
+[ext_resource type="PackedScene" uid="uid://dinpanebuq4qu" path="res://forge.tscn" id="5_bye5c"]
 [ext_resource type="PackedScene" uid="uid://dswb8beyomsda" path="res://stoneNodeA.tscn" id="6_xmhg1"]
 [ext_resource type="PackedScene" uid="uid://b6acdm5mvgn5f" path="res://stoneNodeB.tscn" id="7_4q7v7"]
 [ext_resource type="PackedScene" uid="uid://db7xaomgf3hvq" path="res://Player.tscn" id="8_xf30i"]
@@ -48,6 +49,7 @@ size = Vector3(1, 4.07788, 5.91125)
 [sub_resource type="BoxMesh" id="BoxMesh_00pni"]
 
 [node name="Main" type="Node3D"]
+transform = Transform3D(0.971743, 0, 0, 0, 0.971743, 0, 0, 0, 0.971743, 0, 0, 0)
 script = ExtResource("1_6d2o0")
 
 [node name="Graphics" parent="." instance=ExtResource("1_8hllw")]
@@ -57,8 +59,7 @@ metadata/_edit_use_anchors_ = true
 environment = SubResource("Environment_sv6l6")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
-light_energy = 0.6
+transform = Transform3D(-0.766211, -0.383109, 0.221187, 0, 0.442371, 0.766214, -0.442376, 0.663559, -0.383104, 0, 0, 0)
 shadow_enabled = true
 
 [node name="Hammer" parent="." instance=ExtResource("4_bhrcg")]
@@ -92,6 +93,9 @@ shape = SubResource("BoxShape3D_6pgk0")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Static Environment/test2"]
 transform = Transform3D(1, 0, 0, 0, 3.40451, 0, 0, 0, 5.89943, 0, 0, 0)
 mesh = SubResource("BoxMesh_eh1un")
+
+[node name="Forge" parent="Static Environment" instance=ExtResource("5_bye5c")]
+transform = Transform3D(-3.45489e-08, 0, 0.790388, 0, 0.790388, 0, -0.790388, 0, -3.45489e-08, 3.08724, -0.411632, 3.27473)
 
 [node name="Environment" type="Node3D" parent="."]
 
