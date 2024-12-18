@@ -1,8 +1,8 @@
 [gd_scene load_steps=12 format=3 uid="uid://bk733wqfcergj"]
 
-[ext_resource type="PackedScene" uid="uid://cs8c5hhpuxi5k" path="res://Graphics.tscn" id="1_y0shk"]
-[ext_resource type="PackedScene" uid="uid://db7xaomgf3hvq" path="res://Player.tscn" id="2_ciumm"]
-[ext_resource type="Texture2D" uid="uid://boxbb8p8qie00" path="res://grassGround.png" id="4_2mvjg"]
+[ext_resource type="PackedScene" uid="uid://cs8c5hhpuxi5k" path="res://Scenes/Graphics.tscn" id="1_y0shk"]
+[ext_resource type="PackedScene" uid="uid://db7xaomgf3hvq" path="res://Scenes/Player.tscn" id="2_ciumm"]
+[ext_resource type="Texture2D" uid="uid://boxbb8p8qie00" path="res://Resources/grassGround.png" id="4_2mvjg"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5ed2b"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)

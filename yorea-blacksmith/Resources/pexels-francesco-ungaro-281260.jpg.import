@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://boxbb8p8qie00"
-path.s3tc="res://.godot/imported/grassGround.png-665c67a396565046513d7c45e40f9f02.s3tc.ctex"
+uid="uid://brau8nwk7cdha"
+path.s3tc="res://.godot/imported/pexels-francesco-ungaro-281260.jpg-951fde8a6f1ee6e8d77cb7d0bc55ec29.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://grassGround.png"
-dest_files=["res://.godot/imported/grassGround.png-665c67a396565046513d7c45e40f9f02.s3tc.ctex"]
+source_file="res://Resources/pexels-francesco-ungaro-281260.jpg"
+dest_files=["res://.godot/imported/pexels-francesco-ungaro-281260.jpg-951fde8a6f1ee6e8d77cb7d0bc55ec29.s3tc.ctex"]
 
 [params]
 

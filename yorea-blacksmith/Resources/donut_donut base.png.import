@@ -2,17 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://brau8nwk7cdha"
-path.s3tc="res://.godot/imported/pexels-francesco-ungaro-281260.jpg-943b928f6e3e197f1f4ae6063192c21c.s3tc.ctex"
+uid="uid://d30w5u5i3hyv6"
+path.s3tc="res://.godot/imported/donut_donut base.png-e0838d17f6348da3ead8a09819b1ebf4.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
+generator_parameters={
+"md5": "f88def574cc49901d38337d25f4f1f4b"
+}
 
 [deps]
 
-source_file="res://pexels-francesco-ungaro-281260.jpg"
-dest_files=["res://.godot/imported/pexels-francesco-ungaro-281260.jpg-943b928f6e3e197f1f4ae6063192c21c.s3tc.ctex"]
+source_file="res://Resources/donut_donut base.png"
+dest_files=["res://.godot/imported/donut_donut base.png-e0838d17f6348da3ead8a09819b1ebf4.s3tc.ctex"]
 
 [params]
 
