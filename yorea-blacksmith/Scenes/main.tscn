@@ -69,8 +69,8 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.3310
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Static Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
-collision_layer = 255
-collision_mask = 255
+collision_layer = 3
+collision_mask = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Static Environment/StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0397339, 0, 0.000366211)
@@ -83,8 +83,8 @@ mesh = SubResource("BoxMesh_seq1f")
 
 [node name="test2" type="StaticBody3D" parent="Static Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.22272, 1.207, -0.00148952)
-collision_layer = 255
-collision_mask = 255
+collision_layer = 3
+collision_mask = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Static Environment/test2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.354858, -0.00299072)
@@ -96,13 +96,13 @@ mesh = SubResource("BoxMesh_eh1un")
 
 [node name="Forge" parent="Static Environment" instance=ExtResource("5_bye5c")]
 transform = Transform3D(-1.90019e-07, 0, 4.34714, 0, 4.34714, 0, -4.34714, 0, -1.90019e-07, 3.087, 0.422257, 5.64188)
+collision_layer = 3
+collision_mask = 3
 
 [node name="Environment" type="Node3D" parent="."]
 
 [node name="test" type="RigidBody3D" parent="Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.9618, 1.207, -0.00148952)
-collision_layer = 255
-collision_mask = 255
 mass = 100.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/test"]
@@ -113,8 +113,6 @@ mesh = SubResource("SphereMesh_xkdx0")
 
 [node name="test3" type="RigidBody3D" parent="Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.68481, 1.207, -0.00148952)
-collision_layer = 255
-collision_mask = 255
 mass = 25.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/test3"]
@@ -128,8 +126,6 @@ mesh = SubResource("BoxMesh_cx42d")
 
 [node name="test4" type="RigidBody3D" parent="Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.56501, 1.207, -0.00148952)
-collision_layer = 255
-collision_mask = 255
 mass = 50.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/test4"]
@@ -140,8 +136,6 @@ mesh = SubResource("BoxMesh_00pni")
 
 [node name="test5" type="RigidBody3D" parent="Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.31559, 1.207, -0.00148952)
-collision_layer = 255
-collision_mask = 255
 mass = 75.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/test5"]
@@ -152,8 +146,6 @@ mesh = SubResource("BoxMesh_00pni")
 
 [node name="test6" type="RigidBody3D" parent="Environment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.28798, 1.207, -0.00148952)
-collision_layer = 255
-collision_mask = 255
 mass = 100.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/test6"]

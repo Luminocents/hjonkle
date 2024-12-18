@@ -358,8 +358,6 @@ script = ExtResource("1_5y433")
 
 [node name="RigidBody3D" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.107874, -0.368497, 1.62777)
-collision_layer = 255
-collision_mask = 255
 mass = 25.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
@@ -371,8 +369,6 @@ skeleton = NodePath("")
 
 [node name="RigidBody3D2" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0877647, -0.625284, -1.14968)
-collision_layer = 255
-collision_mask = 255
 mass = 25.0
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="RigidBody3D2"]
@@ -384,8 +380,6 @@ skeleton = NodePath("")
 
 [node name="RigidBody3D3" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.646587, 0.357006, -1.29148)
-collision_layer = 255
-collision_mask = 255
 mass = 25.0
 
 [node name="CollisionShape3D3" type="CollisionShape3D" parent="RigidBody3D3"]
@@ -397,8 +391,6 @@ skeleton = NodePath("")
 
 [node name="RigidBody3D4" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.22052, -0.595848, 0.025815)
-collision_layer = 255
-collision_mask = 255
 mass = 25.0
 
 [node name="CollisionShape3D4" type="CollisionShape3D" parent="RigidBody3D4"]
@@ -410,8 +402,6 @@ skeleton = NodePath("")
 
 [node name="RigidBody3D5" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.414462, 1.41026, -0.776988)
-collision_layer = 255
-collision_mask = 255
 mass = 25.0
 
 [node name="CollisionShape3D5" type="CollisionShape3D" parent="RigidBody3D5"]
@@ -423,8 +413,6 @@ skeleton = NodePath("")
 
 [node name="RigidBody3D6" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.42885, -0.0926242, 0.745065)
-collision_layer = 255
-collision_mask = 255
 mass = 25.0
 
 [node name="CollisionShape3D6" type="CollisionShape3D" parent="RigidBody3D6"]
@@ -436,8 +424,6 @@ skeleton = NodePath("")
 
 [node name="RigidBody3D7" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.500459, 1.55971, -0.27206)
-collision_layer = 255
-collision_mask = 255
 mass = 25.0
 
 [node name="CollisionShape3D7" type="CollisionShape3D" parent="RigidBody3D7"]
@@ -449,8 +435,6 @@ skeleton = NodePath("")
 
 [node name="RigidBody3D8" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.996053, -1.04832, 1.02231)
-collision_layer = 255
-collision_mask = 255
 mass = 25.0
 
 [node name="CollisionShape3D8" type="CollisionShape3D" parent="RigidBody3D8"]
@@ -462,8 +446,6 @@ skeleton = NodePath("")
 
 [node name="RigidBody3D9" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.469754, 0.964203, 0.721353)
-collision_layer = 255
-collision_mask = 255
 mass = 25.0
 
 [node name="CollisionShape3D9" type="CollisionShape3D" parent="RigidBody3D9"]
@@ -475,8 +457,6 @@ skeleton = NodePath("")
 
 [node name="RigidBody3D10" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.14468, -0.719528, -0.730675)
-collision_layer = 255
-collision_mask = 255
 mass = 25.0
 
 [node name="CollisionShape3D10" type="CollisionShape3D" parent="RigidBody3D10"]

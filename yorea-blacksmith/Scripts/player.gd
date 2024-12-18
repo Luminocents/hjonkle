@@ -115,7 +115,7 @@ func _physics_process(delta: float) -> void:
 				holdLayer.insert(temp, holding_pinB.get_collision_layer_value(i))
 				holdMask.insert(temp, holding_pinB.get_collision_mask_value(i))
 			colSwitch(holding_pinB, 'layer', 2)
-			colSwitch(holding_pinB, 'mask', 2)
+			colSwitch(holding_pinB, 'mask', 1)
 		
 		if looking_at.freeze == true:
 			return
